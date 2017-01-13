@@ -52,29 +52,29 @@
     %% Comparison Tests
 
     % equality test
-    if testBool(1 = 1, True) then write "✓ = comparison (same)" else write "✓ = comparison (same)"
-    if testBool(1 = 2, False) then write "✓ = comparison (diff)" else write "✓ = comparison (diff)"
+    if testBool(1 = 1, True) then write "✓ = comparison (same)" else write "✗ = comparison (same)"
+    if testBool(1 = 2, False) then write "✓ = comparison (diff)" else write "✗ = comparison (diff)"
 
     % inequality test
-    if testBool(1 not = 2, True) then write "✓ != comparison (diff)" else write "✓ != comparison (diff)"
-    if testBool(1 not = 1, False) then write "✓ != comparison (same)" else write "✓ != comparison (same)"
+    if testBool(1 not = 2, True) then write "✓ != comparison (diff)" else write "✗ != comparison (diff)"
+    if testBool(1 not = 1, False) then write "✓ != comparison (same)" else write "✗ != comparison (same)"
 
     % less than test
-    if testBool(1 < 2, True) then write "✓ < comparison (true)" else write "✓ < comparison (true)"
-    if testBool(1 < 1, False) then write "✓ < comparison (false)" else write "✓ < comparison (false)"
+    if testBool(1 < 2, True) then write "✓ < comparison (true)" else write "✗ < comparison (true)"
+    if testBool(1 < 1, False) then write "✓ < comparison (false)" else write "✗ < comparison (false)"
 
     % greator than test
-    if testBool(2 > 1, True) then write "✓ > comparison (true)" else write "✓ > comparison (true)"
-    if testBool(1 > 2, False) then write "✓ > comparison (false)" else write "✓ > comparison (false)"
+    if testBool(2 > 1, True) then write "✓ > comparison (true)" else write "✗ > comparison (true)"
+    if testBool(1 > 2, False) then write "✓ > comparison (false)" else write "✗ > comparison (false)"
 
     % less than or equal test
-    if testBool(1 <= 2, True) then write "✓ <= comparison (1 <= 2)" else write "✓ <= comparison (1 <= 2)"
-    if testBool(1 <= 1, True) then write "✓ <= comparison (1 = 1)" else write "✓ <= comparison (1 <= 1)"
-    if testBool(1 <= 0, False) then write "✓ <= comparison (1 <= 0)" else write "✓ <= comparison (1 <= 0)"
+    if testBool(1 <= 2, True) then write "✓ <= comparison (1 <= 2)" else write "✗ <= comparison (1 <= 2)"
+    if testBool(1 <= 1, True) then write "✓ <= comparison (1 = 1)" else write "✗ <= comparison (1 <= 1)"
+    if testBool(1 <= 0, False) then write "✓ <= comparison (1 <= 0)" else write "✗ <= comparison (1 <= 0)"
 
     % greater than or equal test
-    if testBool(2 >= 1, True) then write "✓ >= comparison (1 >= 2)" else write "✓ < comparison (1 >= 2)"
-    if testBool(1 >= 1, True) then write "✓ >= comparison (1 = 1)" else write "✓ < comparison (1 >= 1)"
-    if testBool(0 >= 1, False) then write "✓ >= comparison (1 >= 0)" else write "✓ < comparison (1 >= 0)"
+    if testBool(2 >= 1, True) then write "✓ >= comparison (1 >= 2)" else write "✗ < comparison (1 >= 2)"
+    if testBool(1 >= 1, True) then write "✓ >= comparison (1 = 1)" else write "✗ < comparison (1 >= 1)"
+    if testBool(0 >= 1, False) then write "✓ >= comparison (1 >= 0)" else write "✗ < comparison (1 >= 0)"
 }
 
