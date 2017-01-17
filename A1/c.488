@@ -1,20 +1,22 @@
 {
-    % loop guard fail test
+    % loop guard ✗ test
     var i : Integer
-    i := 0
     var j : Integer
-    j := 0
     var k : Integer
-    k := 0
     var l : Integer
+    i := 0
+    j := 0
+    k := 0
     l := 0
     
     while false do 
-        write 1
+        write "✗ while false" 
+
     while i < -1 do
-        write 5
+        write "✗ while 0 < -1" 
+
     repeat {
-        write "repeat 1"
+        write "✓ repeat until"
     } until i = 0
     
     % loop guard success test
@@ -22,16 +24,19 @@
         write i
         i := i + 1
     }
+    write "✓ while loop"
+
     repeat {
         write "repeat 2"
         k := k + 1
     } until k = 5
+    write "✓ repeat loop"
     
     % Exit test
     while true do {
         exit
     }
-    write "exit"
+    write "✓ exit"
     
     while true do {
         while true do {
@@ -40,13 +45,13 @@
             }
         }
     }
-    write "exit integer"
+    write "✓ exit integer"
 
     while true do {
         j := j + 1
         exit when j = 7
     }
-    write "exit expression"
+    write "✓ exit expression"
 
     while true do {
         while true do {
@@ -54,5 +59,5 @@
             exit 2 when l = 5
         }
     }
-    write "exit integer when"
+    write "✓ exit integer when"
 }
