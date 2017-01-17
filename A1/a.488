@@ -1,14 +1,14 @@
 % This file tests the usage of arithmetic, logical, and comparison operators
 {
     % test functions:
-    procedure testInt(actual : Integer, expected : Integer, line : Integer) {
+    procedure testInt(actual : Integer, expected : Integer, id : Integer) {
         if actual = expected then 
             write "✓ (id ", id, ")"
         else
             write "✗ (id", id, ")" 
     }
 
-    procedure testBool(actual : Boolean, expected : Boolean) {
+    procedure testBool(actual : Boolean, expected : Boolean, id : Integer) {
         if actual = expected then 
             write "✓ (id ", id, ")"
         else
