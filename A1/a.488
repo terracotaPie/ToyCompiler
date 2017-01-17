@@ -1,12 +1,18 @@
 % This file tests the usage of arithmetic, logical, and comparison operators
 {
     % test functions:
-    function testInt(actual : Integer, expected : Integer) : Boolean {
-        return with actual = expected
+    procedure testInt(actual : Integer, expected : Integer, line : Integer) {
+        if actual = expected then 
+            write "✓ (id ", id, ")"
+        else
+            write "✗ (id", id, ")" 
     }
 
-    function testBool(actual : Boolean, expected : Boolean) : Boolean {
-        return with actual = expected
+    procedure testBool(actual : Boolean, expected : Boolean) {
+        if actual = expected then 
+            write "✓ (id ", id, ")"
+        else
+            write "✗ (id", id, ")" 
     }
 
     %% Arithmetic Tests
@@ -14,66 +20,66 @@
     % integer constants and unary minus will be used in the tests
 
     % addition test
-    if testInt(1 + 2, 3) then write "✓ addition" else write "✗ addition"
-    if testInt(2 + 1, 3) then write "  ✓ commutative " else write "  ✗ commutative"
+    testInt(1 + 2, 3, 1) 
+    testInt(2 + 1, 3, 2) 
 
     % subtraction test
-    if testInt(0 - 1, -1) then write "✓ subtraction" else write "✗ subtraction"
+    testInt(0 - 1, -1, 3) 
 
     % multiplication test
-    if testInt(2 * 3, 6) then write "✓ multiplication" else write "✗ multiplication"
+    testInt(2 * 3, 6, 4) 
     % the below is a subtest, hence indented with two spaces
-    if testInt(3 * 2, 6) then write "  ✓ commutative " else write "  ✗ commutative"
+    testInt(3 * 2, 6, 5) 
 
     % division test
-    if testInt(6 / 2, 3) then write "✓ division" else write "✗ division"
-    % div by 0 if catchInt(1 / 0) ... (don't know how to handle errors atm)
+    testInt(6 / 2, 3, 6) 
+    % div by 0 catchInt(1 / 0) ... (don't know how to handle errors atm)
 
 
     %% Logical Tests
 
     % logical not test
-    if testBool(not True, False) then write "✓ logical not (not t = f)" else write "✗ logical not (not t = f)"
-    if testBool(not False, True) then write "✓ logical not (not f = t)" else write "✗ logical not (not f = t)"
+    testBool(not True, False, 7) 
+    testBool(not False, True, 8) 
 
     % logical and test
-    if testBool(True and True, True) then write "✓ logical and (t and t)" else write "✗ logical and (t and t)"
-    if testBool(True and False, False) then write "✓ logical and (t and f)" else write "✗ logical and (t and f)"
-    if testBool(False and True, False) then write "✓ logical and (f and t)" else write "✗ logical and (f and t)"
-    if testBool(False and False, False) then write "✓ logical and (f and f)" else write "✗ logical and (f and f)"
+    testBool(True and True, True, 9) 
+    testBool(True and False, False, 10) 
+    testBool(False and True, False, 11) 
+    testBool(False and False, False, 12) 
 
     % logical or test
-    if testBool(True or True, True) then write "✓ logical or (t or t)" else write "✗ logical or (t or t)"
-    if testBool(True or False, True) then write "✓ logical or (t or f)" else write "✗ logical or (t or f)"
-    if testBool(False or True, True) then write "✓ logical or (f or t)" else write "✗ logical or (f or t)"
-    if testBool(False or False, False) then write "✓ logical or (f or f)" else write "✗ logical or (f or f)"
+    testBool(True or True, True, 13) 
+    testBool(True or False, True, 14) 
+    testBool(False or True, True, 15) 
+    testBool(False or False, False, 16) 
 
 
     %% Comparison Tests
 
     % equality test
-    if testBool(1 = 1, True) then write "✓ = comparison (same)" else write "✗ = comparison (same)"
-    if testBool(1 = 2, False) then write "✓ = comparison (diff)" else write "✗ = comparison (diff)"
+    testBool(1 = 1, True, 17) 
+    testBool(1 = 2, False, 18) 
 
     % inequality test
-    if testBool(1 not = 2, True) then write "✓ != comparison (diff)" else write "✗ != comparison (diff)"
-    if testBool(1 not = 1, False) then write "✓ != comparison (same)" else write "✗ != comparison (same)"
+    testBool(1 not = 2, True, 19) 
+    testBool(1 not = 1, False, 20) 
 
     % less than test
-    if testBool(1 < 2, True) then write "✓ < comparison (true)" else write "✗ < comparison (true)"
-    if testBool(1 < 1, False) then write "✓ < comparison (false)" else write "✗ < comparison (false)"
+    testBool(1 < 2, True, 21) 
+    testBool(1 < 1, False, 22) 
 
     % greator than test
-    if testBool(2 > 1, True) then write "✓ > comparison (true)" else write "✗ > comparison (true)"
-    if testBool(1 > 2, False) then write "✓ > comparison (false)" else write "✗ > comparison (false)"
+    testBool(2 > 1, True, 23) 
+    testBool(1 > 2, False, 24) 
 
     % less than or equal test
-    if testBool(1 <= 2, True) then write "✓ <= comparison (1 <= 2)" else write "✗ <= comparison (1 <= 2)"
-    if testBool(1 <= 1, True) then write "✓ <= comparison (1 = 1)" else write "✗ <= comparison (1 <= 1)"
-    if testBool(1 <= 0, False) then write "✓ <= comparison (1 <= 0)" else write "✗ <= comparison (1 <= 0)"
+    testBool(1 <= 2, True, 25) 
+    testBool(1 <= 1, True, 26) 
+    testBool(1 <= 0, False, 27) 
 
     % greater than or equal test
-    if testBool(2 >= 1, True) then write "✓ >= comparison (1 >= 2)" else write "✗ < comparison (1 >= 2)"
-    if testBool(1 >= 1, True) then write "✓ >= comparison (1 = 1)" else write "✗ < comparison (1 >= 1)"
-    if testBool(0 >= 1, False) then write "✓ >= comparison (1 >= 0)" else write "✗ < comparison (1 >= 0)"
+    testBool(2 >= 1, True, 28) 
+    testBool(1 >= 1, True, 29) 
+    testBool(0 >= 1, False, 30) 
 }
