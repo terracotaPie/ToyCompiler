@@ -2,11 +2,11 @@
 {
     % test functions:
     function testInt(actual : Integer, expected : Integer) : Boolean {
-        return actual = expected
+        return with actual = expected
     }
 
     function testBool(actual : Boolean, expected : Boolean) : Boolean {
-        return actual = expected
+        return with actual = expected
     }
 
     %% Arithmetic Tests
