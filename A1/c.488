@@ -1,0 +1,58 @@
+{
+    % loop guard fail test
+    var i : Integer
+    i := 0
+    var j : Integer
+    j := 0
+    var k : Integer
+    k := 0
+    var l : Integer
+    l := 0
+    
+    while false do 
+        write 1
+    while i < -1 do
+        write 5
+    repeat {
+        write "repeat 1"
+    } until i = 0
+    
+    % loop guard success test
+    while i < 5 do {
+        write i
+        i := i + 1
+    }
+    repeat {
+        write "repeat 2"
+        k := k + 1
+    } until k = 5
+    
+    % Exit test
+    while true do {
+        exit
+    }
+    write "exit"
+    
+    while true do {
+        while true do {
+            while true do {
+                 exit 3
+            }
+        }
+    }
+    write "exit integer"
+
+    while true do {
+        j := j + 1
+        exit when j = 7
+    }
+    write "exit expression"
+
+    while true do {
+        while true do {
+            l := l + 1
+            exit 2 when l = 5
+        }
+    }
+    write "exit integer when"
+}
