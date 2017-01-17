@@ -5,6 +5,7 @@
     % ---- Set up arrays ----
 
     % bounds 1 .. integer inclusive
+    % [n>=1], otherwise would be erroneous 
     var A[3] : Integer
 
     % bounds integer .. integer inclusive 
@@ -14,19 +15,64 @@
     var D[-3 .. -1]
 
     % declare multiple arrays on same line
-    var E[1], F[2] : Boolean
+    var E[1], F[1] : Boolean
 
 
     % ---- Verify bounds correct by accessing border indicies ----
 
-    var int : Integer
-    int := 5
+    % array vals for testing
+    var x : Integer
+    x := 10
+    var y : Integer
+    y := 100
     var bool : Boolean
     bool := True
 
-    A[3 / 3] := val
-    A[1 + 2] := val
-    if A[1] == A[3] then 
-    C[-1] := val
+    % array tests
+
+    A[1] := x
+    A[2] := x
+    A[3] := x
+    if A[1] = A[2] and A[2] = A[3] then 
+        write "✓ array declaration: A[n]"
+    else
+        write "✗ array declaration: A[n]"
+
+    A[3 / 3] := y
+    A[1 + 2] := y
+    if A[1] = A[3] then 
+        write "✓ array access: A[ expr ]"
+    else
+        write "✗ array access: A[ expr ]"
+    
+    B[1] := x
+    B[3] := x
+    if B[1] = B[3] then 
+        write "✓ array declaration: A[+ .. +]"
+    else
+        write "✗ array declaration: A[+ .. +]"
+
+    C[-1] := x
+    C[2] := x
+    if C[-1] = C[2] then 
+        write "✓ array declaration: A[- .. +]"
+    else
+        write "✗ array declaration: A[- .. +]"
+
+    D[-1] := x
+    D[-3] := x
+    if D[-1] = D[-3] then 
+        write "✓ array declaration: A[- .. -]"
+    else
+        write "✗ array declaration: A[- .. -]"
+
+    E[1] := x
+    F[1] := x
+    if E[1] = F[1] then 
+        write "✓ multiple arrays in declaration"
+    else
+        write "✓ multiple arrays in declaration"
+
+    function accessIndex(A : Integer, start : Integer, end: Integer)
 
 }
