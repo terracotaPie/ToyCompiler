@@ -59,7 +59,11 @@
     }
 
     toggle : = false
-    PrintAssertEq( power ( 2 , 3 ) , 8 ) % test if 2^3 = 8
+
+    PrintAssertEq ( 1 , 1 ) % This should print OK
+    PrintAssertEq ( 1 , 2 ) % This should print BAD 1 =/= 2
+
+    PrintAssertEq ( power ( 2 , 3 ) , 8 ) % test if 2^3 = 8
 
     % Make sure NextChangingBool returns true on first run and false on second run
     if NextChangingBool then
