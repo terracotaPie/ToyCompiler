@@ -11,12 +11,12 @@
         write "Simple Procedure Ok"
     }
 
-    function func_with_args(n: Integer) {
+    function func_with_args(n: Integer) : Integer {
         write "Simple func Ok"
         return with n
     }
 
-    function func_without_args {
+    function func_without_args : Integer {
         write "Simple func Ok"
         return with 0
     }
