@@ -1,0 +1,15 @@
+% This file tests the usage of arrays including all forms of array 
+% declaration, positive and negative bounds.
+{
+    % test functions:
+    function testInt(actual : Integer, expected : Integer) : Boolean {
+        return actual = expected
+    }
+
+    function testBool(actual : Boolean, expected : Boolean) : Boolean {
+        return actual = expected
+    }
+
+
+    A[3] 
+}
