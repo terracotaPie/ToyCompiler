@@ -1,34 +1,50 @@
-% a program using recursive functions and procedures with and without parameters
-% include at least one nested procedure and one nested function declaration
 {
+    % a program using recursive functions and procedures with and without parameters
+    % include at least one nested procedure and one nested function declaration
+    %global variables
+    var global_counter : Integer
+
     procedure proc_with_args(n: Integer) {
-        write "Simple Procedure Ok"
+        if n = 0 then {
+            write "0 - exiting"
+        } else {
+            write n
+            proc_with_args(n - 1)
+        }
     }
 
     procedure proc_without_args {
-        write "Simple Procedure Ok"
+        if global_counter = 0 then
+            write "0 - exiting"
+        else {
+            write n
+            global_counter := global_counter - 1
+            proc_without_args
+        }
     }
 
-    function func_with_args(n: Integer) : Integer {
-        write "Simple func Ok"
-        return with n
+    function rec_power(n : Integer, p : Integer) : Integer {
+        if p = 1 then return with n
+        if p = 0 then return with 1
+        else return with n * rec_power(n, p - 1)
     }
 
     function func_without_args : Integer {
-        write "Simple func Ok"
-        return with 0
+        if global_counter = 0 then return with global_counter
+        global_counter := global_counter - 1
+        return with func_without_args
     }
 
     procedure func_nested(n : Integer) : Integer {
         function x : Integer {
             return with n
         }
-        x
+        write x
     }
 
     procedure proc_nested(n : Integer) {
         procedure x {
-            write "Simple proc nested Ok"
+            write n
         }
         x
     }
@@ -39,10 +55,27 @@
         else
             return with fib(n - 1) + fib(n - 2)
     }
+
+    write "Procedure with Arguments:"
     proc_with_args(10)
+
+    write "Procedure without Arguments:"
+    global_counter = 10
     proc_without_args
-    func_with_args(10)
-    func_without_args
+
+    write "Recursive Power: Expecting 10 ^ 4 = 1000"
+    write rec_power(10,4)
+
+    global_counter := 10
+    write "Recursive Function without Arguments: Expecting 0"
+    write func_without_args
+
+    write "Nested Function: Expecting 10"
     func_nested(10)
+
+    write "Nested Procedure: Expecting 10"
     proc_nested(10)
+
+    write "Fibonacci Function: fib(10) = 55"
+    write fib_rec(10)
 }
