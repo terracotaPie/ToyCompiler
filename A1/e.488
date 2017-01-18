@@ -1,8 +1,6 @@
-% This file tests the usage of arithmetic, logical, and comparison operators
-{
 % a program using recursive functions and procedures with and without parameters
 % include at least one nested procedure and one nested function declaration
-
+{
     procedure proc_with_args(n: Integer) {
         write "Simple Procedure Ok"
     }
