@@ -11,9 +11,9 @@
 
     % CASE 2: bounds integer .. integer inclusive 
     % ([+..+], [-..+], [-..-], note that [+..-] would be erroneous)
-    var B[1 .. 3] : Integer
-    var C[-1 .. 2] : Integer
-    var D[-3 .. -1] : Integer
+    var B[1 .. 2] : Integer
+    var C[-1 .. 0] : Integer
+    var D[-2 .. -1] : Integer
 
     % CASE 3: declare multiple arrays on same line
     var E[1], F[1] : Boolean
@@ -30,7 +30,8 @@
     y := 100
     bool := True
 
-    % TEST 1 A
+    % TEST 1 A 
+    % verify that we can access all elements of a case 1 array
     A[1] := x
     A[2] := x
     A[3] := x
@@ -40,6 +41,7 @@
         write "✗ array declaration: A[n]"
 
     % TEST 1 B
+    % verify that we can access by indexing via an expression
     A[3 / 3] := y
     A[1 + 2] := y
     if A[1] = A[3] then 
@@ -48,30 +50,34 @@
         write "✗ array access: A[ expr ]"
     
     % TEST 2 A
+    % verify that we can access all elements of a case 2 A array
     B[1] := x
-    B[3] := x
-    if B[1] = B[3] then 
+    B[2] := x
+    if B[1] = B[2] then 
         write "✓ array declaration: A[+ .. +]"
     else
         write "✗ array declaration: A[+ .. +]"
 
     % TEST 2 B
+    %% verify that we can access all elements of a case 2 B array
     C[-1] := x
-    C[2] := x
-    if C[-1] = C[2] then 
+    C[0] := x
+    if C[-1] = C[0] then 
         write "✓ array declaration: A[- .. +]"
     else
         write "✗ array declaration: A[- .. +]"
 
     % TEST 2 C
+    % verify that we can access all elements of a case 2 C array
     D[-1] := x
-    D[-3] := x
-    if D[-1] = D[-3] then 
+    D[-2] := x
+    if D[-1] = D[-2] then 
         write "✓ array declaration: A[- .. -]"
     else
         write "✗ array declaration: A[- .. -]"
 
     % TEST 3
+    % verify that we can access all elements of a case 3 array(s)
     E[1] := bool
     F[1] := bool
     if E[1] = F[1] then 
