@@ -59,26 +59,28 @@
             return with fib(n - 1) + fib(n - 2)
     }
 
+
+    % run tests
     write "Procedure with Arguments:"
     proc_with_args(10)
 
-    write "Procedure without Arguments:"
+    write newline, "Procedure without Arguments:"
     global_counter = 10
     proc_without_args
 
-    write "Recursive Power: Expecting 10 ^ 4 = 1000"
+    write newline, "Recursive Power: Expecting 10 ^ 4 = 1000"
     write rec_power(10,4)
 
     global_counter := 10
-    write "Recursive Function without Arguments: Expecting 0"
+    write newline, "Recursive Function without Arguments: Expecting 0"
     write func_without_args
 
-    write "Nested Function: Expecting 10"
+    write newline, "Nested Function: Expecting 10"
     func_nested(10)
 
-    write "Nested Procedure: Expecting 10"
+    write newline, "Nested Procedure: Expecting 10"
     proc_nested(10)
 
-    write "Fibonacci Function: fib(10) = 55"
+    write newline, "Fibonacci Function: fib(10) = 55"
     write fib_rec(10)
 }

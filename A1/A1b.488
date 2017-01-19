@@ -38,53 +38,53 @@
     A[2] := x
     A[3] := x
     if A[1] = A[2] and A[2] = A[3] then 
-        write "✓ array declaration: A[n]"
+        write "✓ array declaration: A[n]", newline
     else
-        write "✗ array declaration: A[n]"
+        write "✗ array declaration: A[n]", newline
 
     % TEST 1 B
     % verify that we can access by indexing via an expression
     A[3 / 3] := y
     A[1 + 2] := y
     if A[1] = A[3] then 
-        write "✓ array access: A[ expr ]"
+        write "✓ array access: A[ expr ]", newline
     else
-        write "✗ array access: A[ expr ]"
+        write "✗ array access: A[ expr ]", newline
     
     % TEST 2 A
     % verify that we can access all elements of a case 2 A array
     B[1] := x
     B[2] := x
     if B[1] = B[2] then 
-        write "✓ array declaration: A[+ .. +]"
+        write "✓ array declaration: A[+ .. +]", newline
     else
-        write "✗ array declaration: A[+ .. +]"
+        write "✗ array declaration: A[+ .. +]", newline
 
     % TEST 2 B
     %% verify that we can access all elements of a case 2 B array
     C[-1] := x
     C[0] := x
     if C[-1] = C[0] then 
-        write "✓ array declaration: A[- .. +]"
+        write "✓ array declaration: A[- .. +]", newline
     else
-        write "✗ array declaration: A[- .. +]"
+        write "✗ array declaration: A[- .. +]", newline
 
     % TEST 2 C
     % verify that we can access all elements of a case 2 C array
     D[-1] := x
     D[-2] := x
     if D[-1] = D[-2] then 
-        write "✓ array declaration: A[- .. -]"
+        write "✓ array declaration: A[- .. -]", newline
     else
-        write "✗ array declaration: A[- .. -]"
+        write "✗ array declaration: A[- .. -]", newline
 
     % TEST 3
     % verify that we can access all elements of a case 3 array(s)
     E[1] := bool
     F[1] := bool
     if E[1] = F[1] then 
-        write "✓ multiple arrays in declaration"
+        write "✓ multiple arrays in declaration", newline
     else
-        write "✗ multiple arrays in declaration"
+        write "✗ multiple arrays in declaration", newline
 
 }
