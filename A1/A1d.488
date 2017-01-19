@@ -1,4 +1,6 @@
-% program d
+% Contributors: Hong Zhi Yew
+%
+% This file tests using non-recursive functions and procedures with and without parameters
 {
     var glob_arr [ 5 ] : Integer
     var toggle : Boolean

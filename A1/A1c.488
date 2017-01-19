@@ -1,3 +1,6 @@
+% Contributors: Yu Sing Wong
+%
+% This file tests all forms of loop building and loop exit constructs.
 {
     % loop guard ✗ test
     var i : Integer

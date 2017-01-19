@@ -1,6 +1,9 @@
+% Contributors: Timur Borkhodoev 
+%
+% This file tests using recursive functions and procedures with and without parameters
+% including at least one nested procedure and one nested function declaration
 {
-    % a program using recursive functions and procedures with and without parameters
-    % include at least one nested procedure and one nested function declaration
+
     %global variables
     var global_counter : Integer
 
