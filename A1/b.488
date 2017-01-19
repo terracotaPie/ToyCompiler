@@ -23,7 +23,7 @@
     var bool : Boolean
 
 
-    % ---- Test declarations ----
+    % ---- Tests ----
 
     % array vals for testing
     x := 10
