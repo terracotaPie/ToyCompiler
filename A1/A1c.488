@@ -1,3 +1,6 @@
+% Contributors: Yu Sing Wong
+%
+% This file tests all forms of loop building and loop exit constructs.
 {
     % loop guard ✗ test
     var i : Integer
@@ -10,13 +13,13 @@
     l := 0
     
     while false do 
-        write "✗ while false" 
+        write "✗ while false", newline
 
     while i < -1 do
-        write "✗ while 0 < -1" 
+        write "✗ while 0 < -1", newline
 
     repeat {
-        write "✓ repeat until"
+        write "✓ repeat until", newline
     } until i = 0
     
     % loop guard success test
@@ -24,19 +27,19 @@
         write i
         i := i + 1
     }
-    write "✓ while loop"
+    write "✓ while loop", newline
 
     repeat {
-        write "repeat 2"
+        write "repeat 2", newline
         k := k + 1
     } until k = 5
-    write "✓ repeat loop"
+    write "✓ repeat loop", newline
     
     % Exit test
     while true do {
         exit
     }
-    write "✓ exit"
+    write "✓ exit", newline
     
     while true do {
         while true do {
@@ -45,13 +48,13 @@
             }
         }
     }
-    write "✓ exit integer"
+    write "✓ exit integer", newline
 
     while true do {
         j := j + 1
         exit when j = 7
     }
-    write "✓ exit expression"
+    write "✓ exit expression", newline
 
     while true do {
         while true do {
@@ -59,5 +62,5 @@
             exit 2 when l = 5
         }
     }
-    write "✓ exit integer when"
+    write "✓ exit integer when", newline
 }

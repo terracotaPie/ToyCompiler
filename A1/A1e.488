@@ -1,0 +1,86 @@
+% Contributors: Timur Borkhodoev 
+%
+% This file tests using recursive functions and procedures with and without parameters
+% including at least one nested procedure and one nested function declaration
+{
+
+    %global variables
+    var global_counter : Integer
+
+    procedure proc_with_args(n: Integer) {
+        if n = 0 then {
+            write "0 - exiting"
+        } else {
+            write n
+            proc_with_args(n - 1)
+        }
+    }
+
+    procedure proc_without_args {
+        if global_counter = 0 then
+            write "0 - exiting"
+        else {
+            write n
+            global_counter := global_counter - 1
+            proc_without_args
+        }
+    }
+
+    function rec_power(n : Integer, p : Integer) : Integer {
+        if p = 1 then return with n
+        if p = 0 then return with 1
+        else return with n * rec_power(n, p - 1)
+    }
+
+    function func_without_args : Integer {
+        if global_counter = 0 then return with global_counter
+        global_counter := global_counter - 1
+        return with func_without_args
+    }
+
+    procedure func_nested(n : Integer) : Integer {
+        function x : Integer {
+            return with n
+        }
+        write x
+    }
+
+    procedure proc_nested(n : Integer) {
+        procedure x {
+            write n
+        }
+        x
+    }
+
+    function fib_rec(n: Integer) : Integer {
+        if n = 1 or n = 2 then
+            return with 1
+        else
+            return with fib(n - 1) + fib(n - 2)
+    }
+
+
+    % run tests
+    write "Procedure with Arguments:"
+    proc_with_args(10)
+
+    write newline, "Procedure without Arguments:"
+    global_counter = 10
+    proc_without_args
+
+    write newline, "Recursive Power: Expecting 10 ^ 4 = 1000"
+    write rec_power(10,4)
+
+    global_counter := 10
+    write newline, "Recursive Function without Arguments: Expecting 0"
+    write func_without_args
+
+    write newline, "Nested Function: Expecting 10"
+    func_nested(10)
+
+    write newline, "Nested Procedure: Expecting 10"
+    proc_nested(10)
+
+    write newline, "Fibonacci Function: fib(10) = 55"
+    write fib_rec(10)
+}
