@@ -1,0 +1,12 @@
+The submitted file (using Markus) should contain:
+ 
+a) A README.A2 file that describes what each team member did for this assignment.
+
+b) Your csc488.cup file. We will use this file to build a parser and run that parser on our test cases.
+
+c) A design document that describes how you designed your csc488.cup file. 
+   Explain the issues that arose with the source language reference grammar and how you resolved those issues.
+
+d) A tests directory containing all of the test cases that you used to test your compiler. There should be two subdirectories:
+- tests/passing - tests for the correct operation of the parser (legal programs)
+- tests/failing - test to demonstrate handling of syntax errors (invalid programs)
