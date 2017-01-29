@@ -135,5 +135,88 @@ start with program;
  *
  *  GOES HERE
  */
-
+ 
 program		::=	;
+
+
+
+program: scope % main program
+statement: variable ’:’ ’=’ expression , % assignment
+’if’ expression ’then’ statement , % conditional statement
+’if’ expression ’then’ statement ’else’ statement ,
+’while’ expression ’do’ statement , % loop while expression is true
+’repeat’ statement ’until’ expression , % loop until expression is true
+’exit’ , % exit from containing loop
+’exit’ integer , % exit from integer loops
+’exit’ ’when’ expression , % exit from containing loop
+% when expression is true
+’exit’ integer ’when’ expression , % exit from integer loops
+% when expression is true
+’return’ ’with’ expression , % return from function
+’return’ , % return from a procedure
+’write’ output , % print to standard output
+’read’ input , % input from standard input
+procedurename , % call procedure
+procedurename ’(’ arguments ’)’ ,
+scope , % embedded scope
+statement statement % sequence of statements
+declaration: ’var’ variablenames ’:’ type , % declare variables
+’function’ functionname ’:’ type scope , % declare function
+’function’ functionname ’(’ parameters ’)’ ’:’ type scope ,
+’procedure’ procedurename scope , % declare procedure
+’procedure’ procedurename ’(’ parameters ’)’ scope ,
+declaration declaration % sequence of declarations
+variablenames: variablename , % declare scalar variable
+variablename ’[’ integer ’]’ , % declare one dimensional array
+% bounds 1 .. integer inclusive
+variablename ’[’ bound ’.’ ’.’ bound ’]’ , % declare one-dimensional array
+% bounds integer .. integer inclusive
+variablenames ’,’ variablenames % declare multiple variables
+bound integer , % positive integer bound
+’-’ integer % negative integer bound
+scope ’{’ declaration statement ’}’ , % define new scope
+’{’ statement ’}’ ,
+’{’ ’}’ % empty scope
+1
+output: expression , % integer expression to be printed
+text , % string constant to be printed
+’newline’ , % skip to new line
+output ’,’ output % output sequence
+input: variable , % input to this integer variable
+input ’,’ input % input sequence
+type: ’Integer’ , % integer type
+’Boolean’ % Boolean type
+arguments: expression , % actual parameter expression
+arguments ’,’ arguments % actual parameter sequence
+parameters: parametername ’:’ type , % declare formal parameter
+parameters ’,’ parameters % formal parameter sequence
+variable: variablename , % reference to scalar variable
+arrayname ’[’ expression ’]’ % reference to array element
+expression: integer , % integer literal constant
+’-’ expression , % unary minus
+expression ’+’ expression , % addition
+expression ’-’ expression , % subtraction
+expression ’*’ expression , % multiplication
+expression ’/’ expression , % division
+’true’ , % Boolean constant true
+’false’ , % Boolean constant false
+’not’ expression , % Boolean not
+expression ’and’ expression , % Boolean and
+expression ’or’ expression , % Boolean or
+expression ’=’ expression , % equality comparison
+expression ’not’ ’=’ expression , % inequality comparison
+expression ’<’ expression , % less than comparison
+expression ’<’ ’=’ expression , % less than or equal comparison
+expression ’>’ expression , % greater than comparison
+expression ’>’ ’=’ expression , % greater than or equal comparison
+’(’ expression ’)’ ,
+’(’ expression ’?’ expression ’:’ expression ’)’ , % conditional expression
+variable , % reference to variable
+functionname , % call of a function
+functionname ’(’ arguments ’)’ ,
+parametername % reference to a parameter
+variablename: identifier
+arrayname: identifier
+functionname: identifier
+parametername: identifier
+procedurename: identifier
