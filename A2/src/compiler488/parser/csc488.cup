@@ -95,8 +95,8 @@ terminal	READ, 	REPEAT,	RETURN,	NEWLINE,THEN,	UNTIL	  ;
 terminal	VAR,	WHEN,	WHILE,	WITHX,	WRITE 	  ;
 
 // Special-character terminals, no value attached
-terminal	L_PAREN	,R_PAREN,L_SQUARE, R_SQUARE, L_CURLEY, R_CURLEY	  ;
-terminal	EQUAL,	GREATER,LESS,	COMMA,  DOT, QUESTION, COLON	  ;
+terminal	L_PAREN	,R_PAREN, L_SQUARE, R_SQUARE, L_CURLEY, R_CURLEY	  ;
+terminal	EQUAL,	GREATER, LESS,	COMMA,  DOT, QUESTION, COLON	  ;
 terminal	PLUS,	MINUS,	TIMES,  DIVIDE	  ;
 
 // Terminals returned by the scanner with a value.
@@ -157,12 +157,6 @@ program
     ::=	scope
       ;
 
-scope
-    ::= L_CURLEY declaration statement R_CURLEY
-      | L_CURLEY statement R_CURLEY
-      | L_CURLEY R_CURLEY
-      ;
-
 statement
     ::=  variable COLON EQUAL expression
       | IF expression THEN statement
@@ -202,6 +196,12 @@ variablenames
 bound
     ::= INTCONST 
       | MINUS INTCONST 
+      ;
+
+scope
+    ::= L_CURLEY declaration statement R_CURLEY
+      | L_CURLEY statement R_CURLEY
+      | L_CURLEY R_CURLEY
       ;
 
 output
@@ -249,8 +249,7 @@ expression
       | expression AND expression
       | expression OR expression
       | expression EQUAL expression
-      | expression NOT expression
-      | expression NOT expression
+      | expression NOT EQUAL expression
       | expression LESS expression
       | expression LESS EQUAL expression
       | expression GREATER expression
