@@ -139,41 +139,46 @@ start with program;
 program ::
     =	scope
     ;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+statement ::
+    =  variable COLON EQUAL expression
+    | IF expression THEN statement
+    | IF expression THEN statement ELSE statement
+    | WHILE expression DO statement
+    | REPEAT statement UNTIL expression
+    | EXIT
+    | EXIT INTEGER
+    | EXIT WHEN expression
+    | EXIT INTEGER WHEN expression
+    | RETURN WITH expression
+    | RETUN
+    | WRITE output
+    | READ input
+    | procedurename
+    | procedurename L_PAREN arguments R_PAREN
+    | scope
+    | statement statement
+    ;
+declaration ::
+    = VAR variablenames COLON type
+    | FUNCTION functionname COLON type scope
+    | FUNCTION functionname L_PAREN parameters R_PAREN COLON type scope
+    | PROCEDURE procedurename scope
+    | PROCEDURE procedurename L_PAREN parameters R_PAREN scope
+    | declaration declaration
+    ;
+variablenames ::
+    = variablename
+    | variablename L_SQUARE INTEGER R_SQUARE
+    | variablename L_SQUARE bound DOT DOT bound R_SQUARE
+    | variablenames COMMA variblenames
+    ;
+bound ::
+    = INTEGER
+    | MINUS INTEGER
+    ;
 
 output ::
-    = expression 
+    = expression
     | text
     | NEWLINE
     | output COLON output
