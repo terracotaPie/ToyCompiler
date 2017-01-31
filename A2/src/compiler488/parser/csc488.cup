@@ -17,56 +17,56 @@ import java_cup.runtime.*;		// Must always import this.
  */
 parser code {:
 
-	String lastError  ;
-	
-    /* Override the report_error method so it will display the line and
-     * column of where the error occurred in the input as well as the
-     * reason for the error which is passed into the method in the
-     * String 'message'.
-     */
-    public void report_error(String message, Object info)
-	{
-	String st =  "Error"  ;
-   
-        if (info instanceof java_cup.runtime.Symbol)
-	    {
-            java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info)  ;
+  String lastError;
 
-	    /* s.left is supposed to hold the line number of the error.
-	     * s.right is supposed to hold the column number.
-	     */
-   
-            if (s.left >::= 0)				// Check line number.
-		{
-                st += " in line " + (s.left + 1)  ;
-                if (s.right >::= 0)			// Check column number.
-                    st += ", column " + (s.right + 1)  ;
-		}
-	    }
-	    st += ": " + message  ;
-        System.err.println (st)  ;
-        lastError= st  ;
-	}
-   
-    // Override the report_fatal_error method to use the report_error method.
-    public void report_fatal_error (String message, Object info) throws Exception
-	{
-        report_error (message, info)  ;
-        throw new Exception (lastError)  ;
-	}
-   
-   // version string for printing version in Main
-   public static final String version =
-     "Winter 2017"   ;
+  /* Override the report_error method so it will display the line and
+   * column of where the error occurred in the input as well as the
+   * reason for the error which is passed into the method in the
+   * String 'message'.
+   */
+  public void report_error(String message, Object info)
+  {
+    String st =  "Error";
 
-:}  ;
+    if (info instanceof java_cup.runtime.Symbol)
+    {
+      java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info)  ;
 
-/* User code components 3: initialization code.
- * If you want some code to be executed before the parser asks for the first
- * token, add it here.
- */
-init with {:
-:}  ;
+      /* s.left is supposed to hold the line number of the error.
+       * s.right is supposed to hold the column number.
+       */
+
+      if (s.left >::= 0)				// Check line number.
+      {
+        st += " in line " + (s.left + 1)  ;
+        if (s.right >::= 0)			// Check column number.
+          st += ", column " + (s.right + 1)  ;
+      }
+    }
+    st += ": " + message;
+    System.err.println (st);
+    lastError= st;
+  }
+
+  // Override the report_fatal_error method to use the report_error method.
+  public void report_fatal_error (String message, Object info) throws Exception
+  {
+    report_error (message, info)  ;
+    throw new Exception (lastError)  ;
+  }
+
+  // version string for printing version in Main
+  public static final String version =
+    "Winter 2017"   ;
+
+  :}  ;
+
+  /* User code components 3: initialization code.
+   * If you want some code to be executed before the parser asks for the first
+   * token, add it here.
+   */
+  init with {:
+    :}  ;
 
 /* User code components 4: scanner specification code.
  * If you need to override the way the parser asks the scanner for the
@@ -125,7 +125,23 @@ nonterminal arrayname;
 nonterminal functionname;
 nonterminal parametername;
 nonterminal procedurename;
-
+// added rules
+nonterminal operatorrule;
+nonterminal outputcolon;
+nonterminal argumentscolon;
+nonterminal inputcomma;
+nonterminal parameterscomma;
+nonterminal maybedeclaration;
+nonterminal maybestatement;
+nonterminal variablenamescomma;
+nonterminal outputcontents;
+nonterminal newlinestatement;
+nonterminal statementcontents;
+nonterminal moredeclaration;
+nonterminal declarationcontent;
+nonterminal expressioncontents;
+nonterminal expressiontimes;
+nonterminal expressionplus;
 // Non-terminals that have a value.
 // nonterminal type  nameList   ;
 
@@ -157,7 +173,7 @@ program
     ::=	scope
       ;
 
-statement
+statementcontents
     ::=  variable COLON EQUAL expression
       | IF expression THEN statement
       | IF expression THEN statement ELSE statement
@@ -174,87 +190,162 @@ statement
       | procedurename
       | procedurename L_PAREN arguments R_PAREN
       | scope
-      | statement statement
+      ;
+
+newlinestatement
+    ::= statement
+      |
+      ;
+
+statement
+    ::= statementcontents newlinestatement
+    ;
+declarationcontent
+    ::= VAR variablenames COLON type
+      | FUNCTION IDENT:fn COLON type scope
+        {: RESULT = new functionname(fn.identifierText); :}
+      | FUNCTION IDENT:fn L_PAREN parameters R_PAREN COLON type scope
+        {: RESULT = new functionname(fn.identifierText); :}
+      | PROCEDURE IDENT:pn scope
+        {: RESULT = new procedurename(pn.identifierText); :}
+      | PROCEDURE IDENT:pn L_PAREN parameters R_PAREN scope
+        {: RESULT = new procedurename(pn.identifierText); :}
+      ;
+
+moredeclaration
+    ::= declaration
+      |
       ;
 
 declaration
-    ::= VAR variablenames COLON type
-      | FUNCTION functionname COLON type scope
-      | FUNCTION functionname L_PAREN parameters R_PAREN COLON type scope
-      | PROCEDURE procedurename scope
-      | PROCEDURE procedurename L_PAREN parameters R_PAREN scope
-      | declaration declaration
+    ::= declarationcontent moredeclaration
+      ;
+
+variablenamescomma
+    ::= variablenames COMMA
       ;
 
 variablenames
-    ::= variablename
-      | variablename L_SQUARE INTEGER R_SQUARE
-      | variablename L_SQUARE bound DOT DOT bound R_SQUARE
-      | variablenames COMMA variablenames 
+    ::= IDENT 
+        {: RESULT = new variablename(vn.identifierText); :}
+      | IDENT:vn L_SQUARE INTEGER R_SQUARE
+        {: RESULT = new arrayname(vn.identifierText); :}
+      | IDENT:vn L_SQUARE bound DOT DOT bound R_SQUARE
+        {: RESULT = new arrayname(vn.identifierText); :}
+      | variablenamescomma variablenames 
       ;
 
 bound
     ::= INTCONST 
-      | MINUS INTCONST 
+      | MINUS INTCONST
+      ;
+
+maybedeclaration
+    ::= declaration
+      |
+      ;
+
+maybestatement
+    ::= maybedeclaration statement
+      |
       ;
 
 scope
-    ::= L_CURLEY declaration statement R_CURLEY
-      | L_CURLEY statement R_CURLEY
-      | L_CURLEY R_CURLEY
+    ::= L_CURLEY maybestatement R_CURLEY
       ;
 
-output
+outputcolon
+    ::= COLON output 
+      |
+      ;
+
+outputcontents
     ::= expression
       | TEXTCONST 
       | NEWLINE
-      | output COLON output
       ;
 
-input
-    ::= variable
-      | input COMMA input
-      ;
-
-type
-    ::= INTCONST 
-      | BOOLEAN
-      ;
-
-arguments
-    ::= expression
-      | arguments COLON arguments
-      ;
-
-parameters
-    ::= parametername COLON type
-      | parameters COMMA parameters
+output
+    ::= outputcontents outputcolon
       ;
 
 variable
     ::= variablename
       | arrayname L_SQUARE expression R_SQUARE
       ;
+      
+inputcomma
+    ::= COMMA input
+      |
+      ;
 
-expression
-    ::= INTCONST 
+input
+    ::= variable inputcomma
+      ;
+
+type
+    ::= INTEGER 
+      | BOOLEAN
+      ;
+
+argumentscolon
+    ::= COLON arguments
+      |
+      ;
+
+arguments
+    ::= expression argumentscolon
+      ;
+
+parameterscomma
+    ::= COMMA parameters 
+      |
+      ;
+
+parameters
+    ::= IDENT:pn COLON type parameterscomma
+        {: RESULT = new parametername(pn.identifierText); :}
+      ;
+
+operatorrule 
+    ::= PLUS expression
       | MINUS expression
-      | expression PLUS expression
-      | expression MINUS expression
-      | expression TIMES expression
-      | expression DIVIDE expression
+      | TIMES expression
+      | DIVIDE expression
+      | AND expression
+      | OR expression
+      | EQUAL expression
+      | NOT EQUAL expression
+      | LESS expression
+      | LESS EQUAL expression
+      | GREATER expression
+      | GREATER EQUAL expression
+      | NOT
+      ;
+ 
+expressiontimes
+    ::= expression TIMES
+      | expression DIVIDE
+      |
+      ;
+
+
+expressionplusminus
+    ::= expression PLUS
+      | expression MINUS
+      ;
+
+expressionparen
+    ::= L_PAREN expression R_PAREN
+      | expressioncontents
+      ;
+
+expressioncontents
+    ::= bound 
+      | expression operatorrule 
       | TRUE
       | FALSE
-      | NOT expression
-      | expression AND expression
-      | expression OR expression
-      | expression EQUAL expression
-      | expression NOT EQUAL expression
-      | expression LESS expression
-      | expression LESS EQUAL expression
-      | expression GREATER expression
-      | expression GREATER EQUAL expression
-      | L_PAREN expression R_PAREN
+      | expressionparen
       | L_PAREN expression QUESTION expression COLON expression R_PAREN
       | variable
       | functionname
@@ -262,22 +353,31 @@ expression
       | parametername
       ;
 
-variablename
-    ::= IDENT
+expressionnot
+    ::= NOT
+      |
       ;
 
-arrayname
-    ::= IDENT
+expressionand
+    ::= expression AND
+      |
       ;
 
-functionname
-    ::= IDENT
+expressionor
+    ::= expression OR
+      
+      | {}
       ;
 
-parametername
-    ::= IDENT
+expressioneq
+    ::= 
+expressionneg
+    ::=
+
+expressionpre
+    ::=
+      ; 
       ;
 
-procedurename
-    ::= IDENT
-      ;
+expression
+    ::= 
