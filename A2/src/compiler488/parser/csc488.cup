@@ -125,7 +125,6 @@ nonterminal arrayname;
 nonterminal functionname;
 nonterminal parametername;
 nonterminal procedurename;
-
 // added rules
 // ----
 nonterminal outputcolon;
@@ -138,15 +137,21 @@ nonterminal statements;
 nonterminal outputcontents;
 nonterminal moredeclaration;
 nonterminal declarationcontent;
-nonterminal conjunction,	negation	 ;
-nonterminal	arithexpn,	term,    	factor		;
-nonterminal	primary,	constant, compareexpn;	
+nonterminal conjunction;
+nonterminal negation;
+nonterminal	arithexpn;
+nonterminal term;
+nonterminal factor;
+nonterminal	primary;
+nonterminal constant;
+nonterminal compareexpn;	
 nonterminal statementexpression;
 nonterminal ifstatement;
 nonterminal ifelsestatement;
 nonterminal makevar;
 nonterminal statementcontent;
 nonterminal statementelse;
+
 // Non-terminals that have a value.
 // nonterminal type  nameList   ;
 
@@ -328,81 +333,9 @@ parameters
         {: RESULT = new parametername(pn.identifierText); :}
       ;
 
-/* operatorrule */ 
-/*     ::= PLUS expression */
-/*       | MINUS expression */
-/*       | TIMES expression */
-/*       | DIVIDE expression */
-/*       | AND expression */
-/*       | OR expression */
-/*       | EQUAL expression */
-/*       | NOT EQUAL expression */
-/*       | LESS expression */
-/*       | LESS EQUAL expression */
-/*       | GREATER expression */
-/*       | GREATER EQUAL expression */
-/*       | NOT */
-/*       ; */
- 
-/* expressiontimes */
-/*     ::= expression TIMES */
-/*       | expression DIVIDE */
-/*       | */
-/*       ; */
-
-
-/* expressionplusminus */
-/*     ::= expression PLUS */
-/*       | expression MINUS */
-/*       ; */
-
-/* expressionparen */
-/*     ::= L_PAREN expression R_PAREN */
-/*       | expressioncontents */
-/*       ; */
-
-/* expressioncontents */
-/*     ::= bound */ 
-/*       | expression operatorrule */ 
-/*       | TRUE */
-/*       | FALSE */
-/*       | expressionparen */
-/*       | L_PAREN expression QUESTION expression COLON expression R_PAREN */
-/*       | variable */
-/*       | functionname */
-/*       | functionname L_PAREN arguments R_PAREN */
-/*       | parametername */
-/*       ; */
-
-/* expressionnot */
-/*     ::= NOT */
-/*       | */
-/*       ; */
-
-/* expressionand */
-/*     ::= expression AND */
-/*       | */
-/*       ; */
-
-/* expressionor */
-/*     ::= expression OR */
-/*       | */
-/*       ; */
-
-/* expressioneq */
-/*     ::= */
-/*       ; */
-/* expressionneg */
-/*     ::= */
-/*       ; */
-
-/* expressionpre */
-/*     ::= */
-/*       ; */ 
- 
 
 expression
-    ::=	conjunction			// disjunctions, associate left-to-right
+    ::=	conjunction
 		  |	expression OR conjunction
 		  ;
 
@@ -412,12 +345,12 @@ conjunction
 		  ;
 
 negation	
-    ::=	compareexpn 			// negations
+    ::=	compareexpn
 		  |	NOT negation
 		  ;
 
 compareexpn	
-    ::=	arithexpn			// comparisons, do not associate
+    ::=	arithexpn
 		  |	arithexpn EQUAL arithexpn
 		  | arithexpn NOT EQUAL arithexpn
 		  |	arithexpn LESS arithexpn
@@ -427,34 +360,34 @@ compareexpn
 		  ;
 
 arithexpn	
-    ::=	term				// expressions, associate + , - left-to-right
+    ::=	term
 	  	|	arithexpn  PLUS  term
 	  	|	arithexpn  MINUS term
 	  	;
 
 term	
-    ::=	factor				// terms, associate * , /   left-to-right
+    ::=	factor
 		  |	term TIMES factor
 		  |	term DIVIDE factor
 		  ;
 
 factor		
-     ::=	primary				
-		 |	MINUS factor			// unary minus
-		 ;
+    ::=	primary				
+		  |	MINUS factor
+		  ;
 
 primary		
     ::=	constant
-		  |	variable
-		  | L_PAREN  expression  R_PAREN
-		  |	L_PAREN  expression QUESTION expression COLON expression R_PAREN
-		  |	IDENT L_PAREN argumentscolon R_PAREN
-		;
+      |	variable
+      | L_PAREN  expression  R_PAREN
+      |	L_PAREN  expression QUESTION expression COLON expression R_PAREN
+      |	IDENT L_PAREN argumentscolon R_PAREN
+      ;
 
 constant	
-    ::=	INTCONST	// integer constant
-		  |	TRUE		// constant true
-		  |	FALSE		// constant false
+    ::=	INTCONST
+		  |	TRUE
+		  |	FALSE
 		  ;
 
 variable
@@ -462,49 +395,3 @@ variable
 		  |	IDENT L_SQUARE expression R_SQUARE
 		  | IDENT L_SQUARE expression COMMA expression R_SQUARE
 		  ;
-/* addexpression */
-/*     ::= addexpression PLUS multexpression */
-/*       | addexpression MINUS multexpression */
-/*       ; */
-
-/* multexpression */
-/*     ::= multexpression TIMES bound */
-/*       | multexpression DIVIDE bound */
-/*       | bound */
-/*       ; */
-
-/* maybearithmetic */
-/*     ::= maybearithmetic PLUS multexpression */
-/*       | maybearithmetic MINUS multexpression */
-/*       | bound */
-/*       ; */
-
-
-
-/* expression */
-/*     ::= INTCONST */
-/*       | */
-/*       /1* | MINUS maybearithmetic *1/ */
-/*       /1* | maybearithmetic *1/ */
-/*       /1* | expression PLUS expression *1/ */
-/*       /1* | expression MINUS expression *1/ */
-/*       /1* | expression TIMES expression *1/ */
-/*       /1* | expression DIVIDE expression *1/ */
-/*       | TRUE */
-/*       | FALSE */
-/*       | NOT expression */
-/*       | expression AND expression */
-/*       | expression OR expression */
-/*       | expression EQUAL expression */
-/*       | expression NOT EQUAL expression */
-/*       | expression LESS expression */
-/*       | expression LESS EQUAL expression */
-/*       | expression GREATER expression */
-/*       | expression GREATER EQUAL expression */
-/*       | L_PAREN expression R_PAREN */
-/*       | L_PAREN QUESTION expression COLON expression R_PAREN */
-/*       | variable */
-/*       | functionname */
-/*       | functionname L_PAREN arguments R_PAREN */
-/*       | parametername */
-/*       ; */
