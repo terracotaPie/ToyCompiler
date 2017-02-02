@@ -2,7 +2,7 @@
 
 package compiler488.parser  ;
 
-import java_cup.runtime.*;		// Must always import this.
+import java_cup.runtime.*;    // Must always import this.
 
 /* User code components 1: action code components.
  * Code to be used inside the actions triggered when productions are matched.
@@ -12,7 +12,7 @@ import java_cup.runtime.*;		// Must always import this.
 // your code goes here
 //:}  ;
 
-/* User code components 2: parser code components. 
+/* User code components 2: parser code components.
  * Modifications to the default generated parser
  */
 parser code {:
@@ -36,10 +36,10 @@ parser code {:
        * s.right is supposed to hold the column number.
        */
 
-      if (s.left >::= 0)				// Check line number.
+      if (s.left >::= 0)        // Check line number.
       {
         st += " in line " + (s.left + 1)  ;
-        if (s.right >::= 0)			// Check column number.
+        if (s.right >::= 0)     // Check column number.
           st += ", column " + (s.right + 1)  ;
       }
     }
@@ -85,29 +85,29 @@ parser code {:
  * "left", "right", "nonassoc", "import", and "package".
  */
 
-// DEFINITIONS for CSC488S Source Language  Winter  2016/2017 
+// DEFINITIONS for CSC488S Source Language  Winter  2016/2017
 
-// Terminals returned by the scanner with no value attached.  
-terminal	AND,	OR,	NOT,	TRUE,	FALSE	  ;
-terminal 	BOOLEAN,INTEGER,FUNCTION,PROCEDURE	  ;
-terminal	DO,	ELSE,	EXIT,   IF	  ;
-terminal	READ, 	REPEAT,	RETURN,	NEWLINE,THEN,	UNTIL	  ;
-terminal	VAR,	WHEN,	WHILE,	WITHX,	WRITE 	  ;
+// Terminals returned by the scanner with no value attached.
+terminal  AND,  OR, NOT,  TRUE, FALSE   ;
+terminal  BOOLEAN,INTEGER,FUNCTION,PROCEDURE    ;
+terminal  DO, ELSE, EXIT,   IF    ;
+terminal  READ,   REPEAT, RETURN, NEWLINE,THEN, UNTIL   ;
+terminal  VAR,  WHEN, WHILE,  WITHX,  WRITE     ;
 
 // Special-character terminals, no value attached
-terminal	L_PAREN	,R_PAREN, L_SQUARE, R_SQUARE, L_CURLEY, R_CURLEY	  ;
-terminal	EQUAL,	GREATER, LESS,	COMMA,  DOT, QUESTION, COLON	  ;
-terminal	PLUS,	MINUS,	TIMES,  DIVIDE	  ;
+terminal  L_PAREN ,R_PAREN, L_SQUARE, R_SQUARE, L_CURLEY, R_CURLEY    ;
+terminal  EQUAL,  GREATER, LESS,  COMMA,  DOT, QUESTION, COLON    ;
+terminal  PLUS, MINUS,  TIMES,  DIVIDE    ;
 
 // Terminals returned by the scanner with a value.
-terminal String  IDENT	  ;
-terminal Integer INTCONST	  ;
-terminal String  TEXTCONST	  ;
+terminal String  IDENT    ;
+terminal Integer INTCONST   ;
+terminal String  TEXTCONST    ;
 
 // Non-terminals that have no value.
 // nonterminal xxx
 
-nonterminal	program;
+nonterminal program;
 nonterminal statement;
 nonterminal declaration;
 nonterminal variablenames;
@@ -139,12 +139,12 @@ nonterminal moredeclaration;
 nonterminal declarationcontent;
 nonterminal conjunction;
 nonterminal negation;
-nonterminal	arithexpn;
+nonterminal arithmetic;
 nonterminal term;
 nonterminal factor;
-nonterminal	primary;
+nonterminal primary;
 nonterminal constant;
-nonterminal compareexpn;	
+nonterminal comparison;
 nonterminal statementexpression;
 nonterminal ifstatement;
 nonterminal ifelsestatement;
@@ -160,7 +160,7 @@ nonterminal statementelse;
 // commented out.
 //
 //precedence right PLUS, MINUS  ;
-//precedence right TIMES, DIVIDE;		// Higher precedence.
+//precedence right TIMES, DIVIDE;   // Higher precedence.
 
 // The grammar section.
 
@@ -180,7 +180,7 @@ start with program  ;
  */
 
 program
-    ::=	scope
+    ::= scope
       ;
 
 ifstatement
@@ -189,7 +189,7 @@ ifstatement
       ;
 
 ifelsestatement
-    ::= IF expression THEN statementelse ELSE statementelse 
+    ::= IF expression THEN statementelse ELSE statementelse
       ;
 
 statementelse
@@ -209,8 +209,8 @@ statementcontent
     ::= statementexpression expression
       | WHILE expression DO statementelse
       | EXIT
-      | EXIT INTCONST 
-      | RETURN 
+      | EXIT INTCONST
+      | RETURN
       | WRITE output
       | READ input
       | procedurename
@@ -254,7 +254,7 @@ variablenamescomma
        ;
 
 makevar
-    ::= IDENT:vn 
+    ::= IDENT:vn
         {: RESULT = new variablename(vn.identifierText); :}
       | IDENT:vn L_SQUARE INTEGER R_SQUARE
         {: RESULT = new arrayname(vn.identifierText); :}
@@ -267,7 +267,7 @@ variablenames
       ;
 
 bound
-    ::= INTCONST 
+    ::= INTCONST
       | MINUS INTCONST
       ;
 
@@ -281,13 +281,13 @@ scope
       ;
 
 outputcolon
-    ::= COLON output 
+    ::= COLON output
       |
       ;
 
 outputcontents
     ::= expression
-      | TEXTCONST 
+      | TEXTCONST
       | NEWLINE
       ;
 
@@ -296,10 +296,10 @@ output
       ;
 
 variable
-    ::= variablename 
+    ::= variablename
       | variablename L_SQUARE expression R_SQUARE
       ;
-      
+
 inputcomma
     ::= COMMA input
       |
@@ -310,7 +310,7 @@ input
       ;
 
 type
-    ::= INTEGER 
+    ::= INTEGER
       | BOOLEAN
       ;
 
@@ -324,7 +324,7 @@ arguments
       ;
 
 parameterscomma
-    ::= COMMA parameters 
+    ::= COMMA parameters
       |
       ;
 
@@ -335,63 +335,63 @@ parameters
 
 
 expression
-    ::=	conjunction
-		  |	expression OR conjunction
-		  ;
-
-conjunction
-     ::=	negation
-		  |	conjunction AND negation
-		  ;
-
-negation	
-    ::=	compareexpn
-		  |	NOT negation
-		  ;
-
-compareexpn	
-    ::=	arithexpn
-		  |	arithexpn EQUAL arithexpn
-		  | arithexpn NOT EQUAL arithexpn
-		  |	arithexpn LESS arithexpn
-		  |	arithexpn LESS EQUAL arithexpn
-		  |	arithexpn GREATER arithexpn
-		  |	arithexpn GREATER EQUAL arithexpn
-		  ;
-
-arithexpn	
-    ::=	term
-	  	|	arithexpn  PLUS  term
-	  	|	arithexpn  MINUS term
-	  	;
-
-term	
-    ::=	factor
-		  |	term TIMES factor
-		  |	term DIVIDE factor
-		  ;
-
-factor		
-    ::=	primary				
-		  |	MINUS factor
-		  ;
-
-primary		
-    ::=	constant
-      |	variable
-      | L_PAREN  expression  R_PAREN
-      |	L_PAREN  expression QUESTION expression COLON expression R_PAREN
-      |	IDENT L_PAREN argumentscolon R_PAREN
+    ::= conjunction
+      | expression OR conjunction
       ;
 
-constant	
-    ::=	INTCONST
-		  |	TRUE
-		  |	FALSE
-		  ;
+conjunction
+     ::=  negation
+      | conjunction AND negation
+      ;
+
+negation
+    ::= comparison
+      | NOT negation
+      ;
+
+comparison
+    ::= arithmetic
+      | arithmetic EQUAL arithmetic
+      | arithmetic NOT EQUAL arithmetic
+      | arithmetic LESS arithmetic
+      | arithmetic LESS EQUAL arithmetic
+      | arithmetic GREATER arithmetic
+      | arithmetic GREATER EQUAL arithmetic
+      ;
+
+arithmetic
+    ::= term
+      | arithmetic PLUS term
+      | arithmetic MINUS term
+      ;
+
+term
+    ::= factor
+      | term TIMES factor
+      | term DIVIDE factor
+      ;
+
+factor
+    ::= primary
+      | MINUS factor
+      ;
+
+primary
+    ::= constant
+      | variable
+      | L_PAREN expression R_PAREN
+      | L_PAREN expression QUESTION expression COLON expression R_PAREN
+      | IDENT L_PAREN argumentscolon R_PAREN
+      ;
+
+constant
+    ::= INTCONST
+      | TRUE
+      | FALSE
+      ;
 
 variable
-    ::=	IDENT
-		  |	IDENT L_SQUARE expression R_SQUARE
-		  | IDENT L_SQUARE expression COMMA expression R_SQUARE
-		  ;
+    ::= IDENT
+      | IDENT L_SQUARE expression R_SQUARE
+      | IDENT L_SQUARE expression COMMA expression R_SQUARE
+      ;
