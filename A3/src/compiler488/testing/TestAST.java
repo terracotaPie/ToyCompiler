@@ -13,6 +13,8 @@ package compiler488.testing;
 
 import compiler488.ast.stmt.Scope;
 import compiler488.parser.*;
+import java_cup.runtime.Symbol;
+
 import java.io.*;
 
 
@@ -38,7 +40,8 @@ class TestAST {
 	
 	static public void PrintAST (File file) throws Exception {
 		Parser p = new Parser(new Lexer(new FileReader(file)));
-		Scope s = (Scope) p.parse().value;
+		Symbol q = p.parse();
+		Scope s = (Scope) q.value;
 		/*  Print the entire AST from it's root */
 		s.printOn(System.out, 0);		
 	}

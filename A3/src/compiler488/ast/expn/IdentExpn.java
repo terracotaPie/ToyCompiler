@@ -6,7 +6,7 @@ import compiler488.ast.Readable;
  *  References to a scalar variable.
  */
 public class IdentExpn extends Expn implements Readable
-    {
+{
     private String ident;  	// name of the identifier
 
     /**

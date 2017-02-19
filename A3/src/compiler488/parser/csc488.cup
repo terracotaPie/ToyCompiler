@@ -1,8 +1,13 @@
+//   Date: 2017/02/01 21:56:02  
 // Package and import specifications section.
 
 package compiler488.parser;
 
 import java_cup.runtime.*;		// Must always import this.
+import compiler488.ast.*;
+import compiler488.ast.decl.*;
+import compiler488.ast.stmt.*;
+import compiler488.ast.expn.*;
 
 /* User code components 1: action code components.
  * Code to be used inside the actions triggered when productions are matched.
@@ -19,51 +24,52 @@ parser code {:
 
 	String lastError;
 	
-	/* Override the report_error method so it will display the line and
-	 * column of where the error occurred in the input as well as the
-	 * reason for the error which is passed into the method in the
-	 * String 'message'.
-	 * @param message  error message to print
-	 * @param info	 symbol containing line/column numbers
-	 */
-	public void report_error(String message, Object info)
+    /** Override the report_error method so it will display the line and
+     * column of where the error occurred in the input as well as the
+     * reason for the error which is passed into the method in the
+     * String 'message'.
+     * @param message  error message to print
+     * @param info     symbol containing line/column numbers
+     */
+    public void report_error(String message, Object info)
 	{
 	String st =  "Error";
    
-		if (info instanceof java_cup.runtime.Symbol)
-		{
-			java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
+        if (info instanceof java_cup.runtime.Symbol)
+	    {
+            java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
 
-		/* s.left is supposed to hold the line number of the error.
-		 * s.right is supposed to hold the column number.
-			 * If either is < 0 the parser may have run off the end of the program
-			 * and a Syntax Error message without line number may be printed.
-		 */
+	    /* s.left is supposed to hold the line number of the error.
+	     * s.right is supposed to hold the column number.
+             * If either is < 0 the parser may have run off the end of the program
+             * and a Syntax Error message without line number may be printed.
+	     */
    
-			if (s.left >= 0)				// Check line number.
-			{
-				st += " in line " + (s.left + 1);
-				if (s.right >= 0)			// Check column number.
-					st += ", column " + (s.right + 1);
-			}
-			else
-			   st += " at end of input " ;
+            if (s.left >= 0)				// Check line number.
+		{
+                st += " in line " + (s.left + 1);
+                if (s.right >= 0)			// Check column number.
+                    st += ", column " + (s.right + 1);
 		}
-		st += ": " + message;
-		System.err.println (st);
-		lastError = st;
+            else
+               st += " at end of input " ;
+           }
+	    st += ": " + message;
+        System.err.println (st);
+        lastError = st;
 	}
    
-	// Override the report_fatal_error method to use the report_error method.
-	/** @throws SyntaxErrorException						*/
-	public void report_fatal_error (String message, Object info) throws SyntaxErrorException
+    /** Override the report_fatal_error method to use the report_error method. */
+    /** @throws SyntaxErrorException						*/
+    public void report_fatal_error (String message, Object info) throws SyntaxErrorException
 	{
-		report_error (message, info);
-		throw new SyntaxErrorException (lastError);
+        report_error (message, info);
+/*        throw new SyntaxErrorException (lastError); */
 	}
    
-	// version string for printing version in Main
-	public static final String version = "Winter 2017" ;
+   /** version string for printing version in Main */
+   public static final String version =
+     " $Revision: 1.7 $ $Date: 2012/02/08 21:56:02 $Author: dw $" ;
 
 :};
 
@@ -91,7 +97,7 @@ init with {:
  * "left", "right", "nonassoc", "import", and "package".
  */
 
-// DEFINITIONS for CSC488S Source Language  Winter  2017 
+// DEFINITIONS for CSC488S Source Language  Winter  2011/2012 
 
 // Terminals returned by the scanner with no value attached.  
 terminal	AND,	OR,	NOT,	TRUE,	FALSE	;
@@ -113,13 +119,22 @@ terminal String  TEXTCONST	;
 // Non-terminals that have no value.
 // nonterminal xxx
 
-nonterminal	program,	statement,	declaration,	scope	;
-nonterminal	statements,	declarations,	matchedStatement, unmatchedStatement ;
-nonterminal	variablenames,		output			;
-nonterminal	type,  	arguments,	parameters,	variable	;
-nonterminal 	expression,	variablename 			;
+nonterminal	program;
+nonterminal compiler488.ast.stmt.Stmt statement;
+nonterminal compiler488.ast.decl.Declaration declaration;
+nonterminal compiler488.ast.stmt.Scope scope	;
+nonterminal	ASTList<compiler488.ast.stmt.Stmt> statements;
+nonterminal ASTList<compiler488.ast.decl.Declaration> declarations;
+nonterminal matchedStatement, unmatchedStatement ;
+nonterminal	ASTList<DeclarationPart> variablenames;
+nonterminal output			;
+nonterminal compiler488.ast.type.Type	type;
+nonterminal arguments,	parameters,	variable	;
+nonterminal 	expression;
+nonterminal compiler488.ast.decl.DeclarationPart variablename 			;
 
-nonterminal	inputs, outputs, bound ;
+nonterminal	inputs, outputs;
+nonterminal Integer bound ;
 nonterminal	procedureCall, parameter, conjunction, negation, compareExpn ;
 nonterminal	arithExpn, term, factor, primary, constant ;
 
@@ -128,7 +143,7 @@ nonterminal	arithExpn, term, factor, primary, constant ;
 
 // PLEASE NOTE: your grammar can not use the 'precedence'
 // feature of java-cup. The lines below should remain
-// commented out.
+// commented.
 //
 //precedence left PLUS, MINUS;
 //precedence left TIMES, DIVIDE;		// Higher precedence.
@@ -145,19 +160,32 @@ start with program;
  * reads one more token before it will act on the production.
  */
 
-program		::=	scope	;				// the main program
+program		::=	scope					// the main program
+                {: RESULT = new compiler488.ast.stmt.Program(); :}
+         ;
 
-scope		::=	L_CURLEY  declarations statements  R_CURLEY  	// scope with declarations and statements
+scope		::=	L_CURLEY  declarations:dcs statements:sts  R_CURLEY  	// scope with declarations and statements
+                {: RESULT = new compiler488.ast.stmt.Scope();
+                 RESULT.setDeclarations(dcs);
+                 RESULT.setStatements(sts); :}
 		|	L_CURLEY statements  R_CURLEY 		// scope with statments only
 		|	L_CURLEY  R_CURLEY			// empty scope
 		;
 
-statements	::=	statement						// sequence of statements
-		|	statements statement
+statements	::=	statement:s						// sequence of statements
+        {: RESULT = new ASTList<compiler488.ast.stmt.Stmt>();
+           RESULT.addLast(s); :}
+		|	statements:ss statement:s
+		{: RESULT = ss;
+		   RESULT.addLast(s); :}
 		;
 
-declarations	::=	declaration						// sequence of declarations
-		|	declarations declaration
+declarations	::=	declaration:d						// sequence of declarations
+        {: RESULT = new ASTList<compiler488.ast.decl.Declaration>();
+           RESULT.addLast(d); :}
+		|	declarations:ds declaration:d
+        {: RESULT = ds;
+           RESULT.addLast(d); :}
 		;
 
 statement	::=	matchedStatement
@@ -188,28 +216,51 @@ procedureCall	::=	IDENT 							// call procedure with no parameters
 		|	IDENT L_PAREN arguments R_PAREN  			// call procedure with parameters
 		;
 
-declaration	::=	VAR variablenames COLON type			// declare scalar/array variables
+declaration	::=	VAR variablenames:vn COLON type:t			// declare scalar/array variables
+        {: RESULT = new MultiDeclarations();
+           ((MultiDeclarations)RESULT).setElements(vn);
+           RESULT.setType(t); :}
 		|	FUNCTION IDENT COLON type scope			// declare function
 		|	FUNCTION  IDENT L_PAREN parameters R_PAREN COLON type scope
 		|	PROCEDURE IDENT scope			//  declare procedure
 		|	PROCEDURE IDENT L_PAREN parameters R_PAREN scope
 		;
 
-variablenames	::=	variablename  				// list of variables being declared
-		|	variablenames COMMA variablename 
+variablenames	::=	variablename:v 				// list of variables being declared
+        {: RESULT = new ASTList<DeclarationPart>();
+           RESULT.addLast(v); :}
+		|	variablenames:vn COMMA variablename:v
+		{: RESULT = vn;
+		   RESULT.addLast(v); :}
 		;
 
-variablename	::=	IDENT 						// scalar variable
-		|	IDENT L_SQUARE INTCONST R_SQUARE		// array variable with upper bound
-		|	IDENT L_SQUARE bound DOT DOT bound  R_SQUARE	// array variable with upper/lower bounds
+variablename	::=	IDENT:n 						// scalar variable
+        {: RESULT = new DeclarationPart();
+           RESULT.setName(n); :}
+		|	IDENT:n L_SQUARE INTCONST:s R_SQUARE		// array variable with upper bound
+        {: RESULT = new ArrayDeclPart();
+           RESULT.setName(n);
+           ((ArrayDeclPart)RESULT).setSize(s);
+           ((ArrayDeclPart)RESULT).setLowerBoundary(0);
+           ((ArrayDeclPart)RESULT).setUpperBoundary(s); :}
+		|	IDENT:n L_SQUARE bound:l DOT DOT bound:u  R_SQUARE	// array variable with upper/lower bounds
+        {: RESULT = new ArrayDeclPart();
+           RESULT.setName(n);
+           ((ArrayDeclPart)RESULT).setSize(l - u + 1);
+           ((ArrayDeclPart)RESULT).setLowerBoundary(l);
+           ((ArrayDeclPart)RESULT).setUpperBoundary(u); :}
 		;
 
-bound		::=	INTCONST					// positive array bound
-		|	MINUS INTCONST					// negative array bound
+bound		::=	INTCONST:i										// positive array bound
+            {: RESULT = i ;:}
+		|	MINUS INTCONST:i // negative array bound
+		    {: RESULT = -i; :}
 		;
 
 type		::=	INTEGER			// integer type
+        {: RESULT = new compiler488.ast.type.IntegerType(); :}
 		|	BOOLEAN			// boolean type
+        {: RESULT = new compiler488.ast.type.BooleanType(); :}
 		;
 
 outputs		::=	output			// list of output expressions
@@ -283,8 +334,8 @@ constant	::=	INTCONST	// integer constant
 		|	FALSE		// constant false
 		;
 
-variable	::=	IDENT					// scalar variable or function call
-		|	IDENT L_SQUARE expression R_SQUARE	// element of an array
+variable	::=	IDENT 					// scalar variable or function call
+		|	IDENT L_SQUARE expression R_SQUARE 	// element of an array
 		;
 
 
