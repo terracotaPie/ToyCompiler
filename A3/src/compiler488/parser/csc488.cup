@@ -129,7 +129,9 @@ nonterminal matchedStatement, unmatchedStatement ;
 nonterminal ASTList<DeclarationPart> variablenames;
 nonterminal output;
 nonterminal compiler488.ast.type.Type type;
-nonterminal arguments, parameters, variable ;
+nonterminal arguments;
+nonterminal parameters;
+nonterminal variable;
 nonterminal expression;
 nonterminal compiler488.ast.decl.DeclarationPart variablename      ;
 
@@ -219,8 +221,17 @@ statement
     ;
 
 matchedStatement
-  ::= variable COLON EQUAL expression
-    | IF expression THEN matchedStatement ELSE matchedStatement
+  ::= variable:var COLON EQUAL expression:exp
+      {:
+        // TODO: type checking?
+        RESULT = compiler488.ast.stmt.AssignStmt();
+        RESULT.setLVal(var);
+        RESULT.setRVal(exp);
+      :}
+    | IF expression:exp THEN matchedStatement:s1 ELSE matchedStatement:s2
+      {:
+        // TODO: if exp then s1 else s2
+      :}
     | WHILE expression DO statement
     | REPEAT statement UNTIL expression
     | EXIT
