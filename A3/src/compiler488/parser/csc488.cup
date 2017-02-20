@@ -1,9 +1,9 @@
-//   Date: 2017/02/01 21:56:02  
-// Package and import specifications section.
+ //  Date: 2017/02/01 21:56:02
+ // Package and import specifications section.
 
 package compiler488.parser;
 
-import java_cup.runtime.*;		// Must always import this.
+import java_cup.runtime.*;  // Must always import this.
 import compiler488.ast.*;
 import compiler488.ast.decl.*;
 import compiler488.ast.stmt.*;
@@ -22,51 +22,51 @@ import compiler488.ast.expn.*;
  */
 parser code {:
 
-	String lastError;
-	
+String lastError;
+
     /** Override the report_error method so it will display the line and
      * column of where the error occurred in the input as well as the
      * reason for the error which is passed into the method in the
      * String 'message'.
-     * @param message  error message to print
-     * @param info     symbol containing line/column numbers
+     * @param message error message to print
+     * @param info    symbol containing line/column numbers
      */
     public void report_error(String message, Object info)
-	{
-	String st =  "Error";
-   
+  {
+  String st = "Error";
+
         if (info instanceof java_cup.runtime.Symbol)
-	    {
+      {
             java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
 
-	    /* s.left is supposed to hold the line number of the error.
-	     * s.right is supposed to hold the column number.
+      /* s.left is supposed to hold the line number of the error.
+       * s.right is supposed to hold the column number.
              * If either is < 0 the parser may have run off the end of the program
              * and a Syntax Error message without line number may be printed.
-	     */
-   
-            if (s.left >= 0)				// Check line number.
-		{
+       */
+
+            if (s.left >= 0)  // Check line number.
+    {
                 st += " in line " + (s.left + 1);
-                if (s.right >= 0)			// Check column number.
+                if (s.right >= 0)  // Check column number.
                     st += ", column " + (s.right + 1);
-		}
+    }
             else
                st += " at end of input " ;
            }
-	    st += ": " + message;
+      st += ": " + message;
         System.err.println (st);
         lastError = st;
-	}
-   
+  }
+
     /** Override the report_fatal_error method to use the report_error method. */
-    /** @throws SyntaxErrorException						*/
+    /** @throws SyntaxErrorException           */
     public void report_fatal_error (String message, Object info) throws SyntaxErrorException
-	{
+  {
         report_error (message, info);
-/*        throw new SyntaxErrorException (lastError); */
-	}
-   
+/*       throw new SyntaxErrorException (lastError); */
+  }
+
    /** version string for printing version in Main */
    public static final String version =
      " $Revision: 1.7 $ $Date: 2012/02/08 21:56:02 $Author: dw $" ;
@@ -82,7 +82,7 @@ init with {:
 
 /* User code components 4: scanner specification code.
  * If you need to override the way the parser asks the scanner for the
- * next token, put your preferred method here.  Uncomment the line following
+ * next token, put your preferred method here. Uncomment the line following
  * this comment, replace the line after that with your code, and uncomment
  * the line after that.
  */
@@ -92,250 +92,305 @@ init with {:
 
 /* Symbol lists section.
  * The names of terminals and non-terminals are not allowed to be CUP
- * reserved words.  These include "code", "action", "parser", "terminal",
+ * reserved words. These include "code", "action", "parser", "terminal",
  * "non", "nonterminal", "init", "scan", "with", "start", "precedence",
  * "left", "right", "nonassoc", "import", and "package".
  */
 
-// DEFINITIONS for CSC488S Source Language  Winter  2011/2012 
+// DEFINITIONS for CSC488S Source Language Winter 2011/2012
 
-// Terminals returned by the scanner with no value attached.  
-terminal	AND,	OR,	NOT,	TRUE,	FALSE	;
-terminal 	BOOLEAN,INTEGER,FUNCTION,PROCEDURE	;
-terminal	DO,	ELSE,	EXIT,   IF	;
-terminal	READ, 	REPEAT,	RETURN,	NEWLINE,THEN,	UNTIL	;
-terminal	VAR,	WHEN,	WHILE,	WITHX,	WRITE 	;
+// Terminals returned by the scanner with no value attached.
+terminal AND, OR, NOT, TRUE, FALSE ;
+terminal  BOOLEAN,INTEGER,FUNCTION,PROCEDURE ;
+terminal DO, ELSE, EXIT,  IF ;
+terminal READ,  REPEAT, RETURN, NEWLINE,THEN, UNTIL ;
+terminal VAR, WHEN, WHILE, WITHX, WRITE  ;
 
 // Special-character terminals, no value attached
-terminal	L_PAREN	,R_PAREN,L_SQUARE, R_SQUARE, L_CURLEY, R_CURLEY	;
-terminal	EQUAL,	GREATER,LESS,	COMMA,  DOT, QUESTION, COLON	;
-terminal	PLUS,	MINUS,	TIMES,  DIVIDE	;
+terminal L_PAREN ,R_PAREN,L_SQUARE, R_SQUARE, L_CURLEY, R_CURLEY ;
+terminal EQUAL, GREATER,LESS, COMMA, DOT, QUESTION, COLON ;
+terminal PLUS, MINUS, TIMES, DIVIDE ;
 
 // Terminals returned by the scanner with a value.
-terminal String  IDENT	;
-terminal Integer INTCONST	;
-terminal String  TEXTCONST	;
+terminal String IDENT ;
+terminal Integer INTCONST ;
+terminal String TEXTCONST ;
 
 // Non-terminals that have no value.
 // nonterminal xxx
 
-nonterminal	program;
+nonterminal program;
 nonterminal compiler488.ast.stmt.Stmt statement;
 nonterminal compiler488.ast.decl.Declaration declaration;
-nonterminal compiler488.ast.stmt.Scope scope	;
-nonterminal	ASTList<compiler488.ast.stmt.Stmt> statements;
+nonterminal compiler488.ast.stmt.Scope scope ;
+nonterminal ASTList<compiler488.ast.stmt.Stmt> statements;
 nonterminal ASTList<compiler488.ast.decl.Declaration> declarations;
 nonterminal matchedStatement, unmatchedStatement ;
-nonterminal	ASTList<DeclarationPart> variablenames;
-nonterminal output			;
-nonterminal compiler488.ast.type.Type	type;
-nonterminal arguments,	parameters,	variable	;
-nonterminal 	expression;
-nonterminal compiler488.ast.decl.DeclarationPart variablename 			;
+nonterminal ASTList<DeclarationPart> variablenames;
+nonterminal output;
+nonterminal compiler488.ast.type.Type type;
+nonterminal arguments, parameters, variable ;
+nonterminal expression;
+nonterminal compiler488.ast.decl.DeclarationPart variablename      ;
 
-nonterminal	inputs, outputs;
+nonterminal inputs, outputs;
 nonterminal Integer bound ;
-nonterminal	procedureCall, parameter, conjunction, negation, compareExpn ;
-nonterminal	arithExpn, term, factor, primary, constant ;
+nonterminal procedureCall, parameter, conjunction, negation, compareExpn ;
+nonterminal compiler488.expn.BinaryExpon arithExpn;
+nonterminal term, factor, primary, constant ;
 
 // Non-terminals that have a value.
-// nonterminal type  nameList ;
+// nonterminal type nameList ;
 
 // PLEASE NOTE: your grammar can not use the 'precedence'
 // feature of java-cup. The lines below should remain
 // commented.
 //
 //precedence left PLUS, MINUS;
-//precedence left TIMES, DIVIDE;		// Higher precedence.
-precedence   left ELSE ;
+//precedence left TIMES, DIVIDE;  // Higher precedence.
+precedence  left ELSE ;
 
-// The grammar section.
+ // The grammar section.
 
-// This specifies the initial symbol of the grammar.
+ // This specifies the initial symbol of the grammar.
 start with program;
 
 /* Notice that sometimes the action must be inside the production rule,
- * not after it.  This is a subtle yet significant difference from YACC.
- * This is because the CUP parser is looking ahead one token.  It ALWAYS
+ * not after it. This is a subtle yet significant difference from YACC.
+ * This is because the CUP parser is looking ahead one token. It ALWAYS
  * reads one more token before it will act on the production.
  */
 
-program		::=	scope					// the main program
-                {: RESULT = new compiler488.ast.stmt.Program(); :}
-         ;
+program
+  ::= scope
+      {:
+        RESULT = new compiler488.ast.stmt.Program();
+      :}
+    ;
 
-scope		::=	L_CURLEY  declarations:dcs statements:sts  R_CURLEY  	// scope with declarations and statements
-                {: RESULT = new compiler488.ast.stmt.Scope();
-                 RESULT.setDeclarations(dcs);
-                 RESULT.setStatements(sts); :}
-		|	L_CURLEY statements  R_CURLEY 		// scope with statments only
-		|	L_CURLEY  R_CURLEY			// empty scope
-		;
+scope
+  ::= L_CURLEY declarations:dcs statements:sts R_CURLEY
+      {:
+        RESULT = new compiler488.ast.stmt.Scope();
+        RESULT.setDeclarations(dcs);
+        RESULT.setStatements(sts);
+      :}
+    | L_CURLEY statements R_CURLEY
+    | L_CURLEY R_CURLEY
+    ;
 
-statements	::=	statement:s						// sequence of statements
-        {: RESULT = new ASTList<compiler488.ast.stmt.Stmt>();
-           RESULT.addLast(s); :}
-		|	statements:ss statement:s
-		{: RESULT = ss;
-		   RESULT.addLast(s); :}
-		;
+statements
+  ::= statement:s
+      {:
+        RESULT = new ASTList<compiler488.ast.stmt.Stmt>()
+        RESULT.addLast(s);
+      :}
+    | statements:ss statement:s
+      {:
+        RESULT = ss;
+        RESULT.addLast(s);
+      :}
+    ;
 
-declarations	::=	declaration:d						// sequence of declarations
-        {: RESULT = new ASTList<compiler488.ast.decl.Declaration>();
-           RESULT.addLast(d); :}
-		|	declarations:ds declaration:d
-        {: RESULT = ds;
-           RESULT.addLast(d); :}
-		;
+declarations
+  ::= declaration:d
+      {:
+        RESULT = new ASTList<compiler488.ast.decl.Declaration>();
+        RESULT.addLast(d);
+      :}
+    | declarations:ds declaration:d
+      {:
+        RESULT = ds;
+        RESULT.addLast(d);
+      :}
+  ;
 
-statement	::=	matchedStatement
-		|	unmatchedStatement
-		;
+statement
+  ::= matchedStatement
+    | unmatchedStatement
+    ;
 
-matchedStatement::=	variable COLON EQUAL expression				// assignment statement
-		|	IF expression THEN matchedStatement ELSE matchedStatement // if statements
-		|	WHILE expression DO statement				// while statement
-		|	REPEAT statement  UNTIL expression			// repeat statement
-		|	EXIT							// exit statements
-		|	EXIT INTCONST
-		|	EXIT WHEN expression
-		|	EXIT INTCONST WHEN expression
-		|	RETURN WITHX  expression 
-		|	RETURN 							// return statements
-		|	WRITE outputs						// input/output statments
-		|	READ  inputs
-		|	procedureCall						// procedure call
-		|	scope							// embedded scope
-		;
+matchedStatement
+  ::= variable COLON EQUAL expression
+    | IF expression THEN matchedStatement ELSE matchedStatement
+    | WHILE expression DO statement
+    | REPEAT statement UNTIL expression
+    | EXIT
+    | EXIT INTCONST
+    | EXIT WHEN expression
+    | EXIT INTCONST WHEN expression
+    | RETURN WITHX expression
+    | RETURN
+    | WRITE outputs
+    | READ inputs
+    | procedureCall
+    | scope
+    ;
 
-unmatchedStatement::=	IF expression THEN statement	
-		|	IF expression THEN matchedStatement ELSE unmatchedStatement
-		;
+unmatchedStatement
+  ::= IF expression THEN statement
+    | IF expression THEN matchedStatement ELSE unmatchedStatement
+    ;
 
-procedureCall	::=	IDENT 							// call procedure with no parameters
-		|	IDENT L_PAREN arguments R_PAREN  			// call procedure with parameters
-		;
+procedureCall
+  ::= IDENT  // call procedure with no parameters
+    | IDENT L_PAREN arguments R_PAREN  // call procedure with parameters
+    ;
 
-declaration	::=	VAR variablenames:vn COLON type:t			// declare scalar/array variables
-        {: RESULT = new MultiDeclarations();
-           ((MultiDeclarations)RESULT).setElements(vn);
-           RESULT.setType(t); :}
-		|	FUNCTION IDENT COLON type scope			// declare function
-		|	FUNCTION  IDENT L_PAREN parameters R_PAREN COLON type scope
-		|	PROCEDURE IDENT scope			//  declare procedure
-		|	PROCEDURE IDENT L_PAREN parameters R_PAREN scope
-		;
+declaration
+  ::= VAR variablenames:vn COLON type:t  // declare scalar/array variables
+      {:
+        RESULT = new MultiDeclarations();
+        ((MultiDeclarations)RESULT).setElements(vn);
+        RESULT.setType(t);
+      :}
+    | FUNCTION IDENT COLON type scope  // declare function
+    | FUNCTION IDENT L_PAREN parameters R_PAREN COLON type scope
+    | PROCEDURE IDENT scope  // declare procedure
+    | PROCEDURE IDENT L_PAREN parameters R_PAREN scope
+    ;
 
-variablenames	::=	variablename:v 				// list of variables being declared
+variablenames
+  ::= variablename:v  // list of variables being declared
         {: RESULT = new ASTList<DeclarationPart>();
            RESULT.addLast(v); :}
-		|	variablenames:vn COMMA variablename:v
-		{: RESULT = vn;
-		   RESULT.addLast(v); :}
-		;
+    | variablenames:vn COMMA variablename:v
+      {:
+        RESULT = vn;
+        RESULT.addLast(v);
+      :}
+    ;
 
-variablename	::=	IDENT:n 						// scalar variable
-        {: RESULT = new DeclarationPart();
-           RESULT.setName(n); :}
-		|	IDENT:n L_SQUARE INTCONST:s R_SQUARE		// array variable with upper bound
-        {: RESULT = new ArrayDeclPart();
-           RESULT.setName(n);
-           ((ArrayDeclPart)RESULT).setSize(s);
-           ((ArrayDeclPart)RESULT).setLowerBoundary(0);
-           ((ArrayDeclPart)RESULT).setUpperBoundary(s); :}
-		|	IDENT:n L_SQUARE bound:l DOT DOT bound:u  R_SQUARE	// array variable with upper/lower bounds
-        {: RESULT = new ArrayDeclPart();
-           RESULT.setName(n);
-           ((ArrayDeclPart)RESULT).setSize(l - u + 1);
-           ((ArrayDeclPart)RESULT).setLowerBoundary(l);
-           ((ArrayDeclPart)RESULT).setUpperBoundary(u); :}
-		;
+variablename
+  ::= IDENT:n  // scalar variable
+      {:
+        RESULT = new DeclarationPart();
+        RESULT.setName(n);
+      :}
+    | IDENT:n L_SQUARE INTCONST:s R_SQUARE  // array variable with upper bound
+      {:
+        RESULT = new ArrayDeclPart();
+        RESULT.setName(n);
+        ((ArrayDeclPart)RESULT).setSize(s);
+        ((ArrayDeclPart)RESULT).setLowerBoundary(0);
+        ((ArrayDeclPart)RESULT).setUpperBoundary(s);
+      :}
+    | IDENT:n L_SQUARE bound:l DOT DOT bound:u R_SQUARE  // array variable with upper/lower bounds
+      {:
+        RESULT = new ArrayDeclPart();
+        RESULT.setName(n);
+        ((ArrayDeclPart)RESULT).setSize(l - u + 1);
+        ((ArrayDeclPart)RESULT).setLowerBoundary(l);
+        ((ArrayDeclPart)RESULT).setUpperBoundary(u);
+      :}
+    ;
 
-bound		::=	INTCONST:i										// positive array bound
-            {: RESULT = i ;:}
-		|	MINUS INTCONST:i // negative array bound
-		    {: RESULT = -i; :}
-		;
+bound
+  ::= INTCONST:i  // positive array bound
+      {:
+        RESULT = i;
+      :}
+    | MINUS INTCONST:i  // negative array bound
+      {:
+        RESULT = -i;
+      :}
+    ;
 
-type		::=	INTEGER			// integer type
+type
+  ::= INTEGER  // integer type
         {: RESULT = new compiler488.ast.type.IntegerType(); :}
-		|	BOOLEAN			// boolean type
+    | BOOLEAN  // boolean type
         {: RESULT = new compiler488.ast.type.BooleanType(); :}
-		;
+    ;
 
-outputs		::=	output			// list of output expressions
-		|	outputs COMMA output
-		;
+outputs
+  ::= output  // list of output expressions
+    | outputs COMMA output
+    ;
 
-output		::=	expression		// integer expression
-		|	TEXTCONST		// text constant
-		|	NEWLINE			// newline constant
-		;
+output
+  ::= expression  // integer expression
+    | TEXTCONST  // text constant
+    | NEWLINE  // newline constant
+    ;
 
-inputs		::=	variable		// list of variables being read into
-		|	inputs COMMA variable
-		;
+inputs
+  ::= variable  // list of variables being read into
+    | inputs COMMA variable
+    ;
 
-arguments	::=	expression			// list of function/procedure arguments
-		|	arguments COMMA expression
-		;
+arguments
+  ::= expression  // list of function/procedure arguments
+    | arguments COMMA expression
+    ;
 
-parameters	::=	parameter			// list of function/procedure formal parameters
-		|	parameters COMMA parameter
-		;
+parameters
+  ::= parameter  // list of function/procedure formal parameters
+    | parameters COMMA parameter
+    ;
 
-parameter	::=	IDENT COLON type 		// declare one parameter
-		;
+parameter
+  ::= IDENT COLON type  // declare one parameter
+    ;
 
-expression	::=	conjunction			// disjunctions, associate left-to-right
-		|	expression OR conjunction
-		;
+expression
+  ::= conjunction  // disjunctions, associate left-to-right
+    | expression OR conjunction
+    ;
 
-conjunction	::=	negation			// conjunctions, associate left-to-right
-		|	conjunction AND negation
-		;
+conjunction
+  ::= negation  // conjunctions, associate left-to-right
+    | conjunction AND negation
+    ;
 
-negation	::=	compareExpn 			// negations
-		|	NOT negation
-		;
+negation
+  ::= compareExpn  // negations
+    | NOT negation
+    ;
 
-compareExpn	::=	arithExpn			// comparisons, do not associate
-		|	arithExpn EQUAL arithExpn
-		| 	arithExpn NOT EQUAL arithExpn
-		|	arithExpn LESS arithExpn
-		|	arithExpn LESS EQUAL arithExpn
-		|	arithExpn GREATER arithExpn
-		|	arithExpn GREATER EQUAL arithExpn
-		;
-
-arithExpn	::=	term				// expressions, associate + , - left-to-right
-		|	arithExpn  PLUS  term
-		|	arithExpn  MINUS term
-		;
-
-term		::=	factor				// terms, associate * , /   left-to-right
-		|	term TIMES factor
-		|	term DIVIDE factor
-		;
-
-factor		::=	primary				// unary minus
-		|	MINUS factor
-		;
-
-primary		::=	constant				// integer or boolean constant
-		|	variable				// scalar, array variable or function call
-		|	IDENT L_PAREN arguments R_PAREN 	// function call
-		| 	L_PAREN  expression  R_PAREN		// parenthesized expression
-		|	L_PAREN  expression QUESTION expression COLON expression R_PAREN
-		;
-
-constant	::=	INTCONST	// integer constant
-		|	TRUE		// constant true
-		|	FALSE		// constant false
-		;
-
-variable	::=	IDENT 					// scalar variable or function call
-		|	IDENT L_SQUARE expression R_SQUARE 	// element of an array
-		;
+compareExpn
+  ::= arithExpn
+    | arithExpn EQUAL arithExpn
+    | arithExpn NOT EQUAL arithExpn
+    | arithExpn LESS arithExpn
+    | arithExpn LESS EQUAL arithExpn
+    | arithExpn GREATER arithExpn
+    | arithExpn GREATER EQUAL arithExpn
+    ;
 
 
+arithExpn
+  ::= term  // expressions, associate + , - left-to-right
+    | arithExpn PLUS term
+    | arithExpn MINUS term
+    ;
+
+term
+  ::= factor  // terms, associate * , /  left-to-right
+    | term TIMES factor
+    | term DIVIDE factor
+    ;
+
+factor
+  ::= primary  // unary minus
+    | MINUS factor
+    ;
+
+primary
+  ::= constant  // integer or boolean constant
+    | variable  // scalar, array variable or function call
+    | IDENT L_PAREN arguments R_PAREN  // function call
+    |  L_PAREN expression R_PAREN  // parenthesized expression
+    | L_PAREN expression QUESTION expression COLON expression R_PAREN
+    ;
+
+constant
+  ::= INTCONST  // integer constant
+    | TRUE  // constant true
+    | FALSE  // constant false
+    ;
+
+variable
+  ::= IDENT  // scalar variable or function call
+    | IDENT L_SQUARE expression R_SQUARE  // element of an array
+    ;
