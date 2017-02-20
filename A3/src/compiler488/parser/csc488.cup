@@ -175,8 +175,16 @@ scope
         RESULT.setDeclarations(dcs);
         RESULT.setStatements(sts);
       :}
-    | L_CURLEY statements R_CURLEY
+    | L_CURLEY statements:sts R_CURLEY
+      {:
+        // an inner scope?
+        RESULT = new compiler388.ast.stmt.Scope();
+        RESULT.setStatements(sts);
+      :}
     | L_CURLEY R_CURLEY
+      {:
+        // TODO does nothing?
+      :}
     ;
 
 statements
@@ -380,7 +388,7 @@ primary
   ::= constant  // integer or boolean constant
     | variable  // scalar, array variable or function call
     | IDENT L_PAREN arguments R_PAREN  // function call
-    |  L_PAREN expression R_PAREN  // parenthesized expression
+    | L_PAREN expression R_PAREN  // parenthesized expression
     | L_PAREN expression QUESTION expression COLON expression R_PAREN
     ;
 
