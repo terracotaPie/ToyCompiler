@@ -118,29 +118,51 @@ terminal String TEXTCONST ;
 
 // Non-terminals that have no value.
 // nonterminal xxx
+// var x, y: Integer
 
+// Types:
 nonterminal program;
 nonterminal compiler488.ast.stmt.Stmt statement;
 nonterminal compiler488.ast.decl.Declaration declaration;
-nonterminal compiler488.ast.stmt.Scope scope ;
+nonterminal compiler488.ast.stmt.Scope scope;
 nonterminal ASTList<compiler488.ast.stmt.Stmt> statements;
 nonterminal ASTList<compiler488.ast.decl.Declaration> declarations;
-nonterminal matchedStatement, unmatchedStatement ;
+nonterminal matchedStatement, unmatchedStatement;
+// TODO: do we want to also store the type w/ name? DP doesn't allow for this.
 nonterminal ASTList<DeclarationPart> variablenames;
+// TODO: assign type
 nonterminal output;
 nonterminal compiler488.ast.type.Type type;
+// TODO: assign type
 nonterminal arguments;
+// TODO: assign type
 nonterminal parameters;
-nonterminal variable;
-nonterminal expression;
-nonterminal compiler488.ast.decl.DeclarationPart variablename      ;
-
-nonterminal inputs, outputs;
-nonterminal Integer bound ;
-nonterminal procedureCall, parameter, conjunction, negation, compareExpn ;
-nonterminal compiler488.expn.BinaryExpon arithExpn;
-nonterminal term, factor, primary, constant ;
-
+nonterminal compiler488.ast.expn.IdentExpn variable;
+nonterminal compiler488.ast.expn.Expn expression;
+nonterminal compiler488.ast.decl.DeclarationPart variablename;
+// TODO: assign type
+nonterminal inputs;
+// TODO: assign type
+nonterminal outputs;
+nonterminal Integer bound;
+// TODO: assign type
+nonterminal procedureCall;
+// TODO: assign type
+nonterminal parameter;
+// TODO: assign type
+nonterminal conjunction;
+// TODO: assign type
+nonterminal negation;
+nonterminal compiler488.ast.expn.CompareExpn compareExpn;
+nonterminal compiler488.ast.expn.BinaryExpn arithExpn;
+// TODO: assign type
+nonterminal term;
+// TODO: assign type
+nonterminal factor;
+// TODO: assign type
+nonterminal primary;
+// TODO: assign type
+nonterminal constant;
 // Non-terminals that have a value.
 // nonterminal type nameList ;
 
@@ -166,6 +188,7 @@ start with program;
 program
   ::= scope
       {:
+        System.out.println("creating scope");
         RESULT = new compiler488.ast.stmt.Program();
       :}
     ;
@@ -174,13 +197,14 @@ scope
   ::= L_CURLEY declarations:dcs statements:sts R_CURLEY
       {:
         RESULT = new compiler488.ast.stmt.Scope();
+        System.out.println("HELLO");
         RESULT.setDeclarations(dcs);
         RESULT.setStatements(sts);
       :}
     | L_CURLEY statements:sts R_CURLEY
       {:
         // an inner scope?
-        RESULT = new compiler388.ast.stmt.Scope();
+        RESULT = new compiler488.ast.stmt.Scope();
         RESULT.setStatements(sts);
       :}
     | L_CURLEY R_CURLEY
@@ -192,7 +216,7 @@ scope
 statements
   ::= statement:s
       {:
-        RESULT = new ASTList<compiler488.ast.stmt.Stmt>()
+        RESULT = new ASTList<compiler488.ast.stmt.Stmt>();
         RESULT.addLast(s);
       :}
     | statements:ss statement:s
@@ -224,9 +248,10 @@ matchedStatement
   ::= variable:var COLON EQUAL expression:exp
       {:
         // TODO: type checking?
-        RESULT = compiler488.ast.stmt.AssignStmt();
-        RESULT.setLVal(var);
-        RESULT.setRVal(exp);
+        RESULT = new compiler488.ast.stmt.AssignStmt();
+        // check that var and exp have the same type
+        ((AssignStmt)RESULT).setLval((compiler488.ast.expn.IdentExpn)var);
+        ((AssignStmt)RESULT).setRval((compiler488.ast.expn.Expn)exp);
       :}
     | IF expression:exp THEN matchedStatement:s1 ELSE matchedStatement:s2
       {:
@@ -317,9 +342,14 @@ bound
 
 type
   ::= INTEGER  // integer type
-        {: RESULT = new compiler488.ast.type.IntegerType(); :}
+      {:
+        System.out.println("Hello");
+        RESULT = new compiler488.ast.type.IntegerType();
+      :}
     | BOOLEAN  // boolean type
-        {: RESULT = new compiler488.ast.type.BooleanType(); :}
+      {:
+        RESULT = new compiler488.ast.type.BooleanType();
+      :}
     ;
 
 outputs

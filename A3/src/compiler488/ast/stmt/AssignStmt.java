@@ -4,6 +4,7 @@ import compiler488.ast.expn.Expn;
 
 /**
  * Holds the assignment of an expression to a variable.
+ * e.g. x := 2
  */
 public class AssignStmt extends Stmt {
 	/*
@@ -13,6 +14,7 @@ public class AssignStmt extends Stmt {
 	private Expn lval, rval;
 
 	/** Returns a string that describes the assignment statement. */
+	// 1 + 1 := 2
 	@Override
 	public String toString() {
 		return "Assignment: " + lval + " := " + rval;
