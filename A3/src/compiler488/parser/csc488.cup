@@ -144,7 +144,7 @@ nonterminal DeclarationPart variablename;
 // TODO: assign type
 nonterminal inputs;
 // TODO: assign type
-nonterminal outputs;
+nonterminal ASTList<Printable> outputs;
 nonterminal Integer bound;
 // TODO: assign type
 nonterminal procedureCall;
@@ -240,8 +240,14 @@ declarations
   ;
 
 statement
-  ::= matchedStatement
-    | unmatchedStatement
+  ::= matchedStatement:m
+      {:
+        RESULT = m;
+      :}
+    | unmatchedStatement:u
+      {:
+        RESULT = u;
+      :}
     ;
 
 matchedStatement
@@ -266,30 +272,88 @@ matchedStatement
         ((WhileDoStmt)RESULT).setExpn(expn);
         ((WhileDoStmt)RESULT).setBody(stmt);
       :}
-    | REPEAT statement UNTIL expression
+    | REPEAT statement:body UNTIL expression:loopCondition
       {:
         RESULT = new RepeatUntilStmt();
+        ((RepeatUntilStmt)RESULT).setExpn(loopCondition)
+        ((RepeatUntilStmt)RESULT).setBody(body)
       :}
     | EXIT
-    | EXIT INTCONST
-    | EXIT WHEN expression
-    | EXIT INTCONST WHEN expression
-    | RETURN WITHX expression
+      {:
+        // TODO: check if this generates a cascading statment or a score for each exit cond
+        // i.e. do i need to initialize new ExitStmt for every exit type
+        RESULT = new ExitStmt();
+      :}
+    | EXIT INTCONST:level
+      {:
+        RESULT = new ExitStmt();
+        ((ExitStmt)RESULT).setLevel(level);
+      :}
+    | EXIT WHEN expression:cond
+      {:
+        RESULT = new ExitStmt();
+        ((ExitStmt)RESULT).setExpn(cond);
+      :}
+    | EXIT INTCONST:level WHEN expression:cond
+      {:
+        RESULT = new ExitStmt();
+        ((ExitStmt)RESULT).setLevel(level);
+        ((ExitStmt)RESULT).setExpn(cond);
+      :}
+    | RETURN WITHX expression:expn
+      {:
+        RESULT = new ReturnStmt();
+        ((ReturnStmt)RESULT).setValue(expn);
+      :}
     | RETURN
-    | WRITE outputs
-    | READ inputs
-    | procedureCall
-    | scope
+      {:
+        RESULT = new ReturnStmt();
+      :}
+    | WRITE outputs:out
+      {:
+        RESULT = new WriteStmt();
+        ((WriteStmt)RESULT).setOutputs(out);
+      :}
+    | READ inputs:ins
+      {:
+        RESULT = new ReadStmts();
+        ((WriteStmt)RESULT).setOutputs(ins);
+      :}
+    | procedureCall:p
+      // TODO: figure out if it needs more
+      {: RESULT = p :}
+    | scope:s
+      // TODO: figure out if it needs more
+      {: RESULT = s :}
     ;
 
 unmatchedStatement
-  ::= IF expression THEN statement
-    | IF expression THEN matchedStatement ELSE unmatchedStatement
+  ::= IF expression:cond THEN statement:trueBranch
+      {:
+        RESULT = new IfStmt();
+        ((IfStmt)RESULT).setCondition(cond);
+        ((IfStmt)RESULT).setWhenTrue(trueBranch);
+      :}
+    | IF expression:cond THEN matchedStatement:trueBranch ELSE unmatchedStatement:falseBranch
+      {:
+        RESULT = new IfStmt();
+        ((IfStmt)RESULT).setCondition(cond);
+        ((IfStmt)RESULT).setWhenTrue(trueBranch);
+      :}
     ;
 
 procedureCall
-  ::= IDENT  // call procedure with no parameters
-    | IDENT L_PAREN arguments R_PAREN  // call procedure with parameters
+  ::= IDENT:pName  // call procedure with no parameters
+      {:
+        RESULT = new ProcedureCallStmt();
+        (ProcedureCallStmt)RESULT.setName(pName);
+      :}
+    | IDENT:pName L_PAREN arguments:args R_PAREN  // call procedure with parameters
+      {:
+        RESULT = new ProcedureCallStmt();
+        (ProcedureCallStmt)RESULT.setName(name);
+        (ProcedureCallStmt)RESULT.setArguments(args);
+      :}
     ;
 
 declaration
@@ -300,7 +364,7 @@ declaration
         RESULT.setType(t);
       :}
     | FUNCTION IDENT COLON type scope  // declare function
-    | FUNCTION IDENT L_PAREN parameters R_PAREN COLON type scope
+    | FUNCTION IDENT:id L_PAREN parameters:params R_PAREN COLON type:t scope:s
     | PROCEDURE IDENT scope  // declare procedure
     | PROCEDURE IDENT L_PAREN parameters R_PAREN scope
     ;
