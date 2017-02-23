@@ -121,25 +121,26 @@ terminal String TEXTCONST ;
 // var x, y: Integer
 
 // Types:
-nonterminal program;
-nonterminal compiler488.ast.stmt.Stmt statement;
-nonterminal compiler488.ast.decl.Declaration declaration;
-nonterminal compiler488.ast.stmt.Scope scope;
+nonterminal Program program;
+nonterminal Stmt statement;
+nonterminal Declaration declaration;
+nonterminal Scope scope;
 nonterminal ASTList<compiler488.ast.stmt.Stmt> statements;
 nonterminal ASTList<compiler488.ast.decl.Declaration> declarations;
-nonterminal matchedStatement, unmatchedStatement;
-// TODO: do we want to also store the type w/ name? DP doesn't allow for this.
+nonterminal Stmt matchedStatement;
+nonterminal Stmt unmatchedStatement;
 nonterminal ASTList<DeclarationPart> variablenames;
 // TODO: assign type
-nonterminal output;
-nonterminal compiler488.ast.type.Type type;
+nonterminal Expn output;
+nonterminal Type type;
 // TODO: assign type
-nonterminal arguments;
+nonterminal ASTList<Expn> arguments;
 // TODO: assign type
 nonterminal parameters;
-nonterminal compiler488.ast.expn.IdentExpn variable;
-nonterminal compiler488.ast.expn.Expn expression;
-nonterminal compiler488.ast.decl.DeclarationPart variablename;
+// TODO: should be IdentExpn?
+nonterminal Expn variable;
+nonterminal Expn expression;
+nonterminal DeclarationPart variablename;
 // TODO: assign type
 nonterminal inputs;
 // TODO: assign type
@@ -156,13 +157,14 @@ nonterminal negation;
 nonterminal compiler488.ast.expn.CompareExpn compareExpn;
 nonterminal compiler488.ast.expn.BinaryExpn arithExpn;
 // TODO: assign type
-nonterminal term;
+nonterminal ArithExpn term; // a *,/ b
 // TODO: assign type
 nonterminal factor;
 // TODO: assign type
-nonterminal primary;
+// constant, variable, f (a1,..,an), (exp), (exp ? exp : exp)
+nonterminal Expn primary;
 // TODO: assign type
-nonterminal constant;
+nonterminal ConstExpn constant;
 // Non-terminals that have a value.
 // nonterminal type nameList ;
 
@@ -197,13 +199,11 @@ scope
   ::= L_CURLEY declarations:dcs statements:sts R_CURLEY
       {:
         RESULT = new compiler488.ast.stmt.Scope();
-        System.out.println("HELLO");
         RESULT.setDeclarations(dcs);
         RESULT.setStatements(sts);
       :}
     | L_CURLEY statements:sts R_CURLEY
       {:
-        // an inner scope?
         RESULT = new compiler488.ast.stmt.Scope();
         RESULT.setStatements(sts);
       :}
@@ -247,7 +247,7 @@ statement
 matchedStatement
   ::= variable:var COLON EQUAL expression:exp
       {:
-        // TODO: type checking?
+        System.out.println("assigning a variable");
         RESULT = new compiler488.ast.stmt.AssignStmt();
         // check that var and exp have the same type
         ((AssignStmt)RESULT).setLval((compiler488.ast.expn.IdentExpn)var);
@@ -255,10 +255,21 @@ matchedStatement
       :}
     | IF expression:exp THEN matchedStatement:s1 ELSE matchedStatement:s2
       {:
-        // TODO: if exp then s1 else s2
+        RESULT = new IfStmt();
+        ((IfStmt)RESULT).setCondition(exp);
+        ((IfStmt)RESULT).setWhenTrue(s1);
+        ((IfStmt)RESULT).setWhenFalse(s2);
       :}
-    | WHILE expression DO statement
+    | WHILE expression:expn DO statement:stmt
+      {:
+        RESULT = new WhileDoStmt();
+        ((WhileDoStmt)RESULT).setExpn(expn);
+        ((WhileDoStmt)RESULT).setBody(stmt);
+      :}
     | REPEAT statement UNTIL expression
+      {:
+        RESULT = new RepeatUntilStmt();
+      :}
     | EXIT
     | EXIT INTCONST
     | EXIT WHEN expression
@@ -296,8 +307,10 @@ declaration
 
 variablenames
   ::= variablename:v  // list of variables being declared
-        {: RESULT = new ASTList<DeclarationPart>();
-           RESULT.addLast(v); :}
+        {:
+           RESULT = new ASTList<DeclarationPart>();
+           RESULT.addLast(v);
+        :}
     | variablenames:vn COMMA variablename:v
       {:
         RESULT = vn;
@@ -343,7 +356,7 @@ bound
 type
   ::= INTEGER  // integer type
       {:
-        System.out.println("Hello");
+        System.out.println("Creating an integer");
         RESULT = new compiler488.ast.type.IntegerType();
       :}
     | BOOLEAN  // boolean type
@@ -421,25 +434,54 @@ term
     ;
 
 factor
-  ::= primary  // unary minus
+  ::= primary:p  // unary minus
+      {:
+          RESULT = p;
+      :}
     | MINUS factor
     ;
 
+// an Expn
 primary
-  ::= constant  // integer or boolean constant
+  ::= constant:c  // integer or boolean constant
+      {:
+        RESULT = (ConstExpn)c;
+      :}
     | variable  // scalar, array variable or function call
     | IDENT L_PAREN arguments R_PAREN  // function call
     | L_PAREN expression R_PAREN  // parenthesized expression
     | L_PAREN expression QUESTION expression COLON expression R_PAREN
     ;
 
+// an Expn
 constant
-  ::= INTCONST  // integer constant
+  ::= INTCONST:i  // integer constant
+      {:
+        RESULT = new IntConstExpn();
+        ((IntConstExpn)RESULT).setValue(i);
+      :}
     | TRUE  // constant true
+      {:
+        RESULT = new BoolConstExpn();
+        ((BoolConstExpn)RESULT).setValue(true);
+      :}
     | FALSE  // constant false
+      {:
+        RESULT = new BoolConstExpn();
+        ((BoolConstExpn)RESULT).setValue(false);
+      :}
     ;
 
 variable
-  ::= IDENT  // scalar variable or function call
-    | IDENT L_SQUARE expression R_SQUARE  // element of an array
+  ::= IDENT:name  // scalar variable or function call
+      {:
+        RESULT = new IdentExpn();
+        ((IdentExpn)RESULT).setIdent(name);
+      :}
+    | IDENT:aName L_SQUARE expression:i R_SQUARE  // element of an array
+      {:
+        RESULT = new SubsExpn();
+        ((SubsExpn)RESULT).setVariable((String)aName);
+        ((SubsExpn)RESULT).setOperand((Expn)i);
+      :}
     ;

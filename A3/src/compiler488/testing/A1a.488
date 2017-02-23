@@ -1,3 +1,4 @@
 {
-  var x, y : Integer
+  var x : Integer
+  x := 1
 }
