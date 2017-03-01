@@ -1,4 +1,9 @@
 {
   var x : Integer
-  x := 1
+  var y : Boolean
+  function f : Integer {}
+  function g : Boolean {}
+  function h(x : Integer) : Integer {}
+  procedure p {}
+  procedure testInt(actual : Integer, expected : Integer, id : Integer) {}
 }
