@@ -38,6 +38,8 @@ public class ProcedureCallStmt extends Stmt {
 	@Override
 	public boolean semantic_visit(SemanticObject semanticObject) {
 		boolean b;
+		int num_param;
+		num_param = 0;
 		b = true;
 		// TODO: Wait for symbol table: Check if arguments/types match
 		return b;

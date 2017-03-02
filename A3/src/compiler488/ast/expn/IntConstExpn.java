@@ -1,5 +1,9 @@
 package compiler488.ast.expn;
 
+import compiler488.ast.type.IntegerType;
+import compiler488.ast.type.Type;
+import compiler488.semantics.SemanticObject;
+
 /**
  * Represents a literal integer constant.
  */
@@ -17,5 +21,15 @@ public class IntConstExpn extends ConstExpn
 
 	public void setValue(Integer value) {
 		this.value = value;
+	}
+
+	@Override
+	public boolean semantic_visit(SemanticObject semanticObject) {
+		return true;
+	}
+
+	@Override
+	public Type getType() {
+		return new IntegerType();
 	}
 }

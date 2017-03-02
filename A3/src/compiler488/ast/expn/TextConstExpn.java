@@ -1,6 +1,8 @@
 package compiler488.ast.expn;
 
 import compiler488.ast.Printable;
+import compiler488.ast.type.Type;
+import compiler488.semantics.SemanticObject;
 
 /**
  * Represents a literal text constant.
@@ -20,5 +22,15 @@ public class TextConstExpn extends ConstExpn implements Printable {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	@Override
+	public boolean semantic_visit(SemanticObject semanticObject) {
+		return true;
+	}
+
+	@Override
+	public Type getType() {
+		return new Type();
 	}
 }

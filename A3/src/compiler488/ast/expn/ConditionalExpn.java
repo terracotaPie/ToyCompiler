@@ -1,6 +1,10 @@
 package compiler488.ast.expn;
 
 
+import compiler488.ast.type.BooleanType;
+import compiler488.ast.type.Type;
+import compiler488.semantics.SemanticObject;
+
 /** Represents a conditional expression (i.e., x>0?3:4). */
 public class ConditionalExpn extends Expn {
 	private Expn condition; // Evaluate this to decide which value to yield.
@@ -37,5 +41,21 @@ public class ConditionalExpn extends Expn {
 
 	public void setTrueValue(Expn trueValue) {
 		this.trueValue = trueValue;
+	}
+
+	@Override
+	public Type getType() {
+		return trueValue.getType(); /* S24 */
+	}
+
+	@Override
+	public boolean semantic_visit(SemanticObject semanticObject) {
+		boolean b;
+		b = condition.semantic_visit(semanticObject);
+		b &= condition.getType() instanceof BooleanType; /* S30 */
+		b &= trueValue.semantic_visit(semanticObject);
+		b &= falseValue.semantic_visit(semanticObject);
+		b &= trueValue.getType().equals(falseValue.getType()); /* S33 */
+		return b;
 	}
 }

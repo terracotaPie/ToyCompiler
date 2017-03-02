@@ -1,10 +1,13 @@
 package compiler488.ast.expn;
 
 
+import compiler488.ast.type.Type;
+import compiler488.semantics.SemanticObject;
+
 /**
  * The common features of unary expressions.
  */
-public class UnaryExpn extends Expn
+public abstract class UnaryExpn extends Expn
     {
     Expn  operand ;	/* operand of the unary  operator. */
     String opSymbol;	/* Name of the operator. */
@@ -29,6 +32,6 @@ public class UnaryExpn extends Expn
 	}
 
 	public void setOpSymbol(String opSymbol) {
-		this.opSymbol = opSymbol;
+	this.opSymbol = opSymbol;
 	}
 }
