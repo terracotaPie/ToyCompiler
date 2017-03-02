@@ -70,15 +70,13 @@ public class SymbolTable {
 	 */
 
 
-	private openScope(){
+	public void openScope() {
 	    depth++;
-}
+    }
 
-
-
-
-
-
+	public void closeScope() {
+		depth--;
+	}
 
 	/**
      * Return true if this SymbolTable contains SymbolTableEntry with the given name
@@ -91,7 +89,7 @@ public class SymbolTable {
      * Add a new SymbolTableEntry given by name, kind, value, type. Return true if
      * the new entry was successfully inserted
      */
-    public boolean addEntry(String identifier, AST value, Type type) {
+    public void addEntry(String identifier, AST value, Type type) {
         SymbolTableEntry entry = new SymbolTableEntry(identifier, value, type);
         if (this.hasEntry(identifier)){
             this.symbols.get(identifier).push(entry);
@@ -107,16 +105,17 @@ public class SymbolTable {
      * Return the SymbolTableEntry given by name if there is one, null if there is not.
      */
     public SymbolTableEntry getEntry(String name) {
-        //System.out.println("Get entry " + name + " in symbol table");
-        //System.out.println(entries.size());
-        for (SymbolTableEntry entry : entries) {
-            // System.out.println("current entry name = " + entry.getName());
-            if (entry.getName().equals(name)) {
-                return entry;
-            }
-        }
+		//System.out.println("Get entry " + name + " in symbol table");
+		//System.out.println(entries.size());
+//        for (SymbolTableEntry entry : entries) {
+//            // System.out.println("current entry name = " + entry.getName());
+//            if (entry.getName().equals(name)) {
+//                return entry;
+//            }
+//        }
 
-        return null;
+		return null;
+	}
 
 
 
@@ -126,12 +125,12 @@ public class SymbolTable {
          */
     public boolean removeEntry(String name) {
 
-        for (SymbolTableEntry entry : entries) {
-            if (entry.getName().equals(name)) {
-                entries.remove(entry);
-                return true;
-            }
-        }
+//        for (SymbolTableEntry entry : entries) {
+//            if (entry.getName().equals(name)) {
+//                entries.remove(entry);
+//                return true;
+//            }
+//        }
 
         return false;
     }

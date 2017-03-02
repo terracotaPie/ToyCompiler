@@ -32,11 +32,11 @@ public class SymbolTableEntry {
 
     /* Modifiers ID */
     public String getIdentifier() {
-        return identifier;
+        return name;
     }
 
-    public SymbolTableEntry setIdentifier(String identifier) {
-        this.identifier = identifier;
+    public SymbolTableEntry setIdentifier(String name) {
+        this.name = name;
         return this;
     }
 

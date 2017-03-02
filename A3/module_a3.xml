@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_a3" default="compile.module.a3">
+  <dirname property="module.a3.basedir" file="${ant.file.module_a3}"/>
+  
+  <property name="module.jdk.home.a3" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.a3" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.a3" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.a3" value="-encoding UTF-8 -source 1.7 -target 1.7 ${compiler.args}"/>
+  
+  <property name="a3.output.dir" value="${module.a3.basedir}/out/production/A3"/>
+  <property name="a3.testoutput.dir" value="${module.a3.basedir}/out/test/A3"/>
+  
+  <path id="a3.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="a3.module.production.classpath">
+    <path refid="${module.jdk.classpath.a3}"/>
+  </path>
+  
+  <path id="a3.runtime.production.module.classpath">
+    <pathelement location="${a3.output.dir}"/>
+  </path>
+  
+  <path id="a3.module.classpath">
+    <path refid="${module.jdk.classpath.a3}"/>
+    <pathelement location="${a3.output.dir}"/>
+  </path>
+  
+  <path id="a3.runtime.module.classpath">
+    <pathelement location="${a3.testoutput.dir}"/>
+    <pathelement location="${a3.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.a3">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.a3">
+    <patternset refid="excluded.from.module.a3"/>
+  </patternset>
+  
+  <path id="a3.module.sourcepath">
+    <dirset dir="${module.a3.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.a3" depends="compile.module.a3.production,compile.module.a3.tests" description="Compile module A3"/>
+  
+  <target name="compile.module.a3.production" depends="register.custom.compilers" description="Compile module A3; production classes">
+    <mkdir dir="${a3.output.dir}"/>
+    <javac2 destdir="${a3.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.a3}/javac">
+      <compilerarg line="${compiler.args.a3}"/>
+      <bootclasspath refid="a3.module.bootclasspath"/>
+      <classpath refid="a3.module.production.classpath"/>
+      <src refid="a3.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.a3"/>
+    </javac2>
+    
+    <copy todir="${a3.output.dir}">
+      <fileset dir="${module.a3.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.a3.tests" depends="register.custom.compilers,compile.module.a3.production" description="compile module A3; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.a3" description="cleanup module">
+    <delete dir="${a3.output.dir}"/>
+    <delete dir="${a3.testoutput.dir}"/>
+  </target>
+</project>

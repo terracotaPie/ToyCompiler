@@ -9,4 +9,5 @@ import compiler488.ast.type.Type;
  */
 public abstract class Expn extends AST implements Printable {
     public abstract Type getType();
+
 }

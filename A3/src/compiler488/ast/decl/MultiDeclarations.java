@@ -1,10 +1,12 @@
 package compiler488.ast.decl;
 
 import java.io.PrintStream;
+import java.util.ListIterator;
 
 import compiler488.ast.ASTList;
 import compiler488.ast.Indentable;
 import compiler488.semantics.SemanticObject;
+import compiler488.symbol.SymbolTable;
 
 /**
  * Holds the declaration of multiple elements.
@@ -54,4 +56,17 @@ public class MultiDeclarations extends Declaration {
 	public void setElements(ASTList<DeclarationPart> elements) {
 		this.elements = elements;
 	}
+	public void table_visit(SymbolTable symbolTable) {
+		ListIterator<DeclarationPart> iter_d;
+		if (elements.size() > 0)
+		{
+			iter_d = elements.getIterator();
+			while (iter_d.hasNext())
+			{
+				DeclarationPart t = iter_d.next();
+			    symbolTable.addEntry(t.getName(),this, getType());
+			}
+		}
+	}
+
 }

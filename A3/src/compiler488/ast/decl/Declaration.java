@@ -2,7 +2,7 @@ package compiler488.ast.decl;
 
 import compiler488.ast.Indentable;
 import compiler488.ast.type.Type;
-import compiler488.semantics.SemanticObject;
+import compiler488.symbol.SymbolTable;
 
 /**
  * The common features of declarations.
@@ -33,5 +33,9 @@ public class Declaration extends Indentable {
 	@Override
 	public String toString() {
 		return  String.format("var %s %s", type, name);
+	}
+
+	public void table_visit(SymbolTable symbolTable) {
+	    symbolTable.addEntry(name,this,type);
 	}
 }

@@ -7,6 +7,7 @@ import compiler488.ast.ASTList;
 import compiler488.ast.Indentable;
 import compiler488.ast.decl.Declaration;
 import compiler488.semantics.SemanticObject;
+import compiler488.symbol.SymbolTable;
 
 /**
  * Represents the declarations and instructions of a scope construct.
@@ -83,6 +84,30 @@ public class Scope extends Stmt {
 
 	public void setStatements(ASTList<Stmt> statements) {
 		this.statements = statements;
+	}
+
+	public void table_visit(SymbolTable symbolTable) {
+	    symbolTable.openScope();
+		ListIterator<Declaration> iter_d;
+		if (declarations.size() > 0)
+		{
+			iter_d = declarations.getIterator();
+			while (iter_d.hasNext())
+			{
+				iter_d.next().table_visit(symbolTable);
+			}
+		}
+		ListIterator<Stmt> iter_s;
+		if (statements.size() > 0)
+		{
+			iter_s = statements.getIterator();
+			while(iter_s.hasNext())
+			{
+				iter_s.next().table_visit(symbolTable);
+			}
+
+		}
+		symbolTable.closeScope();
 	}
 
 }

@@ -3,6 +3,7 @@ package compiler488.ast.expn;
 
 import compiler488.ast.type.Type;
 import compiler488.semantics.SemanticObject;
+import compiler488.symbol.SymbolTable;
 
 /**
  * The common features of binary expressions.
@@ -47,6 +48,8 @@ public class BinaryExpn extends Expn
 		public boolean semantic_visit(SemanticObject semanticObject) {
 			return false;
 		}
+		@Override
+		public void table_visit(SymbolTable symbolTable){}
 
 		@Override
 		public Type getType() {

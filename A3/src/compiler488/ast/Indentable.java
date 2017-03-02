@@ -1,6 +1,7 @@
 package compiler488.ast;
 
 import compiler488.semantics.SemanticObject;
+import compiler488.symbol.SymbolTable;
 
 import java.io.PrintStream;
 
@@ -70,5 +71,8 @@ public class Indentable extends AST {
 	public boolean semantic_visit(SemanticObject semanticObject) {
 		/* Has to be overwritten by child */
 		return false;
+	}
+	public void table_visit(SymbolTable symbolTable) {
+		//pass
 	}
 }

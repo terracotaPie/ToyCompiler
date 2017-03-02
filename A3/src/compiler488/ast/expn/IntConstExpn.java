@@ -1,5 +1,7 @@
 package compiler488.ast.expn;
 
+import compiler488.symbol.SymbolTable;
+
 /**
  * Represents a literal integer constant.
  */
@@ -18,4 +20,6 @@ public class IntConstExpn extends ConstExpn
 	public void setValue(Integer value) {
 		this.value = value;
 	}
+    @Override
+    public void table_visit(SymbolTable symbolTable){}
 }

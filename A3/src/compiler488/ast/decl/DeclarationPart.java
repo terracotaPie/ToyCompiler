@@ -2,6 +2,7 @@ package compiler488.ast.decl;
 
 import compiler488.ast.AST;
 import compiler488.semantics.SemanticObject;
+import compiler488.symbol.SymbolTable;
 
 /**
  * The common features of declarations' parts.
@@ -29,4 +30,8 @@ public class DeclarationPart extends AST {
 	public boolean semantic_visit(SemanticObject semanticObject) {
 		return true;
 	}
+    public void table_visit(SymbolTable symbolTable) {
+		//pass
+	}
+
 }

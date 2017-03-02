@@ -1,9 +1,9 @@
 package compiler488.ast;
 
 import compiler488.semantics.SemanticObject;
+import compiler488.symbol.SymbolTable;
 
 import java.io.PrintStream;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
@@ -107,5 +107,11 @@ public class ASTList<E> extends AST {
 	public ListIterator<E> getIterator()
 	{
 		return ll.listIterator();
+	}
+
+	public void table_visit(SymbolTable symbolTable){
+		for (E e: ll) {
+			((AST)e).table_visit(symbolTable);
+		}
 	}
 }
