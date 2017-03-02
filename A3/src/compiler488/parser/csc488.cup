@@ -129,15 +129,15 @@ nonterminal Stmt unmatchedStatement;
 nonterminal ASTList<DeclarationPart> variablenames;
 nonterminal output;
 nonterminal Type type;
-nonterminal arguments;
+nonterminal ASTList<Expn> arguments;
 nonterminal ASTList<ScalarDecl> parameters;
-nonterminal IdentExpn variable;
+nonterminal Expn variable;
 nonterminal Expn expression;
 nonterminal DeclarationPart variablename;
 nonterminal inputs;
 nonterminal outputs;
-nonterminal bound;
-nonterminal procedureCall;
+nonterminal IntConstExpn bound;
+nonterminal ProcedureCallStmt procedureCall;
 nonterminal ScalarDecl parameter;
 nonterminal Expn conjunction;
 nonterminal Expn negation;
@@ -249,29 +249,92 @@ matchedStatement
         ((AssignStmt)RESULT).setLval(var);
         ((AssignStmt)RESULT).setRval(expr);
       :}
-    | IF expression THEN matchedStatement ELSE matchedStatement  // if statements
-    | WHILE expression DO statement  // while statement
-    | REPEAT statement UNTIL expression  // repeat statement
-    | EXIT  // exit statements
-    | EXIT INTCONST
-    | EXIT WHEN expression
-    | EXIT INTCONST WHEN expression
-    | RETURN WITHX expression
-    | RETURN  // return statements
-    | WRITE outputs  // input/output statments
-    | READ inputs
-    | procedureCall  // procedure call
-    | scope  // embedded scope
-;
+    | IF expression:e THEN matchedStatement:thenStmt ELSE matchedStatement:elseStmt  // if statements
+      {:
+        RESULT = new IfStmt();
+        ((IfStmt)RESULT).setCondition(e);
+        ((IfStmt)RESULT).setWhenTrue(thenStmt);
+        ((IfStmt)RESULT).setWhenFalse(elseStmt);
+      :}
+    | WHILE expression:exp DO statement:stmt  // while statement
+      {:
+        RESULT = new WhileDoStmt();
+        ((WhileDoStmt)RESULT).setBody(stmt);
+        ((WhileDoStmt)RESULT).setExpn(exp);
+      :}
+    | REPEAT statement:stmt UNTIL expression:exp  // repeat statement
+      {:
+        RESULT = new RepeatUntilStmt();
+        ((RepeatUntilStmt)RESULT).setBody(stmt);
+        ((RepeatUntilStmt)RESULT).setExpn(exp);
+      :}
+    | EXIT
+      {:
+        // TODO: check if this generates a cascading statment or a score for each exit cond
+        // i.e. do i need to initialize new ExitStmt for every exit type
+        RESULT = new ExitStmt();
+      :}
+    | EXIT INTCONST:level
+      {:
+        RESULT = new ExitStmt();
+        ((ExitStmt)RESULT).setLevel(level);
+      :}
+    | EXIT WHEN expression:cond
+      {:
+        RESULT = new ExitStmt();
+        ((ExitStmt)RESULT).setExpn(cond);
+      :}
+    | EXIT INTCONST:level WHEN expression:cond
+      {:
+        RESULT = new ExitStmt();
+        ((ExitStmt)RESULT).setLevel(level);
+        ((ExitStmt)RESULT).setExpn(cond);
+      :}
+    | RETURN WITHX expression:expn
+      {:
+        RESULT = new ReturnStmt();
+        ((ReturnStmt)RESULT).setValue(expn);
+      :}
+    | RETURN
+      {:
+        RESULT = new ReturnStmt();
+      :}
+      // TODO: read/write/calls
+    | WRITE outputs:out
+    | READ inputs:ins
+    | procedureCall:p
+    | scope:s
+    ;
+
 
 unmatchedStatement
-  ::= IF expression THEN statement
-    | IF expression THEN matchedStatement ELSE unmatchedStatement
+  ::= IF expression:e THEN statement:thenStmt
+      {:
+        RESULT = new IfStmt();
+        ((IfStmt)RESULT).setCondition(e);
+        ((IfStmt)RESULT).setWhenTrue(thenStmt);
+      :}
+    | IF expression:e THEN matchedStatement:thenStmt ELSE unmatchedStatement:elseStmt
+      {:
+        RESULT = new IfStmt();
+        ((IfStmt)RESULT).setCondition(e);
+        ((IfStmt)RESULT).setWhenTrue(thenStmt);
+        ((IfStmt)RESULT).setWhenFalse(elseStmt);
+      :}
 ;
 
 procedureCall
-  ::= IDENT  // call procedure with no parameters
-    | IDENT L_PAREN arguments R_PAREN  // call procedure with parameters
+  ::= IDENT:name  // call procedure with no parameters
+      {:
+        RESULT = new ProcedureCallStmt();
+        ((ProcedureCallStmt)RESULT).setName(name);
+      :}
+    | IDENT:name L_PAREN arguments:args R_PAREN  // call procedure with parameters
+      {:
+        RESULT = new ProcedureCallStmt();
+        ((ProcedureCallStmt)RESULT).setName(name);
+        ((ProcedureCallStmt)RESULT).setArguments(args);
+      :}
 ;
 
 declaration
@@ -357,13 +420,40 @@ variablename
         RESULT = new DeclarationPart();
         ((DeclarationPart)RESULT).setName(id);
       :}
-    | IDENT L_SQUARE INTCONST R_SQUARE  // array variable with upper bound
-    | IDENT L_SQUARE bound DOT DOT bound R_SQUARE  // array variable with upper/lower bounds
+    | IDENT:id L_SQUARE INTCONST:i R_SQUARE  // array variable with upper bound
+      {:
+        // semantic analysis: i > 0
+        RESULT = new ArrayDeclPart();
+        ((ArrayDeclPart)RESULT).setName(id);
+        ((ArrayDeclPart)RESULT).setLowerBoundary(0);
+        ((ArrayDeclPart)RESULT).setUpperBoundary(i);
+        ((ArrayDeclPart)RESULT).setSize(i);
+      :}
+    | IDENT:id L_SQUARE bound:upBoundExpn DOT DOT bound:lowBoundExpn R_SQUARE  // array variable with upper/lower bounds
+      {:
+        Integer upper = upBoundExpn.getValue();
+        Integer lower = lowBoundExpn.getValue();
+        Integer size = upper - lower;
+        // semantic analysis: i > 0
+        RESULT = new ArrayDeclPart();
+        ((ArrayDeclPart)RESULT).setName(id);
+        ((ArrayDeclPart)RESULT).setLowerBoundary(lower);
+        ((ArrayDeclPart)RESULT).setUpperBoundary(upper);
+        ((ArrayDeclPart)RESULT).setSize((size < 0) ? -size : size);
+      :}
 ;
 
 bound
-  ::= INTCONST  // positive array bound
-    | MINUS INTCONST  // negative array bound
+  ::= INTCONST:i  // positive array bound
+      {:
+        RESULT = new IntConstExpn();
+        ((IntConstExpn)RESULT).setValue(i);
+      :}
+    | MINUS INTCONST:i  // negative array bound
+      {:
+        RESULT = new IntConstExpn();
+        ((IntConstExpn)RESULT).setValue(-i);
+      :}
 ;
 
 type
@@ -394,8 +484,16 @@ inputs
 ;
 
 arguments
-  ::= expression  // list of function/procedure arguments
-    | arguments COMMA expression
+  ::= expression:e  // list of function/procedure arguments
+      {:
+        RESULT = new ASTList<Expn>();
+        RESULT.addLast(e);
+      :}
+    | arguments:es COMMA expression:e
+      {:
+        RESULT = es;
+        RESULT.addLast(e);
+      :}
 ;
 
 parameters
@@ -471,8 +569,20 @@ term
       {:
         RESULT = f;
       :}
-    | term TIMES factor
-    | term DIVIDE factor
+    | term:a TIMES factor:b
+      {:
+        RESULT = new BinaryExpn();
+        ((BinaryExpn)RESULT).setLeft(a);
+        ((BinaryExpn)RESULT).setRight(b);
+        ((BinaryExpn)RESULT).setOpSymbol("*");
+      :}
+    | term:a DIVIDE factor:b
+      {:
+        RESULT = new BinaryExpn();
+        ((BinaryExpn)RESULT).setLeft(a);
+        ((BinaryExpn)RESULT).setRight(b);
+        ((BinaryExpn)RESULT).setOpSymbol("/");
+      :}
 ;
 
 factor
@@ -480,7 +590,12 @@ factor
       {:
         RESULT = p;
       :}
-    | MINUS factor
+    | MINUS factor:f
+      {:
+        RESULT = new UnaryMinusExpn();
+        ((UnaryMinusExpn)RESULT).setOperand(f);
+        ((UnaryMinusExpn)RESULT).setOpSymbol("-");
+      :}
 ;
 
 primary
@@ -488,16 +603,32 @@ primary
       {:
         RESULT = c;
       :}
-    | variable  // scalar, array variable or function call
-    | IDENT L_PAREN arguments R_PAREN  // function call
-    |  L_PAREN expression R_PAREN  // parenthesized expression
-    | L_PAREN expression QUESTION expression COLON expression R_PAREN
+    | variable:v  // scalar, array variable or function call
+      {:
+        RESULT = v;
+      :}
+    | IDENT:name L_PAREN arguments:args R_PAREN  // function call
+      {:
+        RESULT = new FunctionCallExpn();
+        ((FunctionCallExpn)RESULT).setIdent(name);
+        ((FunctionCallExpn)RESULT).setArguments(args);
+      :}
+    | L_PAREN expression:e R_PAREN  // parenthesized expression
+      {:
+        RESULT = e;
+      :}
+    | L_PAREN expression:cond QUESTION expression:trueExpn COLON expression:falseExpn R_PAREN
+      {:
+        RESULT = new ConditionalExpn();
+        ((ConditionalExpn)RESULT).setCondition(cond);
+        ((ConditionalExpn)RESULT).setTrueValue(trueExpn);
+        ((ConditionalExpn)RESULT).setFalseValue(falseExpn);
+      :}
 ;
 
 constant // type: ConstEpn
   ::= INTCONST:i  // integer constant
       {:
-        System.out.println("int");
         RESULT = new IntConstExpn();
         ((IntConstExpn)RESULT).setValue(i);
       :}
@@ -519,7 +650,13 @@ variable
         RESULT = new IdentExpn();
         ((IdentExpn)RESULT).setIdent(name);
       :}
-    | IDENT L_SQUARE expression R_SQUARE  // element of an array
+    | IDENT:name L_SQUARE expression:expn R_SQUARE  // element of an array
+      {:
+        // semantic analysis: check operand is arith expn
+        RESULT = new SubsExpn();
+        ((SubsExpn)RESULT).setVariable(name);
+        ((SubsExpn)RESULT).setOperand(expn);
+      :}
 ;
 
 

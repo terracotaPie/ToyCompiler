@@ -8,6 +8,7 @@ import compiler488.ast.decl.*;
 import compiler488.ast.expn.*;
 import compiler488.ast.stmt.*;
 import compiler488.ast.type.*;
+import static java.lang.Math.abs;
 
 /* User code components 1: action code components.
  * Code to be used inside the actions triggered when productions are matched.
@@ -173,7 +174,6 @@ start with program;
 program
   ::= scope  // the main program
       {:
-        System.out.println("Program");
         RESULT = new Program();
       :}
 ;
@@ -181,14 +181,12 @@ program
 scope
   ::= L_CURLEY declarations:dcs statements:stmts R_CURLEY  // scope with declarations and statements
       {:
-        System.out.println("Scope");
         RESULT = new Scope();
         ((Scope)RESULT).setStatements(stmts);
         ((Scope)RESULT).setDeclarations(dcs);
       :}
     | L_CURLEY declarations:dcs R_CURLEY  // scope with declarations and statements
       {:
-        System.out.println("Scope");
         RESULT = new Scope();
         ((Scope)RESULT).setDeclarations(dcs);
       :}
@@ -249,20 +247,62 @@ matchedStatement
         ((AssignStmt)RESULT).setLval(var);
         ((AssignStmt)RESULT).setRval(expr);
       :}
-    | IF expression THEN matchedStatement ELSE matchedStatement  // if statements
-    | WHILE expression DO statement  // while statement
-    | REPEAT statement UNTIL expression  // repeat statement
-    | EXIT  // exit statements
-    | EXIT INTCONST
-    | EXIT WHEN expression
-    | EXIT INTCONST WHEN expression
-    | RETURN WITHX expression
-    | RETURN  // return statements
-    | WRITE outputs  // input/output statments
-    | READ inputs
-    | procedureCall  // procedure call
-    | scope  // embedded scope
-;
+    | IF expression:e THEN matchedStatement:thenStmt ELSE matchedStatement:elseStmt  // if statements
+      {:
+        RESULT = new IfStmt();
+        ((IfStmt)RESULT).setCondition(e);
+        ((IfStmt)RESULT).setWhenTrue(thenStmt);
+        ((IfStmt)RESULT).setWhenFalse(elseStmt);
+      :}
+    | WHILE expression:exp DO statement:stmt  // while statement
+      {:
+        RESULT = new WhileDoStmt();
+        ((WhileDoStmt)RESULT).setBody(stmt);
+        ((WhileDoStmt)RESULT).setExpn(exp);
+      :}
+    | REPEAT statement:stmt UNTIL expression:exp  // repeat statement
+      {:
+        RESULT = new RepeatUntilStmt();
+        ((RepeatUntilStmt)RESULT).setBody(stmt);
+        ((RepeatUntilStmt)RESULT).setExpn(exp);
+      :}
+    | EXIT
+      {:
+        // TODO: check if this generates a cascading statment or a score for each exit cond
+        // i.e. do i need to initialize new ExitStmt for every exit type
+        RESULT = new ExitStmt();
+      :}
+    | EXIT INTCONST:level
+      {:
+        RESULT = new ExitStmt();
+        ((ExitStmt)RESULT).setLevel(level);
+      :}
+    | EXIT WHEN expression:cond
+      {:
+        RESULT = new ExitStmt();
+        ((ExitStmt)RESULT).setExpn(cond);
+      :}
+    | EXIT INTCONST:level WHEN expression:cond
+      {:
+        RESULT = new ExitStmt();
+        ((ExitStmt)RESULT).setLevel(level);
+        ((ExitStmt)RESULT).setExpn(cond);
+      :}
+    | RETURN WITHX expression:expn
+      {:
+        RESULT = new ReturnStmt();
+        ((ReturnStmt)RESULT).setValue(expn);
+      :}
+    | RETURN
+      {:
+        RESULT = new ReturnStmt();
+      :}
+      // TODO: read/write/calls
+    | WRITE outputs:out
+    | READ inputs:ins
+    | procedureCall:p
+    | scope:s
+    ;
 
 unmatchedStatement
   ::= IF expression THEN statement
@@ -277,7 +317,6 @@ procedureCall
 declaration
   ::= VAR variablenames:varNames COLON type:t  // declare scalar/array variables
       {:
-        System.out.println("Declaration");
         System.out.println(t.toString());
 
         // var a,b,c : Int
@@ -287,7 +326,6 @@ declaration
       :}
     | FUNCTION IDENT:fname COLON type:returnType scope:s // declare function
       {:
-        System.out.println("Function Name: " + fname);
 
         RoutineBody body = new RoutineBody();
         body.setBody(s);
@@ -299,7 +337,6 @@ declaration
       :}
     | FUNCTION IDENT:fname L_PAREN parameters:params R_PAREN COLON type:returnType scope:s
       {:
-        System.out.println("Function w/ args Name: " + fname);
 
         RoutineBody body = new RoutineBody();
         body.setBody(s);
@@ -312,7 +349,6 @@ declaration
       :}
     | PROCEDURE IDENT:pname scope:s  // declare procedure
       {:
-        System.out.println("Procedure Name: " + pname);
 
         RoutineBody body = new RoutineBody();
         body.setBody(s);
@@ -323,7 +359,6 @@ declaration
       :}
     | PROCEDURE IDENT:pname L_PAREN parameters:params R_PAREN scope:s
       {:
-        System.out.println("Procedure w/ args Name: " + pname);
 
         RoutineBody body = new RoutineBody();
         body.setBody(s);
@@ -338,13 +373,11 @@ declaration
 variablenames
   ::= variablename:varName  // list of variables being declared
       {:
-        System.out.println("VariableName");
         RESULT = new ASTList<DeclarationPart>();
         RESULT.addLast((DeclarationPart)varName);
       :}
     | variablenames:vs COMMA variablename:v
       {:
-        System.out.println("VariableNames");
         RESULT = (ASTList<DeclarationPart>)vs;
         RESULT.addLast((DeclarationPart)v);
       :}
@@ -353,17 +386,43 @@ variablenames
 variablename
   ::= IDENT:id  // scalar variable
       {:
-        System.out.println("VariableName: " + id);
         RESULT = new DeclarationPart();
         ((DeclarationPart)RESULT).setName(id);
       :}
-    | IDENT L_SQUARE INTCONST R_SQUARE  // array variable with upper bound
-    | IDENT L_SQUARE bound DOT DOT bound R_SQUARE  // array variable with upper/lower bounds
+    | IDENT:id L_SQUARE INTCONST:upBound R_SQUARE  // array variable with upper bound
+      {:
+        // semantic analysis: make this positive
+        System.out.println("Variable Name: " + id);
+        RESULT = new ArrayDeclPart();
+        ((ArrayDeclPart)RESULT).setName(id);
+        ((ArrayDeclPart)RESULT).setLowerBoundary(0);
+        ((ArrayDeclPart)RESULT).setUpperBoundary(upBound);
+        ((ArrayDeclPart)RESULT).setSize(upBound);
+      :}
+    | IDENT:name L_SQUARE bound:lBound DOT DOT bound:uBound R_SQUARE  // array variable with upper/lower bounds
+      {:
+        System.out.println("VariableName: " + id);
+        Integer upper = ((IntConst)uBound).getValue();
+        Integer lower = ((IntConst)lBound).getValue();
+        RESULT = new ArrayDeclPart();
+        ((ArrayDeclPart)RESULT).setName(name);
+        ((ArrayDeclPart)RESULT).setLowerBoundary(lower);
+        ((ArrayDeclPart)RESULT).setUpperBoundary(upper);
+        ((ArrayDeclPart)RESULT).setSize(abs(upper - lower));
+      :}
 ;
 
 bound
-  ::= INTCONST  // positive array bound
-    | MINUS INTCONST  // negative array bound
+  ::= INTCONST:i  // positive array bound
+      {:
+        RESULT = new IntConstExpn();
+        ((IntConstExpn)RESULT).setValue(i);
+      :}
+    | MINUS INTCONST:i  // negative array bound
+      {:
+        RESULT = new IntConstExpn();
+        ((IntConstExpn)RESULT).setValue(-i);
+      :}
 ;
 
 type
@@ -497,7 +556,6 @@ primary
 constant // type: ConstEpn
   ::= INTCONST:i  // integer constant
       {:
-        System.out.println("int");
         RESULT = new IntConstExpn();
         ((IntConstExpn)RESULT).setValue(i);
       :}
