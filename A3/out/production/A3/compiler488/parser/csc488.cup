@@ -124,28 +124,28 @@ nonterminal Declaration declaration;
 nonterminal Scope scope;
 nonterminal ASTList<Stmt> statements;
 nonterminal ASTList<Declaration> declarations;
-nonterminal matchedStatement;
-nonterminal unmatchedStatement;
+nonterminal Stmt matchedStatement;
+nonterminal Stmt unmatchedStatement;
 nonterminal ASTList<DeclarationPart> variablenames;
 nonterminal output;
 nonterminal Type type;
 nonterminal arguments;
 nonterminal ASTList<ScalarDecl> parameters;
-nonterminal variable;
-nonterminal expression;
+nonterminal IdentExpn variable;
+nonterminal Expn expression;
 nonterminal DeclarationPart variablename;
 nonterminal inputs;
 nonterminal outputs;
 nonterminal bound;
 nonterminal procedureCall;
 nonterminal ScalarDecl parameter;
-nonterminal conjunction;
-nonterminal negation;
-nonterminal compareExpn;
-nonterminal arithExpn;
-nonterminal term;
-nonterminal factor;
-nonterminal primary;
+nonterminal Expn conjunction;
+nonterminal Expn negation;
+nonterminal Expn compareExpn;
+nonterminal Expn arithExpn;
+nonterminal Expn term;
+nonterminal Expn factor;
+nonterminal Expn primary;
 nonterminal ConstExpn constant;
 
 // Non-terminals that have a value.
@@ -230,12 +230,25 @@ declarations
 ;
 
 statement
-  ::= matchedStatement
-    | unmatchedStatement
+  ::= matchedStatement:m
+      {:
+        // TODO: idk
+        RESULT = m;
+      :}
+    | unmatchedStatement:s
+      {:
+        // TODO: idk
+        RESULT = s;
+      :}
 ;
 
 matchedStatement
-  ::= variable COLON EQUAL expression  // assignment statement
+  ::= variable:var COLON EQUAL expression:expr  // assignment statement
+      {:
+        RESULT = new AssignStmt();
+        ((AssignStmt)RESULT).setLval(var);
+        ((AssignStmt)RESULT).setRval(expr);
+      :}
     | IF expression THEN matchedStatement ELSE matchedStatement  // if statements
     | WHILE expression DO statement  // while statement
     | REPEAT statement UNTIL expression  // repeat statement
@@ -408,22 +421,34 @@ parameter
 ;
 
 expression
-  ::= conjunction  // disjunctions, associate left-to-right
+  ::= conjunction:c  // disjunctions, associate left-to-right
+      {:
+        RESULT = c;
+      :}
     | expression OR conjunction
 ;
 
 conjunction
-  ::= negation  // conjunctions, associate left-to-right
+  ::= negation:c  // conjunctions, associate left-to-right
+      {:
+        RESULT = c;
+      :}
     | conjunction AND negation
 ;
 
 negation
-  ::= compareExpn  // negations
+  ::= compareExpn:c  // negations
+      {:
+        RESULT = c;
+      :}
     | NOT negation
 ;
 
 compareExpn
-  ::= arithExpn  // comparisons, do not associate
+  ::= arithExpn:a  // comparisons, do not associate
+      {:
+        RESULT = a;
+      :}
     | arithExpn EQUAL arithExpn
     |  arithExpn NOT EQUAL arithExpn
     | arithExpn LESS arithExpn
@@ -433,24 +458,36 @@ compareExpn
 ;
 
 arithExpn
-  ::= term  // expressions, associate + , - left-to-right
+  ::= term:t  // expressions, associate + , - left-to-right
+      {:
+        RESULT = t;
+      :}
     | arithExpn PLUS term
     | arithExpn MINUS term
 ;
 
 term
-  ::= factor  // terms, associate * , /  left-to-right
+  ::= factor:f  // terms, associate * , /  left-to-right
+      {:
+        RESULT = f;
+      :}
     | term TIMES factor
     | term DIVIDE factor
 ;
 
 factor
-  ::= primary  // unary minus
+  ::= primary:p  // unary minus
+      {:
+        RESULT = p;
+      :}
     | MINUS factor
 ;
 
 primary
-  ::= constant  // integer or boolean constant
+  ::= constant:c  // integer or boolean constant
+      {:
+        RESULT = c;
+      :}
     | variable  // scalar, array variable or function call
     | IDENT L_PAREN arguments R_PAREN  // function call
     |  L_PAREN expression R_PAREN  // parenthesized expression
@@ -460,16 +497,28 @@ primary
 constant // type: ConstEpn
   ::= INTCONST:i  // integer constant
       {:
-        System.out.println("New Const :)");
+        System.out.println("int");
         RESULT = new IntConstExpn();
         ((IntConstExpn)RESULT).setValue(i);
       :}
     | TRUE  // constant true
+      {:
+        RESULT = new BoolConstExpn();
+        ((BoolConstExpn)RESULT).setValue(true);
+      :}
     | FALSE  // constant false
+      {:
+        RESULT = new BoolConstExpn();
+        ((BoolConstExpn)RESULT).setValue(false);
+      :}
 ;
 
 variable
-  ::= IDENT  // scalar variable or function call
+  ::= IDENT:name  // scalar variable or function call
+      {:
+        RESULT = new IdentExpn();
+        ((IdentExpn)RESULT).setIdent(name);
+      :}
     | IDENT L_SQUARE expression R_SQUARE  // element of an array
 ;
 
