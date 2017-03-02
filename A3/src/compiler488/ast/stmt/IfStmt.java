@@ -4,6 +4,8 @@ import java.io.PrintStream;
 
 import compiler488.ast.Indentable;
 import compiler488.ast.expn.Expn;
+import compiler488.ast.type.BooleanType;
+import compiler488.semantics.SemanticObject;
 
 /**
  * Represents an if-then or an if-then-else construct.
@@ -36,6 +38,17 @@ public class IfStmt extends Stmt {
 			whenFalse.printOn(out, depth + 1);
 		}
 		Indentable.printIndentOnLn(out, depth, "End if");
+	}
+
+	@Override
+	public boolean semantic_visit(SemanticObject semanticObject) {
+		boolean b;
+		b = condition.getType().equals(new BooleanType()); /* S30 */
+		if (whenTrue != null)
+			b &= whenTrue.semantic_visit(semanticObject);
+		if (whenFalse != null)
+			b &= whenFalse.semantic_visit(semanticObject);
+		return b;
 	}
 
 	public Expn getCondition() {

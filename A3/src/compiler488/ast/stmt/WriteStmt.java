@@ -1,7 +1,14 @@
 package compiler488.ast.stmt;
 
+import compiler488.ast.AST;
 import compiler488.ast.ASTList;
 import compiler488.ast.Printable;
+import compiler488.ast.expn.Expn;
+import compiler488.ast.type.IntegerType;
+import compiler488.semantics.SemanticObject;
+
+import java.util.Iterator;
+import java.util.ListIterator;
 
 /**
  * The command to write data on the output device.
@@ -25,5 +32,30 @@ public class WriteStmt extends Stmt {
 
 	public void setOutputs(ASTList<Printable> outputs) {
 		this.outputs = outputs;
+	}
+
+	@Override
+	public boolean semantic_visit(SemanticObject semanticObject) {
+		boolean b;
+		b = true;
+		if (0 == outputs.size())
+			return false;
+		else {
+			ListIterator<Printable> iterator = outputs.getIterator();
+
+			Printable p;
+			while (iterator.hasNext())
+			{
+				p = iterator.next();
+				if (p instanceof AST)
+				{
+					b &= ((AST) p).semantic_visit(semanticObject);
+					b &= p instanceof Expn && ((Expn) p).semantic_visit(semanticObject) &&
+							((Expn) p).getType() instanceof IntegerType; /* S31 */
+				}
+
+			}
+		}
+		return b;
 	}
 }

@@ -1,5 +1,7 @@
 package compiler488.ast.decl;
 
+import compiler488.semantics.SemanticObject;
+
 /**
  * Holds the declaration part of an array.
  */
@@ -39,6 +41,14 @@ public class ArrayDeclPart extends DeclarationPart {
 
 	public void setUpperBoundary(Integer ub) {
 		this.ub = ub;
+	}
+
+	@Override
+	public boolean semantic_visit(SemanticObject semanticObject) {
+		if (lb > ub)
+			return false; /* S46 */
+		/* TODO: S19 S47 S48*/
+		return true;
 	}
 
 	public void setSize(Integer size) {

@@ -1,10 +1,12 @@
 package compiler488.ast.stmt;
 
 import java.io.PrintStream;
+import java.util.ListIterator;
 
 import compiler488.ast.ASTList;
 import compiler488.ast.Indentable;
 import compiler488.ast.decl.Declaration;
+import compiler488.semantics.SemanticObject;
 
 /**
  * Represents the declarations and instructions of a scope construct.
@@ -17,6 +19,32 @@ public class Scope extends Stmt {
 	public Scope() {
 		declarations = new ASTList<Declaration>();
 		statements = new ASTList<Stmt>();
+	}
+
+	@Override
+	public boolean semantic_visit(SemanticObject semanticObject) {
+		boolean b;
+		ListIterator<Declaration> iter_d;
+		ListIterator<Stmt> iter_s;
+		b = true;
+		if (declarations.size() > 0)
+		{
+			iter_d = declarations.getIterator();
+			while (iter_d.hasNext())
+			{
+				b &= iter_d.next().semantic_visit(semanticObject); /* S02 */
+			}
+		}
+		if (statements.size() > 0)
+		{
+			iter_s = statements.getIterator();
+			while(iter_s.hasNext())
+			{
+				b &= iter_s.next().semantic_visit(semanticObject);
+			}
+
+		}
+		return b;
 	}
 
 	/**

@@ -1,5 +1,7 @@
 package compiler488.ast;
 
+import compiler488.semantics.SemanticObject;
+
 import java.io.PrintStream;
 
 /**
@@ -62,5 +64,11 @@ public class Indentable extends AST {
 	 */
 	public void printOn(PrintStream out, int depth) {
 		Indentable.printIndentOnLn(out, depth, this.toString());
+	}
+
+	@Override
+	public boolean semantic_visit(SemanticObject semanticObject) {
+		/* Has to be overwritten by child */
+		return false;
 	}
 }

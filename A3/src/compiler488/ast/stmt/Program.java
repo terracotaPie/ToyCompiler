@@ -11,8 +11,9 @@ public class Program extends Scope {
     public boolean semantic_visit(SemanticObject semanticObject)
     {
         boolean b;
-        b = getDeclarations().semantic_visit(semanticObject);
-        b &= getStatements().semantic_visit(semanticObject);
+        semanticObject.S00_01 = true;
+        b = super.semantic_visit(semanticObject);
+        semanticObject.S00_01 = false;
         return b;
     }
 

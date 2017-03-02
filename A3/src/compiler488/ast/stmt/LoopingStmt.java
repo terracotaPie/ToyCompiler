@@ -1,6 +1,8 @@
 package compiler488.ast.stmt;
 
 import compiler488.ast.expn.Expn;
+import compiler488.ast.type.BooleanType;
+import compiler488.semantics.SemanticObject;
 
 
 /**
@@ -25,6 +27,17 @@ public abstract class LoopingStmt extends Stmt
 
 	public void setBody(Stmt body) {
 		this.body = body;
+	}
+
+	@Override
+	public boolean semantic_visit(SemanticObject semanticObject) {
+		boolean b;
+		semanticObject.S50 += 1;
+		b = expn.getType().equals(new BooleanType()); /* S30 */
+		if (body != null)
+			b &= body.semantic_visit(semanticObject);
+		semanticObject.S50 -= 1;
+		return b;
 	}
 
 }

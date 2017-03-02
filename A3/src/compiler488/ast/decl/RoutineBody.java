@@ -1,10 +1,12 @@
 package compiler488.ast.decl;
 
 import java.io.PrintStream;
+import java.util.ListIterator;
 
 import compiler488.ast.ASTList;
 import compiler488.ast.Indentable;
 import compiler488.ast.stmt.Scope;
+import compiler488.semantics.SemanticObject;
 
 /**
  * Represents the parameters and instructions associated with a
@@ -13,6 +15,23 @@ import compiler488.ast.stmt.Scope;
 public class RoutineBody extends Indentable {
 	private ASTList<ScalarDecl> parameters; // The formal parameters of the routine.
 	private Scope body; // Execute this scope when routine is called.
+
+	@Override
+	public boolean semantic_visit(SemanticObject semanticObject) {
+		boolean b;
+		b = true;
+		ListIterator<ScalarDecl> iterator;
+		if (parameters.size() > 0)
+		{
+			iterator = parameters.getIterator();
+			while (iterator.hasNext())
+			{
+				b &= iterator.next().semantic_visit(semanticObject);
+			}
+		}
+		b &= body.semantic_visit(semanticObject);
+		return b;
+	}
 
 	/**
 	 * Print a description of the formal parameters and the scope for this

@@ -5,5 +5,4 @@ package compiler488.ast.expn;
  * expressions.
  */
 public class BoolExpn extends BinaryExpn {
-
 }

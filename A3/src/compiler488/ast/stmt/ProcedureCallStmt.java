@@ -2,6 +2,7 @@ package compiler488.ast.stmt;
 
 import compiler488.ast.ASTList;
 import compiler488.ast.expn.Expn;
+import compiler488.semantics.SemanticObject;
 
 /**
  * Represents calling a procedure.
@@ -32,5 +33,13 @@ public class ProcedureCallStmt extends Stmt {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public boolean semantic_visit(SemanticObject semanticObject) {
+		boolean b;
+		b = true;
+		// TODO: Wait for symbol table: Check if arguments/types match
+		return b;
 	}
 }

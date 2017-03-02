@@ -267,6 +267,7 @@ matchedStatement
         // TODO: check if this generates a cascading statment or a score for each exit cond
         // i.e. do i need to initialize new ExitStmt for every exit type
         RESULT = new ExitStmt();
+        ((ExitStmt)RESULT).setLevel(1);
       :}
     | EXIT INTCONST:level
       {:
@@ -276,6 +277,7 @@ matchedStatement
     | EXIT WHEN expression:cond
       {:
         RESULT = new ExitStmt();
+        ((ExitStmt)RESULT).setLevel(1);
         ((ExitStmt)RESULT).setExpn(cond);
       :}
     | EXIT INTCONST:level WHEN expression:cond

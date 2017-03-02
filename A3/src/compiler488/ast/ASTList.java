@@ -1,6 +1,9 @@
 package compiler488.ast;
 
+import compiler488.semantics.SemanticObject;
+
 import java.io.PrintStream;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
@@ -68,6 +71,20 @@ public class ASTList<E> extends AST {
 			Indentable.printIndentOn(out, depth, ">>empty<<\n");
 	}
 
+	public boolean semantic_visit(SemanticObject semanticObject) {
+		if (0 == ll.size())
+			return true;
+		else {
+			ListIterator<E> iterator = ll.listIterator();
+			boolean b;
+			b = true;
+			while (iterator.hasNext())
+				b &= ((AST)iterator.next()).semantic_visit(semanticObject);
+
+			return b;
+		}
+	}
+
 	/**
 	 * Return the contatenation of the strings obtained by sending
 	 * <b>toString</b> to each element.
@@ -85,5 +102,10 @@ public class ASTList<E> extends AST {
 
 			return result.toString();
 		}
+	}
+
+	public ListIterator<E> getIterator()
+	{
+		return ll.listIterator();
 	}
 }

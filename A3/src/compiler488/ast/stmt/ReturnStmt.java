@@ -4,6 +4,7 @@ import java.io.PrintStream;
 
 import compiler488.ast.Indentable;
 import compiler488.ast.expn.Expn;
+import compiler488.semantics.SemanticObject;
 
 /**
  * The command to return from a function or procedure.
@@ -27,6 +28,11 @@ public class ReturnStmt extends Stmt {
 			out.println("return ");
 		else
 			out.println("return with " + value );
+	}
+
+	@Override
+	public boolean semantic_visit(SemanticObject semanticObject) {
+		return value.semantic_visit(semanticObject) && semanticObject.IsTopStackType(value.getType());
 	}
 
 	public Expn getValue() {

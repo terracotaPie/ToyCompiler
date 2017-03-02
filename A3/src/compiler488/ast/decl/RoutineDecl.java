@@ -3,6 +3,7 @@ package compiler488.ast.decl;
 import java.io.PrintStream;
 
 import compiler488.ast.Indentable;
+import compiler488.semantics.SemanticObject;
 
 /**
  * Represents the declaration of a function or procedure.
@@ -29,6 +30,22 @@ public class RoutineDecl extends Declaration {
 	    {
 	      return " function " + name + " : " + type ;
 	    }
+	}
+
+	@Override
+	public boolean semantic_visit(SemanticObject semanticObject) {
+		boolean b;
+		if (type == null)
+			semanticObject.pushProcedure(); /* S08 */
+		else
+			semanticObject.pushFunction(type); /* S04 */
+		b = routineBody.semantic_visit(semanticObject);
+		semanticObject.popScope(); /* S05 S09 */
+		if (b)
+		{
+			/* TODO: Assign routine to Symbol table  S11 S12 S13 S17 S18*/
+		}
+		return b;
 	}
 
 	/**

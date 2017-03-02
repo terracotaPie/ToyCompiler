@@ -1,6 +1,7 @@
 package compiler488.ast.stmt;
 
 import compiler488.ast.expn.*;
+import compiler488.semantics.SemanticObject;
 
 /**
  * Represents the command to exit from a loop.
@@ -43,4 +44,9 @@ public class ExitStmt extends Stmt {
 		this.level = level;
 	}
 
+	@Override
+	public boolean semantic_visit(SemanticObject semanticObject) {
+		boolean b;
+		return semanticObject.S50 > level && level > 0; /* S50 && S53 */
+	}
 }

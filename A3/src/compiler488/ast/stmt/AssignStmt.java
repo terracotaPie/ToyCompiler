@@ -1,6 +1,7 @@
 package compiler488.ast.stmt;
 
 import compiler488.ast.expn.Expn;
+import compiler488.semantics.SemanticObject;
 
 /**
  * Holds the assignment of an expression to a variable.
@@ -34,5 +35,14 @@ public class AssignStmt extends Stmt {
 
 	public void setRval(Expn rval) {
 		this.rval = rval;
+	}
+
+	@Override
+	public boolean semantic_visit(SemanticObject semanticObject) {
+		boolean b;
+		b = lval.semantic_visit(semanticObject);
+		b &= rval.semantic_visit(semanticObject);
+		b &= lval.getType().equals(rval.getType());
+		return b;
 	}
 }

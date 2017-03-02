@@ -4,6 +4,7 @@ import java.io.PrintStream;
 
 import compiler488.ast.ASTList;
 import compiler488.ast.Indentable;
+import compiler488.semantics.SemanticObject;
 
 /**
  * Holds the declaration of multiple elements.
@@ -24,6 +25,12 @@ public class MultiDeclarations extends Declaration {
 		return  " : " + type ;
 	}
 
+
+	@Override
+	public boolean semantic_visit(SemanticObject semanticObject) {
+		/* TODO: S47 */
+		return true;
+	}
 
 	/**
 	 * Print the multiple declarations of the same type.
