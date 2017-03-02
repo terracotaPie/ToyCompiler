@@ -23,11 +23,14 @@ public class SymbolTableEntry {
 
     /* position within this scopes*/
     private int orderNo;
+    /* scope depth */
+    public int depth;
 
-    public SymbolTableEntry(String name, AST value, Type type) {
+    public SymbolTableEntry(String name, AST value, Type type,int depth) {
         this.name  = name;
         this.value = value;
         this.type  = type;
+        this.depth = depth;
     }
 
     /* Modifiers ID */

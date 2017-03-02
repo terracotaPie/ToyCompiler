@@ -28,13 +28,13 @@ public class SymbolTable {
 
     private int depth;
 
-	private HashMap<String, Stack<SymbolTableEntry>> symbols;
+	private HashMap<String, ArrayList<SymbolTableEntry>> symbols;
 
 	/** Symbol Table  constructor
          *  Create and initialize a symbol table 
 	 */
 	public SymbolTable  (){
-	    this.symbols = new HashMap<String, Stack<SymbolTableEntry>>();
+	    this.symbols = new HashMap<String, ArrayList<SymbolTableEntry> >();
 	}
 
 	/**  Initialize - called once by semantic analysis  
@@ -90,12 +90,18 @@ public class SymbolTable {
      * the new entry was successfully inserted
      */
     public void addEntry(String identifier, AST value, Type type) {
-        SymbolTableEntry entry = new SymbolTableEntry(identifier, value, type);
+        SymbolTableEntry entry = new SymbolTableEntry(identifier, value, type, depth);
         if (this.hasEntry(identifier)){
-            this.symbols.get(identifier).push(entry);
+            for(SymbolTableEntry e : symbols.get(identifier)) {
+                if (entry.depth == e.depth) {
+                // TODO throw exception
+				} else {
+					this.symbols.get(identifier).add(0,entry);
+				}
+			}
         } else {
-            Stack<SymbolTableEntry> chain = new Stack<SymbolTableEntry>();
-            chain.push(entry);
+            ArrayList<SymbolTableEntry> chain = new ArrayList<SymbolTableEntry>();
+            chain.add(entry);
             this.symbols.put(identifier, chain);
         }
     }
