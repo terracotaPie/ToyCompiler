@@ -127,15 +127,15 @@ nonterminal ASTList<Declaration> declarations;
 nonterminal Stmt matchedStatement;
 nonterminal Stmt unmatchedStatement;
 nonterminal ASTList<DeclarationPart> variablenames;
-nonterminal output;
+nonterminal Printable output;
 nonterminal Type type;
 nonterminal ASTList<Expn> arguments;
 nonterminal ASTList<ScalarDecl> parameters;
 nonterminal Expn variable;
 nonterminal Expn expression;
 nonterminal DeclarationPart variablename;
-nonterminal inputs;
-nonterminal outputs;
+nonterminal ASTList<compiler488.ast.Readable> inputs;
+nonterminal ASTList<Printable> outputs;
 nonterminal IntConstExpn bound;
 nonterminal ProcedureCallStmt procedureCall;
 nonterminal ScalarDecl parameter;
@@ -299,11 +299,24 @@ matchedStatement
       {:
         RESULT = new ReturnStmt();
       :}
-      // TODO: read/write/calls
     | WRITE outputs:out
+      {:
+        RESULT = new WriteStmt();
+        ((WriteStmt)RESULT).setOutputs(out);
+      :}
     | READ inputs:ins
+      {:
+        RESULT = new ReadStmt();
+        ((ReadStmt)RESULT).setInputs(ins);
+      :}
     | procedureCall:p
+      {:
+        RESULT = p;
+      :}
     | scope:s
+      {:
+        RESULT = s;
+      :}
     ;
 
 
@@ -468,19 +481,46 @@ type
 ;
 
 outputs
-  ::= output  // list of output expressions
-    | outputs COMMA output
+  ::= output:out  // list of output expressions
+      {:
+        RESULT = new ASTList<Printable>();
+        RESULT.addLast(out);
+      :}
+    | outputs:os COMMA output:o
+      {:
+        RESULT = os;
+        RESULT.addLast((Printable)o);
+      :}
 ;
 
 output
-  ::= expression  // integer expression
-    | TEXTCONST  // text constant
-    | NEWLINE  // newline constant
+  ::= expression:e  // integer expression
+      {:
+        RESULT = e;
+      :}
+    | TEXTCONST:t  // text constant
+      {:
+        RESULT = new TextConstExpn();
+        ((TextConstExpn)RESULT).setValue(t);
+      :}
+    | NEWLINE:newline  // newline constant
+      {:
+        RESULT = new SkipConstExpn();
+      :}
+
 ;
 
 inputs
-  ::= variable  // list of variables being read into
-    | inputs COMMA variable
+  ::= variable:v  // list of variables being read into
+      {:
+        RESULT = new ASTList<compiler488.ast.Readable>();
+        RESULT.addLast((compiler488.ast.Readable)v);
+      :}
+    | inputs:vs COMMA variable:v
+      {:
+        RESULT = vs;
+        RESULT.addLast((compiler488.ast.Readable)v);
+      :}
 ;
 
 arguments
@@ -523,7 +563,13 @@ expression
       {:
         RESULT = c;
       :}
-    | expression OR conjunction
+    | expression:a OR conjunction:b
+      {:
+        RESULT = new BoolExpn();
+        ((BoolExpn)RESULT).setLeft(a);
+        ((BoolExpn)RESULT).setRight(b);
+        ((BoolExpn)RESULT).setOpSymbol("or");
+      :}
 ;
 
 conjunction
@@ -531,7 +577,13 @@ conjunction
       {:
         RESULT = c;
       :}
-    | conjunction AND negation
+    | conjunction:a AND negation:b
+      {:
+        RESULT = new BoolExpn();
+        ((BoolExpn)RESULT).setLeft(a);
+        ((BoolExpn)RESULT).setRight(b);
+        ((BoolExpn)RESULT).setOpSymbol("and");
+      :}
 ;
 
 negation
@@ -540,6 +592,9 @@ negation
         RESULT = c;
       :}
     | NOT negation
+      {:
+        RESULT = new NotExpn();
+      :}
 ;
 
 compareExpn
@@ -547,12 +602,48 @@ compareExpn
       {:
         RESULT = a;
       :}
-    | arithExpn EQUAL arithExpn
-    |  arithExpn NOT EQUAL arithExpn
-    | arithExpn LESS arithExpn
-    | arithExpn LESS EQUAL arithExpn
-    | arithExpn GREATER arithExpn
-    | arithExpn GREATER EQUAL arithExpn
+    | arithExpn:a EQUAL arithExpn:b
+      {:
+        RESULT = new CompareExpn();
+        ((CompareExpn)RESULT).setLeft(a);
+        ((CompareExpn)RESULT).setRight(b);
+        ((CompareExpn)RESULT).setOpSymbol("=");
+      :}
+    | arithExpn:a NOT EQUAL arithExpn:b
+      {:
+        RESULT = new CompareExpn();
+        ((CompareExpn)RESULT).setLeft(a);
+        ((CompareExpn)RESULT).setRight(b);
+        ((CompareExpn)RESULT).setOpSymbol("!=");
+      :}
+    | arithExpn:a LESS arithExpn:b
+      {:
+        RESULT = new CompareExpn();
+        ((CompareExpn)RESULT).setLeft(a);
+        ((CompareExpn)RESULT).setRight(b);
+        ((CompareExpn)RESULT).setOpSymbol("<");
+      :}
+    | arithExpn:a LESS EQUAL arithExpn:b
+      {:
+        RESULT = new CompareExpn();
+        ((CompareExpn)RESULT).setLeft(a);
+        ((CompareExpn)RESULT).setRight(b);
+        ((CompareExpn)RESULT).setOpSymbol("<=");
+      :}
+    | arithExpn:a GREATER arithExpn:b
+      {:
+        RESULT = new CompareExpn();
+        ((CompareExpn)RESULT).setLeft(a);
+        ((CompareExpn)RESULT).setRight(b);
+        ((CompareExpn)RESULT).setOpSymbol(">");
+      :}
+    | arithExpn:a GREATER EQUAL arithExpn:b
+      {:
+        RESULT = new CompareExpn();
+        ((CompareExpn)RESULT).setLeft(a);
+        ((CompareExpn)RESULT).setRight(b);
+        ((CompareExpn)RESULT).setOpSymbol(">=");
+      :}
 ;
 
 arithExpn
@@ -560,8 +651,20 @@ arithExpn
       {:
         RESULT = t;
       :}
-    | arithExpn PLUS term
-    | arithExpn MINUS term
+    | arithExpn:a PLUS term:b
+      {:
+        RESULT = new ArithExpn();
+        ((BinaryExpn)RESULT).setLeft(a);
+        ((BinaryExpn)RESULT).setRight(b);
+        ((BinaryExpn)RESULT).setOpSymbol("+");
+      :}
+    | arithExpn:a MINUS term:b
+      {:
+        RESULT = new ArithExpn();
+        ((ArithExpn)RESULT).setLeft(a);
+        ((ArithExpn)RESULT).setRight(b);
+        ((ArithExpn)RESULT).setOpSymbol("-");
+      :}
 ;
 
 term
@@ -571,17 +674,17 @@ term
       :}
     | term:a TIMES factor:b
       {:
-        RESULT = new BinaryExpn();
-        ((BinaryExpn)RESULT).setLeft(a);
-        ((BinaryExpn)RESULT).setRight(b);
-        ((BinaryExpn)RESULT).setOpSymbol("*");
+        RESULT = new ArithExpn();
+        ((ArithExpn)RESULT).setLeft(a);
+        ((ArithExpn)RESULT).setRight(b);
+        ((ArithExpn)RESULT).setOpSymbol("*");
       :}
     | term:a DIVIDE factor:b
       {:
-        RESULT = new BinaryExpn();
-        ((BinaryExpn)RESULT).setLeft(a);
-        ((BinaryExpn)RESULT).setRight(b);
-        ((BinaryExpn)RESULT).setOpSymbol("/");
+        RESULT = new ArithExpn();
+        ((ArithExpn)RESULT).setLeft(a);
+        ((ArithExpn)RESULT).setRight(b);
+        ((ArithExpn)RESULT).setOpSymbol("/");
       :}
 ;
 
