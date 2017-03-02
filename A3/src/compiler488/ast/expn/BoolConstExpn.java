@@ -1,5 +1,10 @@
 package compiler488.ast.expn;
 
+import compiler488.ast.type.BooleanType;
+import compiler488.ast.type.Type;
+import compiler488.semantics.SemanticObject;
+import compiler488.symbol.SymbolTable;
+
 /**
  * Boolean literal constants.
  */
@@ -9,7 +14,7 @@ public class BoolConstExpn extends ConstExpn
 
     /** Returns the value of the boolean constant */
     @Override
-	public String toString () { 
+	public String toString () {
 	return ( value ? "(true)" : "(false)" );
     }
 
@@ -19,5 +24,17 @@ public class BoolConstExpn extends ConstExpn
 
 	public void setValue(boolean value) {
 		this.value = value;
+	}
+
+	@Override
+	public boolean semantic_visit(SemanticObject semanticObject) {
+		return true;
+	}
+
+    @Override
+    public void table_visit(SymbolTable symbolTable){}
+	@Override
+	public Type getType() {
+		return new BooleanType();
 	}
 }

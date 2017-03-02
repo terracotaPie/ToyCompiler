@@ -4,6 +4,8 @@ import compiler488.ast.AST;
 import compiler488.ast.ASTList;
 import compiler488.ast.Printable;
 import compiler488.ast.expn.Expn;
+import compiler488.ast.expn.SkipConstExpn;
+import compiler488.ast.expn.TextConstExpn;
 import compiler488.ast.type.IntegerType;
 import compiler488.semantics.SemanticObject;
 
@@ -51,7 +53,9 @@ public class WriteStmt extends Stmt {
 				{
 					b &= ((AST) p).semantic_visit(semanticObject);
 					b &= p instanceof Expn && ((Expn) p).semantic_visit(semanticObject) &&
-							((Expn) p).getType() instanceof IntegerType; /* S31 */
+							((Expn) p).getType() instanceof IntegerType ||
+					p instanceof TextConstExpn ||
+					p instanceof SkipConstExpn; /* S31 */
 				}
 
 			}

@@ -1,6 +1,10 @@
 package compiler488.ast.expn;
 
 import compiler488.ast.Readable;
+import compiler488.ast.type.IntegerType;
+import compiler488.ast.type.Type;
+import compiler488.semantics.SemanticObject;
+import compiler488.symbol.SymbolTable;
 
 /**
  * References to an array element variable
@@ -26,4 +30,23 @@ public class SubsExpn extends UnaryExpn implements Readable {
 		this.variable = variable;
 	}
 
+	@Override
+	public Type getType() {
+		// TODO: Check symbol table for type
+		return null;
+	}
+
+	@Override
+	public boolean semantic_visit(SemanticObject semanticObject) {
+		boolean b;
+		b = true;
+
+		b &= operand.semantic_visit(semanticObject) && operand.getType() instanceof IntegerType; /* S31 */
+
+		// TODO: Check indent for variable, then check if it is integer
+
+		return b;
+	}
+	@Override
+	public void table_visit(SymbolTable symbolTable){}
 }

@@ -1,6 +1,9 @@
 package compiler488.ast.expn;
 
 import compiler488.symbol.SymbolTable;
+import compiler488.ast.type.IntegerType;
+import compiler488.ast.type.Type;
+import compiler488.semantics.SemanticObject;
 
 /**
  * Represents a literal integer constant.
@@ -22,4 +25,14 @@ public class IntConstExpn extends ConstExpn
 	}
     @Override
     public void table_visit(SymbolTable symbolTable){}
+
+	@Override
+	public boolean semantic_visit(SemanticObject semanticObject) {
+		return true;
+	}
+
+	@Override
+	public Type getType() {
+		return new IntegerType();
+	}
 }
