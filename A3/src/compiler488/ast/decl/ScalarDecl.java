@@ -1,6 +1,9 @@
 package compiler488.ast.decl;
 
+import compiler488.ast.type.Type;
+import compiler488.ast.type.VarType;
 import compiler488.semantics.SemanticObject;
+import compiler488.symbol.SymbolTable;
 
 /**
  * Represents the declaration of a simple variable.
@@ -21,5 +24,10 @@ public class ScalarDecl extends Declaration {
 	@Override
 	public String toString() {
 		return  name + " : " + type ;
+	}
+	@Override
+	public void table_visit(SymbolTable symbolTable) {
+	    type = new Type(VarType.SCALAR);
+		symbolTable.addEntry(name,this,type);
 	}
 }

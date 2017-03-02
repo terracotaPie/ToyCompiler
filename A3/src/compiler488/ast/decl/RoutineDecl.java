@@ -3,7 +3,10 @@ package compiler488.ast.decl;
 import java.io.PrintStream;
 
 import compiler488.ast.Indentable;
+import compiler488.ast.type.Type;
+import compiler488.ast.type.VarType;
 import compiler488.semantics.SemanticObject;
+import compiler488.symbol.SymbolTable;
 
 /**
  * Represents the declaration of a function or procedure.
@@ -48,6 +51,18 @@ public class RoutineDecl extends Declaration {
 		return b;
 	}
 
+	@Override
+	public void table_visit(SymbolTable symbolTable) {
+		if(type==null)
+		{
+			type = new Type(VarType.PROC);
+		}
+		else
+		{
+			type = new Type(VarType.FUNC);
+		}
+		symbolTable.addEntry(name,this,type);
+	}
 	/**
 	 * Prints a description of the function/procedure.
 	 * 
