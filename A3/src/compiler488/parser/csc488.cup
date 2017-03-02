@@ -171,25 +171,19 @@ start with program;
  */
 
 program
-  ::= scope  // the main program
+  ::= scope:s
       {:
-        System.out.println("Program");
         RESULT = new Program();
+        ((Program)RESULT).setStatements(s.getStatements());
+        ((Program)RESULT).setDeclarations(s.getDeclarations());
       :}
 ;
 
 scope
   ::= L_CURLEY declarations:dcs statements:stmts R_CURLEY  // scope with declarations and statements
       {:
-        System.out.println("Scope");
         RESULT = new Scope();
         ((Scope)RESULT).setStatements(stmts);
-        ((Scope)RESULT).setDeclarations(dcs);
-      :}
-    | L_CURLEY declarations:dcs R_CURLEY  // scope with declarations and statements
-      {:
-        System.out.println("Scope");
-        RESULT = new Scope();
         ((Scope)RESULT).setDeclarations(dcs);
       :}
     | L_CURLEY statements:stmts R_CURLEY  // scope with statments only
@@ -353,8 +347,6 @@ procedureCall
 declaration
   ::= VAR variablenames:varNames COLON type:t  // declare scalar/array variables
       {:
-        System.out.println("Declaration");
-        System.out.println(t.toString());
 
         // var a,b,c : Int
         RESULT = new MultiDeclarations();
@@ -363,7 +355,6 @@ declaration
       :}
     | FUNCTION IDENT:fname COLON type:returnType scope:s // declare function
       {:
-        System.out.println("Function Name: " + fname);
 
         RoutineBody body = new RoutineBody();
         body.setBody(s);
@@ -375,7 +366,6 @@ declaration
       :}
     | FUNCTION IDENT:fname L_PAREN parameters:params R_PAREN COLON type:returnType scope:s
       {:
-        System.out.println("Function w/ args Name: " + fname);
 
         RoutineBody body = new RoutineBody();
         body.setBody(s);
@@ -388,7 +378,6 @@ declaration
       :}
     | PROCEDURE IDENT:pname scope:s  // declare procedure
       {:
-        System.out.println("Procedure Name: " + pname);
 
         RoutineBody body = new RoutineBody();
         body.setBody(s);
@@ -399,7 +388,6 @@ declaration
       :}
     | PROCEDURE IDENT:pname L_PAREN parameters:params R_PAREN scope:s
       {:
-        System.out.println("Procedure w/ args Name: " + pname);
 
         RoutineBody body = new RoutineBody();
         body.setBody(s);
@@ -414,13 +402,11 @@ declaration
 variablenames
   ::= variablename:varName  // list of variables being declared
       {:
-        System.out.println("VariableName");
         RESULT = new ASTList<DeclarationPart>();
         RESULT.addLast((DeclarationPart)varName);
       :}
     | variablenames:vs COMMA variablename:v
       {:
-        System.out.println("VariableNames");
         RESULT = (ASTList<DeclarationPart>)vs;
         RESULT.addLast((DeclarationPart)v);
       :}
@@ -429,7 +415,6 @@ variablenames
 variablename
   ::= IDENT:id  // scalar variable
       {:
-        System.out.println("VariableName: " + id);
         RESULT = new DeclarationPart();
         ((DeclarationPart)RESULT).setName(id);
       :}
@@ -442,7 +427,7 @@ variablename
         ((ArrayDeclPart)RESULT).setUpperBoundary(i);
         ((ArrayDeclPart)RESULT).setSize(i);
       :}
-    | IDENT:id L_SQUARE bound:upBoundExpn DOT DOT bound:lowBoundExpn R_SQUARE  // array variable with upper/lower bounds
+    | IDENT:id L_SQUARE bound:lowBoundExpn DOT DOT bound:upBoundExpn R_SQUARE  // array variable with upper/lower bounds
       {:
         Integer upper = upBoundExpn.getValue();
         Integer lower = lowBoundExpn.getValue();
@@ -591,9 +576,11 @@ negation
       {:
         RESULT = c;
       :}
-    | NOT negation
+    | NOT negation:c
       {:
         RESULT = new NotExpn();
+        ((NotExpn)RESULT).setOperand(c);
+        ((NotExpn)RESULT).setOpSymbol("not");
       :}
 ;
 
@@ -755,7 +742,6 @@ variable
       :}
     | IDENT:name L_SQUARE expression:expn R_SQUARE  // element of an array
       {:
-        // semantic analysis: check operand is arith expn
         RESULT = new SubsExpn();
         ((SubsExpn)RESULT).setVariable(name);
         ((SubsExpn)RESULT).setOperand(expn);

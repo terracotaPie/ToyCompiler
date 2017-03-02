@@ -42,7 +42,7 @@ public class RoutineDecl extends Declaration {
 	@Override
 	public void printOn(PrintStream out, int depth) {
 		Indentable.printIndentOn(out, depth, this + " ");
-		routineBody.printOn(out, depth);
+		routineBody.printOn(out, depth + 1);
 	}
 
 	public RoutineBody getRoutineBody() {

@@ -6,7 +6,7 @@ package compiler488.ast.decl;
 public class ArrayDeclPart extends DeclarationPart {
 
 	/* The lower and upper boundaries of the array. */
-        private Integer lb, ub;
+	private Integer lb, ub;
 
 
 	/* The number of objects the array holds. */
@@ -33,11 +33,11 @@ public class ArrayDeclPart extends DeclarationPart {
 		return ub;
 	}
 
-        public void setLowerBoundary(Integer lb) {
+	public void setLowerBoundary(Integer lb) {
 		this.lb = lb;
 	}
 
-        public void setUpperBoundary(Integer ub) {
+	public void setUpperBoundary(Integer ub) {
 		this.ub = ub;
 	}
 

@@ -28,4 +28,9 @@ public class Declaration extends Indentable {
 	public void setType(Type type) {
 		this.type = type;
 	}
+
+	@Override
+	public String toString() {
+		return  String.format("var %s %s", type, name);
+	}
 }

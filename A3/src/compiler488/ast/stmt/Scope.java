@@ -30,13 +30,13 @@ public class Scope extends Stmt {
 	@Override
 	public void printOn(PrintStream out, int depth) {
 		Indentable.printIndentOnLn(out, depth, "Scope");
-		Indentable.printIndentOnLn(out, depth, "declarations");
+		Indentable.printIndentOnLn(out, depth + 1, "declarations");
 
-		declarations.printOnSeperateLines(out, depth + 1);
+		declarations.printOnSeperateLines(out, depth + 2);
 
-		Indentable.printIndentOnLn(out, depth, "statements");
+		Indentable.printIndentOnLn(out, depth + 1, "statements");
 
-		statements.printOnSeperateLines(out, depth + 1);
+		statements.printOnSeperateLines(out, depth + 2);
 
 		Indentable.printIndentOnLn(out, depth, "End Scope");
 	}

@@ -8,7 +8,6 @@ import compiler488.ast.decl.*;
 import compiler488.ast.expn.*;
 import compiler488.ast.stmt.*;
 import compiler488.ast.type.*;
-import static java.lang.Math.abs;
 
 /* User code components 1: action code components.
  * Code to be used inside the actions triggered when productions are matched.
@@ -128,17 +127,17 @@ nonterminal ASTList<Declaration> declarations;
 nonterminal Stmt matchedStatement;
 nonterminal Stmt unmatchedStatement;
 nonterminal ASTList<DeclarationPart> variablenames;
-nonterminal output;
+nonterminal Printable output;
 nonterminal Type type;
-nonterminal arguments;
+nonterminal ASTList<Expn> arguments;
 nonterminal ASTList<ScalarDecl> parameters;
-nonterminal IdentExpn variable;
+nonterminal Expn variable;
 nonterminal Expn expression;
 nonterminal DeclarationPart variablename;
-nonterminal inputs;
-nonterminal outputs;
-nonterminal bound;
-nonterminal procedureCall;
+nonterminal ASTList<compiler488.ast.Readable> inputs;
+nonterminal ASTList<Printable> outputs;
+nonterminal IntConstExpn bound;
+nonterminal ProcedureCallStmt procedureCall;
 nonterminal ScalarDecl parameter;
 nonterminal Expn conjunction;
 nonterminal Expn negation;
@@ -172,9 +171,11 @@ start with program;
  */
 
 program
-  ::= scope  // the main program
+  ::= scope:s
       {:
         RESULT = new Program();
+        ((Program)RESULT).setStatements(s.getStatements());
+        ((Program)RESULT).setDeclarations(s.getDeclarations());
       :}
 ;
 
@@ -183,11 +184,6 @@ scope
       {:
         RESULT = new Scope();
         ((Scope)RESULT).setStatements(stmts);
-        ((Scope)RESULT).setDeclarations(dcs);
-      :}
-    | L_CURLEY declarations:dcs R_CURLEY  // scope with declarations and statements
-      {:
-        RESULT = new Scope();
         ((Scope)RESULT).setDeclarations(dcs);
       :}
     | L_CURLEY statements:stmts R_CURLEY  // scope with statments only
@@ -297,27 +293,60 @@ matchedStatement
       {:
         RESULT = new ReturnStmt();
       :}
-      // TODO: read/write/calls
     | WRITE outputs:out
+      {:
+        RESULT = new WriteStmt();
+        ((WriteStmt)RESULT).setOutputs(out);
+      :}
     | READ inputs:ins
+      {:
+        RESULT = new ReadStmt();
+        ((ReadStmt)RESULT).setInputs(ins);
+      :}
     | procedureCall:p
+      {:
+        RESULT = p;
+      :}
     | scope:s
+      {:
+        RESULT = s;
+      :}
     ;
 
+
 unmatchedStatement
-  ::= IF expression THEN statement
-    | IF expression THEN matchedStatement ELSE unmatchedStatement
+  ::= IF expression:e THEN statement:thenStmt
+      {:
+        RESULT = new IfStmt();
+        ((IfStmt)RESULT).setCondition(e);
+        ((IfStmt)RESULT).setWhenTrue(thenStmt);
+      :}
+    | IF expression:e THEN matchedStatement:thenStmt ELSE unmatchedStatement:elseStmt
+      {:
+        RESULT = new IfStmt();
+        ((IfStmt)RESULT).setCondition(e);
+        ((IfStmt)RESULT).setWhenTrue(thenStmt);
+        ((IfStmt)RESULT).setWhenFalse(elseStmt);
+      :}
 ;
 
 procedureCall
-  ::= IDENT  // call procedure with no parameters
-    | IDENT L_PAREN arguments R_PAREN  // call procedure with parameters
+  ::= IDENT:name  // call procedure with no parameters
+      {:
+        RESULT = new ProcedureCallStmt();
+        ((ProcedureCallStmt)RESULT).setName(name);
+      :}
+    | IDENT:name L_PAREN arguments:args R_PAREN  // call procedure with parameters
+      {:
+        RESULT = new ProcedureCallStmt();
+        ((ProcedureCallStmt)RESULT).setName(name);
+        ((ProcedureCallStmt)RESULT).setArguments(args);
+      :}
 ;
 
 declaration
   ::= VAR variablenames:varNames COLON type:t  // declare scalar/array variables
       {:
-        System.out.println(t.toString());
 
         // var a,b,c : Int
         RESULT = new MultiDeclarations();
@@ -389,26 +418,26 @@ variablename
         RESULT = new DeclarationPart();
         ((DeclarationPart)RESULT).setName(id);
       :}
-    | IDENT:id L_SQUARE INTCONST:upBound R_SQUARE  // array variable with upper bound
+    | IDENT:id L_SQUARE INTCONST:i R_SQUARE  // array variable with upper bound
       {:
-        // semantic analysis: make this positive
-        System.out.println("Variable Name: " + id);
+        // semantic analysis: i > 0
         RESULT = new ArrayDeclPart();
         ((ArrayDeclPart)RESULT).setName(id);
         ((ArrayDeclPart)RESULT).setLowerBoundary(0);
-        ((ArrayDeclPart)RESULT).setUpperBoundary(upBound);
-        ((ArrayDeclPart)RESULT).setSize(upBound);
+        ((ArrayDeclPart)RESULT).setUpperBoundary(i);
+        ((ArrayDeclPart)RESULT).setSize(i);
       :}
-    | IDENT:name L_SQUARE bound:lBound DOT DOT bound:uBound R_SQUARE  // array variable with upper/lower bounds
+    | IDENT:id L_SQUARE bound:lowBoundExpn DOT DOT bound:upBoundExpn R_SQUARE  // array variable with upper/lower bounds
       {:
-        System.out.println("VariableName: " + id);
-        Integer upper = ((IntConst)uBound).getValue();
-        Integer lower = ((IntConst)lBound).getValue();
+        Integer upper = upBoundExpn.getValue();
+        Integer lower = lowBoundExpn.getValue();
+        Integer size = upper - lower;
+        // semantic analysis: i > 0
         RESULT = new ArrayDeclPart();
-        ((ArrayDeclPart)RESULT).setName(name);
+        ((ArrayDeclPart)RESULT).setName(id);
         ((ArrayDeclPart)RESULT).setLowerBoundary(lower);
         ((ArrayDeclPart)RESULT).setUpperBoundary(upper);
-        ((ArrayDeclPart)RESULT).setSize(abs(upper - lower));
+        ((ArrayDeclPart)RESULT).setSize((size < 0) ? -size : size);
       :}
 ;
 
@@ -437,24 +466,59 @@ type
 ;
 
 outputs
-  ::= output  // list of output expressions
-    | outputs COMMA output
+  ::= output:out  // list of output expressions
+      {:
+        RESULT = new ASTList<Printable>();
+        RESULT.addLast(out);
+      :}
+    | outputs:os COMMA output:o
+      {:
+        RESULT = os;
+        RESULT.addLast((Printable)o);
+      :}
 ;
 
 output
-  ::= expression  // integer expression
-    | TEXTCONST  // text constant
-    | NEWLINE  // newline constant
+  ::= expression:e  // integer expression
+      {:
+        RESULT = e;
+      :}
+    | TEXTCONST:t  // text constant
+      {:
+        RESULT = new TextConstExpn();
+        ((TextConstExpn)RESULT).setValue(t);
+      :}
+    | NEWLINE:newline  // newline constant
+      {:
+        RESULT = new SkipConstExpn();
+      :}
+
 ;
 
 inputs
-  ::= variable  // list of variables being read into
-    | inputs COMMA variable
+  ::= variable:v  // list of variables being read into
+      {:
+        RESULT = new ASTList<compiler488.ast.Readable>();
+        RESULT.addLast((compiler488.ast.Readable)v);
+      :}
+    | inputs:vs COMMA variable:v
+      {:
+        RESULT = vs;
+        RESULT.addLast((compiler488.ast.Readable)v);
+      :}
 ;
 
 arguments
-  ::= expression  // list of function/procedure arguments
-    | arguments COMMA expression
+  ::= expression:e  // list of function/procedure arguments
+      {:
+        RESULT = new ASTList<Expn>();
+        RESULT.addLast(e);
+      :}
+    | arguments:es COMMA expression:e
+      {:
+        RESULT = es;
+        RESULT.addLast(e);
+      :}
 ;
 
 parameters
@@ -484,7 +548,13 @@ expression
       {:
         RESULT = c;
       :}
-    | expression OR conjunction
+    | expression:a OR conjunction:b
+      {:
+        RESULT = new BoolExpn();
+        ((BoolExpn)RESULT).setLeft(a);
+        ((BoolExpn)RESULT).setRight(b);
+        ((BoolExpn)RESULT).setOpSymbol("or");
+      :}
 ;
 
 conjunction
@@ -492,7 +562,13 @@ conjunction
       {:
         RESULT = c;
       :}
-    | conjunction AND negation
+    | conjunction:a AND negation:b
+      {:
+        RESULT = new BoolExpn();
+        ((BoolExpn)RESULT).setLeft(a);
+        ((BoolExpn)RESULT).setRight(b);
+        ((BoolExpn)RESULT).setOpSymbol("and");
+      :}
 ;
 
 negation
@@ -500,7 +576,12 @@ negation
       {:
         RESULT = c;
       :}
-    | NOT negation
+    | NOT negation:c
+      {:
+        RESULT = new NotExpn();
+        ((NotExpn)RESULT).setOperand(c);
+        ((NotExpn)RESULT).setOpSymbol("not");
+      :}
 ;
 
 compareExpn
@@ -508,12 +589,48 @@ compareExpn
       {:
         RESULT = a;
       :}
-    | arithExpn EQUAL arithExpn
-    |  arithExpn NOT EQUAL arithExpn
-    | arithExpn LESS arithExpn
-    | arithExpn LESS EQUAL arithExpn
-    | arithExpn GREATER arithExpn
-    | arithExpn GREATER EQUAL arithExpn
+    | arithExpn:a EQUAL arithExpn:b
+      {:
+        RESULT = new CompareExpn();
+        ((CompareExpn)RESULT).setLeft(a);
+        ((CompareExpn)RESULT).setRight(b);
+        ((CompareExpn)RESULT).setOpSymbol("=");
+      :}
+    | arithExpn:a NOT EQUAL arithExpn:b
+      {:
+        RESULT = new CompareExpn();
+        ((CompareExpn)RESULT).setLeft(a);
+        ((CompareExpn)RESULT).setRight(b);
+        ((CompareExpn)RESULT).setOpSymbol("!=");
+      :}
+    | arithExpn:a LESS arithExpn:b
+      {:
+        RESULT = new CompareExpn();
+        ((CompareExpn)RESULT).setLeft(a);
+        ((CompareExpn)RESULT).setRight(b);
+        ((CompareExpn)RESULT).setOpSymbol("<");
+      :}
+    | arithExpn:a LESS EQUAL arithExpn:b
+      {:
+        RESULT = new CompareExpn();
+        ((CompareExpn)RESULT).setLeft(a);
+        ((CompareExpn)RESULT).setRight(b);
+        ((CompareExpn)RESULT).setOpSymbol("<=");
+      :}
+    | arithExpn:a GREATER arithExpn:b
+      {:
+        RESULT = new CompareExpn();
+        ((CompareExpn)RESULT).setLeft(a);
+        ((CompareExpn)RESULT).setRight(b);
+        ((CompareExpn)RESULT).setOpSymbol(">");
+      :}
+    | arithExpn:a GREATER EQUAL arithExpn:b
+      {:
+        RESULT = new CompareExpn();
+        ((CompareExpn)RESULT).setLeft(a);
+        ((CompareExpn)RESULT).setRight(b);
+        ((CompareExpn)RESULT).setOpSymbol(">=");
+      :}
 ;
 
 arithExpn
@@ -521,8 +638,20 @@ arithExpn
       {:
         RESULT = t;
       :}
-    | arithExpn PLUS term
-    | arithExpn MINUS term
+    | arithExpn:a PLUS term:b
+      {:
+        RESULT = new ArithExpn();
+        ((BinaryExpn)RESULT).setLeft(a);
+        ((BinaryExpn)RESULT).setRight(b);
+        ((BinaryExpn)RESULT).setOpSymbol("+");
+      :}
+    | arithExpn:a MINUS term:b
+      {:
+        RESULT = new ArithExpn();
+        ((ArithExpn)RESULT).setLeft(a);
+        ((ArithExpn)RESULT).setRight(b);
+        ((ArithExpn)RESULT).setOpSymbol("-");
+      :}
 ;
 
 term
@@ -530,8 +659,20 @@ term
       {:
         RESULT = f;
       :}
-    | term TIMES factor
-    | term DIVIDE factor
+    | term:a TIMES factor:b
+      {:
+        RESULT = new ArithExpn();
+        ((ArithExpn)RESULT).setLeft(a);
+        ((ArithExpn)RESULT).setRight(b);
+        ((ArithExpn)RESULT).setOpSymbol("*");
+      :}
+    | term:a DIVIDE factor:b
+      {:
+        RESULT = new ArithExpn();
+        ((ArithExpn)RESULT).setLeft(a);
+        ((ArithExpn)RESULT).setRight(b);
+        ((ArithExpn)RESULT).setOpSymbol("/");
+      :}
 ;
 
 factor
@@ -539,7 +680,12 @@ factor
       {:
         RESULT = p;
       :}
-    | MINUS factor
+    | MINUS factor:f
+      {:
+        RESULT = new UnaryMinusExpn();
+        ((UnaryMinusExpn)RESULT).setOperand(f);
+        ((UnaryMinusExpn)RESULT).setOpSymbol("-");
+      :}
 ;
 
 primary
@@ -547,10 +693,27 @@ primary
       {:
         RESULT = c;
       :}
-    | variable  // scalar, array variable or function call
-    | IDENT L_PAREN arguments R_PAREN  // function call
-    |  L_PAREN expression R_PAREN  // parenthesized expression
-    | L_PAREN expression QUESTION expression COLON expression R_PAREN
+    | variable:v  // scalar, array variable or function call
+      {:
+        RESULT = v;
+      :}
+    | IDENT:name L_PAREN arguments:args R_PAREN  // function call
+      {:
+        RESULT = new FunctionCallExpn();
+        ((FunctionCallExpn)RESULT).setIdent(name);
+        ((FunctionCallExpn)RESULT).setArguments(args);
+      :}
+    | L_PAREN expression:e R_PAREN  // parenthesized expression
+      {:
+        RESULT = e;
+      :}
+    | L_PAREN expression:cond QUESTION expression:trueExpn COLON expression:falseExpn R_PAREN
+      {:
+        RESULT = new ConditionalExpn();
+        ((ConditionalExpn)RESULT).setCondition(cond);
+        ((ConditionalExpn)RESULT).setTrueValue(trueExpn);
+        ((ConditionalExpn)RESULT).setFalseValue(falseExpn);
+      :}
 ;
 
 constant // type: ConstEpn
@@ -577,7 +740,12 @@ variable
         RESULT = new IdentExpn();
         ((IdentExpn)RESULT).setIdent(name);
       :}
-    | IDENT L_SQUARE expression R_SQUARE  // element of an array
+    | IDENT:name L_SQUARE expression:expn R_SQUARE  // element of an array
+      {:
+        RESULT = new SubsExpn();
+        ((SubsExpn)RESULT).setVariable(name);
+        ((SubsExpn)RESULT).setOperand(expn);
+      :}
 ;
 
 

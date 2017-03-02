@@ -16,9 +16,10 @@ public class Indentable extends AST {
 	 * @param depth
 	 *            How much indentation to use.
 	 */
+	// TODO: Revert tabs
 	public static void printIndentOn(PrintStream out, int depth) {
 		for (; depth > 1; depth -= 2)
-			out.print('\t');
+			out.print("        ");
 		if (1 == depth)
 			out.print("    ");
 	}

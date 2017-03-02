@@ -18,4 +18,9 @@ public class DeclarationPart extends AST {
 		this.name = name;
 	}
 
+
+	@Override
+	public String toString() {
+		return getName();
+	}
 }

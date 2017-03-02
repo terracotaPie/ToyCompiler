@@ -35,8 +35,8 @@ public class MultiDeclarations extends Declaration {
 	 */
 	@Override
 	public void printOn(PrintStream out, int depth) {
-		out.println(elements);
-		Indentable.printIndentOn (out, depth, this + " ");
+		Indentable.printIndentOn (out, depth, String.format("%s", elements));
+		Indentable.printIndentOnLn (out, depth, this + " ");
 	}
 
 
