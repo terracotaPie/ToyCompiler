@@ -16,7 +16,7 @@ public class SymbolTableEntry {
     private Type type;
 
     /* level of scope*/
-    public int depth;
+
 
     /* Value of variable */
     private AST value;
@@ -24,6 +24,7 @@ public class SymbolTableEntry {
     /* position within this scopes*/
     private int orderNo;
     /* scope depth */
+    public int depth;
 
     public SymbolTableEntry(String name, AST value, Type type,int depth) {
         this.name  = name;
@@ -33,7 +34,7 @@ public class SymbolTableEntry {
     }
 
     /* Modifiers ID */
-    public String getIdentifier() {
+    public String getName() {
         return name;
     }
 
