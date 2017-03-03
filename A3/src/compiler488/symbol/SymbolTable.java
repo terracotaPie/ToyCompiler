@@ -1,9 +1,6 @@
 package compiler488.symbol;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Stack;
+import java.util.*;
 
 import compiler488.ast.type.Type;
 import compiler488.ast.AST;
@@ -44,8 +41,8 @@ public class SymbolTable {
 	 */
 	public void Initialize() {
 	
-	   /**   Initialize the symbol table             
-	    *	Any additional symbol table initialization
+	   /**  Initialize the symbol table
+	    *  Any additional symbol table initialization
 	    *  GOES HERE                                	
 	    */
 	    depth = -1;
@@ -73,6 +70,17 @@ public class SymbolTable {
 	public void openScope() {
 	    depth++;
     }
+    public void cleanCurrentScope() {
+	    for(String key : symbols.keySet()) {
+	    	for(SymbolTableEntry entry : symbols.get(key)) {
+	    	    if (entry.depth == depth) {
+	    	        // TODO might be broken
+	    	        symbols.get(key).remove(entry);
+				}
+			}
+		}
+
+	}
 
 	public void closeScope() {
 		depth--;

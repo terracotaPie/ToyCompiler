@@ -2,6 +2,8 @@ package compiler488.ast.stmt;
 
 import java.io.PrintStream;
 import java.util.ListIterator;
+import java.util.Map;
+import java.util.Set;
 
 import compiler488.ast.ASTList;
 import compiler488.ast.Indentable;
@@ -105,8 +107,9 @@ public class Scope extends Stmt {
 			{
 				iter_s.next().table_visit(symbolTable);
 			}
-
 		}
+		symbolTable.cleanCurrentScope();
+
 		symbolTable.closeScope();
 	}
 
