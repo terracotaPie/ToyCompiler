@@ -43,11 +43,7 @@ public class RoutineDecl extends Declaration {
 			semanticObject.pushFunction(type); /* S04 */
 		b = routineBody.semantic_visit(semanticObject);
 		semanticObject.popScope(); /* S05 S09 */
-		if (b)
-		{
-			// S11, 12, 13, 17, 18: done by `table_visit`
-
-		}
+		// S11, 12, 13, 17, 18: done by `table_visit`
 		return b;
 	}
 

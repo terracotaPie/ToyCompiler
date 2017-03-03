@@ -47,6 +47,10 @@ public class ExitStmt extends Stmt {
 	@Override
 	public boolean semantic_visit(SemanticObject semanticObject) {
 		boolean b;
-		return semanticObject.S50 > level && level > 0; /* S50 && S53 */
+		b = semanticObject.S50 > level && level > 0; /* S50 && S53 */
+		if (!b) {
+			semanticObject.addError("Exit has incorrect level");
+		}
+		return b;
 	}
 }

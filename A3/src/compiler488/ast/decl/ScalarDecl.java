@@ -13,7 +13,7 @@ public class ScalarDecl extends Declaration {
 
 	@Override
 	public boolean semantic_visit(SemanticObject semanticObject) {
-		/* TODO: S10 S47 */
+		/* S10, S47 handled by table */
 		return true;
 	}
 

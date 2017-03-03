@@ -31,7 +31,7 @@ public class MultiDeclarations extends Declaration {
 
 	@Override
 	public boolean semantic_visit(SemanticObject semanticObject) {
-		/* TODO: S47 */
+		/* S47 handled by symbol table */
 		return true;
 	}
 

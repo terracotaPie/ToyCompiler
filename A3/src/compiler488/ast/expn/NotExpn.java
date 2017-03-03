@@ -21,6 +21,9 @@ public class NotExpn extends UnaryExpn {
 
         boolean semanticallyCorrectOperand = operand.semantic_visit(semanticObject);
         boolean correctType = operand.getTypeFromSymbolTable(st) instanceof BooleanType;
+        if (!correctType) {
+            semanticObject.addError("Incorrect operand type in `%s`".format(operand.toString()));;
+        }
 
         return semanticallyCorrectOperand && correctType;
     }

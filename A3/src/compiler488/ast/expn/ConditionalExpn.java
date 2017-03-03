@@ -63,6 +63,9 @@ public class ConditionalExpn extends Expn {
 		boolean b;
 		b = condition.semantic_visit(semanticObject);
 		b &= condition.getTypeFromSymbolTable(st) instanceof BooleanType; /* S30 */
+		if (!b) {
+			semanticObject.addError("The condition `%s ` should return a Boolean".format(condition.toString()));
+		}
 		b &= trueValue.semantic_visit(semanticObject);
 		b &= falseValue.semantic_visit(semanticObject);
 		b &= trueValue.getTypeFromSymbolTable(st).equals(falseValue.getTypeFromSymbolTable(st)); /* S33 */
