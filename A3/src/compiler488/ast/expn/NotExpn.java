@@ -17,7 +17,12 @@ public class NotExpn extends UnaryExpn {
 
     @Override
     public boolean semantic_visit(SemanticObject semanticObject) {
-        return operand.semantic_visit(semanticObject) && operand.getType() instanceof BooleanType; /* S30 */
+        SymbolTable st = semanticObject.getSymbolTable();
+
+        boolean semanticallyCorrectOperand = operand.semantic_visit(semanticObject);
+        boolean correctType = operand.getTypeFromSymbolTable(st) instanceof BooleanType;
+
+        return semanticallyCorrectOperand && correctType;
     }
     @Override
     public void table_visit(SymbolTable symbolTable){}

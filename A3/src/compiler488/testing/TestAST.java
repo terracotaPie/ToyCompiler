@@ -11,8 +11,11 @@ package compiler488.testing;
  * This simple minded driver does not read from standard input
  */
 
+import compiler488.ast.stmt.Program;
 import compiler488.ast.stmt.Scope;
 import compiler488.parser.*;
+import compiler488.semantics.SemanticObject;
+import compiler488.symbol.SymbolTable;
 import java_cup.runtime.Symbol;
 
 import java.io.*;
@@ -41,9 +44,12 @@ class TestAST {
 	static public void PrintAST (File file) throws Exception {
 		Parser p = new Parser(new Lexer(new FileReader(file)));
 		Symbol q = p.parse();
-		Scope s = (Scope) q.value;
+		Program s = (Program) q.value;
 		/*  Print the entire AST from it's root */
-		s.printOn(System.out, 0);		
+		s.printOn(System.out, 0);
+		SemanticObject so = new SemanticObject();
+		System.out.println("Semantic: " + s.semantic_visit(so));
+		System.out.print(so);
 	}
 
 }

@@ -50,16 +50,22 @@ public class ConditionalExpn extends Expn {
 	}
 
 	@Override
+	public Type getTypeFromSymbolTable(SymbolTable sb) {
+		return trueValue.getTypeFromSymbolTable(sb);
+	}
+
+	@Override
 	public void table_visit(SymbolTable symbolTable){}
 
 	@Override
 	public boolean semantic_visit(SemanticObject semanticObject) {
+		SymbolTable st = semanticObject.getSymbolTable();
 		boolean b;
 		b = condition.semantic_visit(semanticObject);
-		b &= condition.getType() instanceof BooleanType; /* S30 */
+		b &= condition.getTypeFromSymbolTable(st) instanceof BooleanType; /* S30 */
 		b &= trueValue.semantic_visit(semanticObject);
 		b &= falseValue.semantic_visit(semanticObject);
-		b &= trueValue.getType().equals(falseValue.getType()); /* S33 */
+		b &= trueValue.getTypeFromSymbolTable(st).equals(falseValue.getTypeFromSymbolTable(st)); /* S33 */
 		return b;
 	}
 }

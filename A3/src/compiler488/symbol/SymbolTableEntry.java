@@ -1,5 +1,8 @@
 package compiler488.symbol;
 
+import compiler488.ast.decl.Declaration;
+import compiler488.ast.decl.RoutineBody;
+import compiler488.ast.decl.RoutineDecl;
 import compiler488.ast.type.Type;
 import compiler488.ast.AST;
 
@@ -8,6 +11,13 @@ import compiler488.ast.AST;
  */
 public class SymbolTableEntry {
 
+    public enum VarType{
+        FUNC,
+        PROC,
+        ARRAY,
+        SCALAR,
+    }
+
     /**
      *  Identifier for this symbol
      */
@@ -15,8 +25,10 @@ public class SymbolTableEntry {
 
     private Type type;
 
-    /* level of scope*/
+    private VarType varType;
 
+    /* level of scope*/
+    private VarType t;
 
     /* Value of variable */
     private AST value;
@@ -26,11 +38,12 @@ public class SymbolTableEntry {
     /* scope depth */
     public int depth;
 
-    public SymbolTableEntry(String name, AST value, Type type,int depth) {
+    public SymbolTableEntry(String name, Declaration value, Type type, int depth, VarType varType) {
         this.name  = name;
         this.value = value;
         this.type  = type;
         this.depth = depth;
+        this.t = varType;
     }
 
     /* Modifiers ID */
@@ -56,6 +69,9 @@ public class SymbolTableEntry {
     /* Modifiers Type */
     public Type getType() {
         return type;
+    }
+    public VarType getVarType() {
+        return varType;
     }
 
     public SymbolTableEntry setType(Type type) {

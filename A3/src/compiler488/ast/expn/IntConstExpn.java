@@ -35,4 +35,9 @@ public class IntConstExpn extends ConstExpn
 	public Type getType() {
 		return new IntegerType();
 	}
-}
+
+		@Override
+		public Type getTypeFromSymbolTable(SymbolTable sb) {
+			return getType();
+		}
+	}

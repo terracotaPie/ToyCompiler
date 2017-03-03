@@ -1,9 +1,6 @@
 package compiler488.ast.decl;
 
-import compiler488.ast.type.Type;
-import compiler488.ast.type.VarType;
 import compiler488.semantics.SemanticObject;
-import compiler488.symbol.SymbolTable;
 
 /**
  * Holds the declaration part of an array.
@@ -49,14 +46,9 @@ public class ArrayDeclPart extends DeclarationPart {
 	@Override
 	public boolean semantic_visit(SemanticObject semanticObject) {
 		if (lb > ub)
-			return false; /* S46 */
-		/* TODO: S19 S47 S48*/
+			return false; /* S46, S48 */
+		/* TODO: S19 S47*/
 		return true;
-	}
-	@Override
-	public void table_visit(SymbolTable symbolTable) {
-		Type type = new Type(VarType.ARRAY);
-		symbolTable.addEntry(name,this,type);
 	}
 
 	public void setSize(Integer size) {

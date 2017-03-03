@@ -37,4 +37,9 @@ public class BoolConstExpn extends ConstExpn
 	public Type getType() {
 		return new BooleanType();
 	}
-}
+
+	@Override
+	public Type getTypeFromSymbolTable(SymbolTable sb) {
+		return getType();
+	}
+	}

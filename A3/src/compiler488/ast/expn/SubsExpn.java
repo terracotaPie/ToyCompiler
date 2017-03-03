@@ -5,6 +5,7 @@ import compiler488.ast.type.IntegerType;
 import compiler488.ast.type.Type;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
+import compiler488.symbol.SymbolTableEntry;
 
 /**
  * References to an array element variable
@@ -32,16 +33,26 @@ public class SubsExpn extends UnaryExpn implements Readable {
 
 	@Override
 	public Type getType() {
-		// TODO: Check symbol table for type
+		// Requires Symbol table
 		return null;
+	}
+
+	@Override
+	public Type getTypeFromSymbolTable(SymbolTable sb)
+	{
+		SymbolTableEntry entry = sb.getEntry(variable);
+		return entry.getType();
 	}
 
 	@Override
 	public boolean semantic_visit(SemanticObject semanticObject) {
 		boolean b;
+		SymbolTable st;
+
+		st = semanticObject.getSymbolTable();
 		b = true;
 
-		b &= operand.semantic_visit(semanticObject) && operand.getType() instanceof IntegerType; /* S31 */
+		b &= operand.semantic_visit(semanticObject) && operand.getTypeFromSymbolTable(st) instanceof IntegerType; /* S31 */
 
 		// TODO: Check indent for variable, then check if it is integer
 

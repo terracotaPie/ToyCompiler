@@ -1,7 +1,13 @@
 package compiler488.semantics;
 
 import java.io.*;
+
+import compiler488.ast.stmt.Program;
+import compiler488.ast.stmt.Scope;
+import compiler488.parser.Lexer;
+import compiler488.parser.Parser;
 import compiler488.symbol.SymbolTable;
+import java_cup.runtime.Symbol;
 
 /** Implement semantic analysis for compiler 488 
  *  @author  <B>Nagee Elghassein</B>
@@ -29,8 +35,16 @@ public class Semantics {
 	void Initialize() {
 	
 	   /*   Initialize the symbol table             */
-	
-	   // Symbol.Initialize();
+		try {
+			Parser p = new Parser(new Lexer(new FileReader(f)));
+			Symbol q = null;
+			q = p.parse();
+			Program s = (Program) q.value;
+			boolean b = s.semantic_visit(new SemanticObject());
+			System.out.println("Semantic:" + b);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	   
 	   /*********************************************/
 	   /*  Additional initialization code for the   */

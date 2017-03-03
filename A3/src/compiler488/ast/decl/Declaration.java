@@ -7,7 +7,7 @@ import compiler488.symbol.SymbolTable;
 /**
  * The common features of declarations.
  */
-public class Declaration extends Indentable {
+public abstract class Declaration extends Indentable {
 	/** The type of thing being declared. */
 	protected Type type=null;
 
@@ -35,7 +35,5 @@ public class Declaration extends Indentable {
 		return  String.format("var %s %s", type, name);
 	}
 
-	public void table_visit(SymbolTable symbolTable) {
-	    symbolTable.addEntry(name,this,type);
-	}
+	public abstract void table_visit(SymbolTable symbolTable);
 }

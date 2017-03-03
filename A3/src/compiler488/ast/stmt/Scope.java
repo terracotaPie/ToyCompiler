@@ -24,6 +24,8 @@ public class Scope extends Stmt {
 
 	@Override
 	public boolean semantic_visit(SemanticObject semanticObject) {
+		semanticObject.pushScope();
+		this.table_visit(semanticObject.getSymbolTable());
 		boolean b;
 		ListIterator<Declaration> iter_d;
 		ListIterator<Stmt> iter_s;
@@ -36,6 +38,10 @@ public class Scope extends Stmt {
 				b &= iter_d.next().semantic_visit(semanticObject); /* S02 */
 			}
 		}
+		if (!b)
+		{
+			semanticObject.addError("declaration error");
+		}
 		if (statements.size() > 0)
 		{
 			iter_s = statements.getIterator();
@@ -45,6 +51,11 @@ public class Scope extends Stmt {
 			}
 
 		}
+		if (!b)
+		{
+			semanticObject.addError("statement error");
+		}
+		semanticObject.popScope();
 		return b;
 	}
 

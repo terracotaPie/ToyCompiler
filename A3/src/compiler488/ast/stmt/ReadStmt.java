@@ -9,6 +9,7 @@ import compiler488.ast.expn.IdentExpn;
 import compiler488.ast.expn.SubsExpn;
 import compiler488.ast.type.IntegerType;
 import compiler488.semantics.SemanticObject;
+import compiler488.symbol.SymbolTable;
 
 import java.util.ListIterator;
 
@@ -39,9 +40,12 @@ public class ReadStmt extends Stmt {
 
 	@Override
 	public boolean semantic_visit(SemanticObject semanticObject) {
-
 		boolean b;
+		SymbolTable st;
+
 		b = true;
+		st = semanticObject.getSymbolTable();
+
 		if (0 == inputs.size())
 			return false;
 		else {
@@ -52,9 +56,9 @@ public class ReadStmt extends Stmt {
 			{
 				p = iterator.next();
 				b &= (p instanceof IdentExpn && ((IdentExpn)p).semantic_visit(semanticObject)
-						&& ((IdentExpn)p).getType() instanceof IntegerType) ||
+						&& ((IdentExpn)p).getTypeFromSymbolTable(st) instanceof IntegerType) ||
 						(p instanceof SubsExpn && ((SubsExpn)p).semantic_visit(semanticObject)
-								&& ((SubsExpn)p).getType() instanceof IntegerType); /* S31 */
+								&& ((SubsExpn)p).getTypeFromSymbolTable(st) instanceof IntegerType); /* S31 */
 
 			}
 		}

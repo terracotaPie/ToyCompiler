@@ -226,12 +226,10 @@ declarations
 statement
   ::= matchedStatement:m
       {:
-        // TODO: idk
         RESULT = m;
       :}
     | unmatchedStatement:s
       {:
-        // TODO: idk
         RESULT = s;
       :}
 ;
@@ -264,8 +262,6 @@ matchedStatement
       :}
     | EXIT
       {:
-        // TODO: check if this generates a cascading statment or a score for each exit cond
-        // i.e. do i need to initialize new ExitStmt for every exit type
         RESULT = new ExitStmt();
         ((ExitStmt)RESULT).setLevel(1);
       :}

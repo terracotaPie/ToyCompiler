@@ -39,10 +39,15 @@ public class AssignStmt extends Stmt {
 
 	@Override
 	public boolean semantic_visit(SemanticObject semanticObject) {
-		boolean b;
+		this.table_visit(semanticObject.getSymbolTable());
+		boolean b, c;
 		b = lval.semantic_visit(semanticObject);
 		b &= rval.semantic_visit(semanticObject);
-		b &= lval.getType().equals(rval.getType());
-		return b;
+		c = lval.getTypeFromSymbolTable(semanticObject.getSymbolTable()).equals(rval.getTypeFromSymbolTable(semanticObject.getSymbolTable()));
+		if (!c)
+		{
+			semanticObject.addError(String.format("Type mismatch on %d: %s and %s", line_num, lval, rval));
+		}
+		return b && c;
 	}
 }

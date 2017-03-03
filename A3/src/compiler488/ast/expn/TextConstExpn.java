@@ -34,6 +34,12 @@ public class TextConstExpn extends ConstExpn implements Printable {
 	public Type getType() {
 		return new Type();
 	}
+
+	@Override
+	public Type getTypeFromSymbolTable(SymbolTable sb) {
+		return getType();
+	}
+
 	@Override
 	public void table_visit(SymbolTable symbolTable){}
 }

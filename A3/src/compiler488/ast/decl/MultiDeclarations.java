@@ -7,6 +7,7 @@ import compiler488.ast.ASTList;
 import compiler488.ast.Indentable;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
+import compiler488.symbol.SymbolTableEntry;
 
 /**
  * Holds the declaration of multiple elements.
@@ -64,7 +65,16 @@ public class MultiDeclarations extends Declaration {
 			while (iter_d.hasNext())
 			{
 				DeclarationPart t = iter_d.next();
-			    symbolTable.addEntry(t.getName(),this, getType());
+				SymbolTableEntry.VarType vt;
+				if (t instanceof ArrayDeclPart)
+				{
+					vt = SymbolTableEntry.VarType.ARRAY;
+				}
+				else
+				{
+					vt = SymbolTableEntry.VarType.SCALAR;
+				}
+			    symbolTable.addEntry(t.getName(),this, getType(), vt);
 			}
 		}
 	}

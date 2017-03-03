@@ -6,6 +6,7 @@ import compiler488.ast.Indentable;
 import compiler488.ast.expn.Expn;
 import compiler488.ast.type.BooleanType;
 import compiler488.semantics.SemanticObject;
+import compiler488.symbol.SymbolTable;
 
 /**
  * Represents an if-then or an if-then-else construct.
@@ -43,7 +44,8 @@ public class IfStmt extends Stmt {
 	@Override
 	public boolean semantic_visit(SemanticObject semanticObject) {
 		boolean b;
-		b = condition.getType().equals(new BooleanType()); /* S30 */
+		SymbolTable st = semanticObject.getSymbolTable();
+		b = condition.getTypeFromSymbolTable(st).equals(new BooleanType()); /* S30 */
 		if (whenTrue != null)
 			b &= whenTrue.semantic_visit(semanticObject);
 		if (whenFalse != null)

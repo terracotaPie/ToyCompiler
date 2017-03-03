@@ -3,6 +3,7 @@ package compiler488.ast.stmt;
 import compiler488.ast.expn.Expn;
 import compiler488.ast.type.BooleanType;
 import compiler488.semantics.SemanticObject;
+import compiler488.symbol.SymbolTable;
 
 
 /**
@@ -32,8 +33,9 @@ public abstract class LoopingStmt extends Stmt
 	@Override
 	public boolean semantic_visit(SemanticObject semanticObject) {
 		boolean b;
+		SymbolTable st = semanticObject.getSymbolTable();
 		semanticObject.S50 += 1;
-		b = expn.getType().equals(new BooleanType()); /* S30 */
+		b = expn.getTypeFromSymbolTable(st).equals(new BooleanType()); /* S30 */
 		if (body != null)
 			b &= body.semantic_visit(semanticObject);
 		semanticObject.S50 -= 1;

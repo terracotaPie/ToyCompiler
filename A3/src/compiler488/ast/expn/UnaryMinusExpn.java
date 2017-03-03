@@ -13,8 +13,9 @@ public class UnaryMinusExpn extends UnaryExpn {
     @Override
     public boolean semantic_visit(SemanticObject semanticObject) {
         boolean b;
+        SymbolTable st = semanticObject.getSymbolTable();
         b = operand.semantic_visit(semanticObject);
-        return b && operand.getType().equals(new IntegerType()); /* S31 */
+        return b && operand.getTypeFromSymbolTable(st).equals(new IntegerType()); /* S31 */
     }
 
     @Override

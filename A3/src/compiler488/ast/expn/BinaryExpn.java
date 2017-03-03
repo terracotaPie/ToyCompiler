@@ -1,12 +1,12 @@
 package compiler488.ast.expn;
 
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import compiler488.ast.type.BooleanType;
 import compiler488.ast.type.IntegerType;
 import compiler488.ast.type.Type;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
+import sun.jvm.hotspot.debugger.cdbg.Sym;
 
 /**
  * The common features of binary expressions.
@@ -49,8 +49,10 @@ public class BinaryExpn extends Expn
 
 	@Override
 	public boolean semantic_visit(SemanticObject semanticObject) {
-		boolean b;
+		boolean b, c;
+		SymbolTable sb = semanticObject.getSymbolTable();
 		b = true;
+		c = true;
 		b &= left.semantic_visit(semanticObject);
 		b &= right.semantic_visit(semanticObject);
 		switch (opSymbol)
@@ -64,17 +66,29 @@ public class BinaryExpn extends Expn
 			case "<":
 			case "<=":
 			case "!=":
-				b &= left.getType() instanceof IntegerType && right.getType() instanceof IntegerType; /* S31 */
+				c = left.getTypeFromSymbolTable(sb) instanceof IntegerType && right.getTypeFromSymbolTable(sb) instanceof IntegerType; /* S31 */
+				if (!c)
+				{
+					semanticObject.addError("TypeError: Integer expected");
+				}
 				break;
 			case "and":
 			case "or":
-				b &= left.getType() instanceof BooleanType && right.getType() instanceof BooleanType; /* S30 */
+				c = left.getTypeFromSymbolTable(sb) instanceof BooleanType && right.getTypeFromSymbolTable(sb) instanceof BooleanType; /* S30 */
+				if (!c)
+				{
+					semanticObject.addError("TypeError: Boolean expected");
+				}
 				break;
 			case "=":
-				b &= left.getType().equals(right.getType());
+				c = left.getTypeFromSymbolTable(sb).equals(right.getTypeFromSymbolTable(sb));
+				if (!c)
+				{
+					semanticObject.addError(String.format("%s type is not equal to %s", left, right));
+				}
 				break;
 		}
-		return b;
+		return b && c;
 	}
     @Override
     public void table_visit(SymbolTable symbolTable){}
@@ -86,4 +100,9 @@ public class BinaryExpn extends Expn
 		else
 			return null;
 	}
+
+	@Override
+	public Type getTypeFromSymbolTable(SymbolTable sb) {
+			return left.getTypeFromSymbolTable(sb);
+		}
 	}

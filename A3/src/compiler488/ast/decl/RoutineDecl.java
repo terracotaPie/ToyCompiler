@@ -3,10 +3,9 @@ package compiler488.ast.decl;
 import java.io.PrintStream;
 
 import compiler488.ast.Indentable;
-import compiler488.ast.type.Type;
-import compiler488.ast.type.VarType;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
+import compiler488.symbol.SymbolTableEntry.VarType;
 
 /**
  * Represents the declaration of a function or procedure.
@@ -46,22 +45,16 @@ public class RoutineDecl extends Declaration {
 		semanticObject.popScope(); /* S05 S09 */
 		if (b)
 		{
-			/* TODO: Assign routine to Symbol table  S11 S12 S13 S17 S18*/
+			// S11, 12, 13, 17, 18: done by `table_visit`
+
 		}
 		return b;
 	}
 
 	@Override
 	public void table_visit(SymbolTable symbolTable) {
-		if(type==null)
-		{
-			type = new Type(VarType.PROC);
-		}
-		else
-		{
-			type = new Type(VarType.FUNC);
-		}
-		symbolTable.addEntry(name,this,type);
+		symbolTable.addEntry(name,this, getType(),
+				getType() == null ? VarType.PROC : VarType.FUNC);
 	}
 	/**
 	 * Prints a description of the function/procedure.

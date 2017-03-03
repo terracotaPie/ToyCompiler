@@ -6,10 +6,6 @@ import compiler488.symbol.SymbolTable;
 
 public class Type extends AST {
 
-    private VarType type;
-    public Type(VarType type){
-       this.type = type;
-    }
     @Override
     public boolean equals(Object obj) {
         return getClass() == obj.getClass();

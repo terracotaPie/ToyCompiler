@@ -53,7 +53,7 @@ public class WriteStmt extends Stmt {
 				{
 					b &= ((AST) p).semantic_visit(semanticObject);
 					b &= p instanceof Expn && ((Expn) p).semantic_visit(semanticObject) &&
-							((Expn) p).getType() instanceof IntegerType ||
+							((Expn) p).getTypeFromSymbolTable(semanticObject.getSymbolTable()) instanceof IntegerType ||
 					p instanceof TextConstExpn ||
 					p instanceof SkipConstExpn; /* S31 */
 				}

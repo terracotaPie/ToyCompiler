@@ -1,10 +1,8 @@
 package compiler488.symbol;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Stack;
+import java.util.*;
 
+import compiler488.ast.decl.*;
 import compiler488.ast.type.Type;
 import compiler488.ast.AST;
 
@@ -89,8 +87,8 @@ public class SymbolTable {
      * Add a new SymbolTableEntry given by name, kind, value, type. Return true if
      * the new entry was successfully inserted
      */
-    public void addEntry(String identifier, AST value, Type type) {
-        SymbolTableEntry entry = new SymbolTableEntry(identifier, value, type, depth);
+    public void addEntry(String identifier, Declaration value, Type type, SymbolTableEntry.VarType var_type) {
+        SymbolTableEntry entry = new SymbolTableEntry(identifier, value, type, depth, var_type);
         if (this.hasEntry(identifier)){
             for(SymbolTableEntry e : symbols.get(identifier)) {
                 if (entry.depth == e.depth) {
@@ -104,18 +102,34 @@ public class SymbolTable {
             chain.add(entry);
             this.symbols.put(identifier, chain);
         }
+
+		if (var_type == SymbolTableEntry.VarType.FUNC || var_type == SymbolTableEntry.VarType.PROC)
+		{
+			RoutineBody b = ((RoutineDecl) value).getRoutineBody();
+			ListIterator<ScalarDecl> iter;
+			if (b.getParameters().size() > 0)
+			{
+				iter = b.getParameters().getIterator();
+
+				while (iter.hasNext())
+				{
+					ScalarDecl d = iter.next();
+					addEntry(d.getName(), d, d.getType(), SymbolTableEntry.VarType.SCALAR);
+				}
+			}
+		}
     }
 
 
     /*
      * Return the SymbolTableEntry given by name if there is one, null if there is not.
      */
-    public SymbolTableEntry getEntry(String name,int depth) {
+    public SymbolTableEntry getEntry(String name) {
 		System.out.println("Get entry " + name + " in symbol table");
 		System.out.println(symbols.size());
 		ArrayList<SymbolTableEntry> entries = symbols.get(name);
         for (SymbolTableEntry entry : entries) {
-            if (entry.getName().equals(name) && entry.depth == depth) {
+            if (entry.getName().equals(name)) {
                 return entry;
             }
         }

@@ -11,7 +11,7 @@ import compiler488.symbol.SymbolTable;
 public abstract class AST {
 
 	public final static String version = "Winter 2017";
-
 	public abstract boolean semantic_visit(SemanticObject semanticObject);
 	public abstract void table_visit(SymbolTable symbolTable);
+	public int line_num;
 }

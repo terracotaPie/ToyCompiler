@@ -5,6 +5,9 @@ import java.io.PrintStream;
 import compiler488.ast.Indentable;
 import compiler488.ast.expn.Expn;
 import compiler488.semantics.SemanticObject;
+import compiler488.symbol.SymbolTable;
+
+import javax.swing.plaf.synth.SynthButtonUI;
 
 /**
  * The command to return from a function or procedure.
@@ -32,7 +35,8 @@ public class ReturnStmt extends Stmt {
 
 	@Override
 	public boolean semantic_visit(SemanticObject semanticObject) {
-		return value.semantic_visit(semanticObject) && semanticObject.IsTopStackType(value.getType());
+		SymbolTable st = semanticObject.getSymbolTable();
+		return value.semantic_visit(semanticObject) && semanticObject.IsTopStackType(value.getTypeFromSymbolTable(st));
 	}
 
 	public Expn getValue() {

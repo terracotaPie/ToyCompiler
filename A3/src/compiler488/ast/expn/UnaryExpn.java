@@ -3,6 +3,8 @@ package compiler488.ast.expn;
 
 import compiler488.ast.type.Type;
 import compiler488.semantics.SemanticObject;
+import compiler488.symbol.SymbolTable;
+import compiler488.symbol.SymbolTableEntry;
 
 /**
  * The common features of unary expressions.
@@ -29,6 +31,11 @@ public abstract class UnaryExpn extends Expn
 
 	public String getOpSymbol() {
 		return opSymbol;
+	}
+
+	@Override
+	public Type getTypeFromSymbolTable(SymbolTable sb) {
+		return operand.getTypeFromSymbolTable(sb);
 	}
 
 	public void setOpSymbol(String opSymbol) {
