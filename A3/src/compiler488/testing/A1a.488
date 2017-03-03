@@ -19,6 +19,6 @@
             write "✗ (id", id, ")", newline
     }
 
-    testInt(1,2)
+    testInt(1,2,3)
 
 }

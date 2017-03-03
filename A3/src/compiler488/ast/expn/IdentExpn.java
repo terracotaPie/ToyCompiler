@@ -32,7 +32,6 @@ public class IdentExpn extends Expn implements Readable
     	boolean exists = semanticObject.getSymbolTable().getEntry(ident) != null;
     	if (!exists)
     		semanticObject.addError("%s is not declared".format(ident));
-    	// TODO: Check if it is in symbol table
 		return true;
 	}
 
