@@ -1,6 +1,6 @@
 {
-   int x : Integer
-   int y : Boolean
+   var x : Integer
+   var y : Boolean
    x := 1
    y := true
 }

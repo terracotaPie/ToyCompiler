@@ -1,6 +1,7 @@
 {
   function a(b : Integer) : Integer {
-    return with a
+    return with b
   }
+  write "ok"
 }
 

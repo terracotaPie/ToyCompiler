@@ -1,0 +1,5 @@
+To run all of the tests, do 
+    `sh RUNTESTS.sh`
+To run a test on one file, and output to another, run
+    `sh RUNTESTS.sh <input> <output>`
+Otherwise it will output to STDOUT if no output is given

@@ -1,5 +1,4 @@
 { 
-  % s03 does'nt exisst in semantics.pdf. this is a copy of s02
-  int x : Integer
+  var x : Integer
   x := 1
 }
