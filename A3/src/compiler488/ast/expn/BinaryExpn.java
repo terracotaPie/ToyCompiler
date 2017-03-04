@@ -6,7 +6,6 @@ import compiler488.ast.type.IntegerType;
 import compiler488.ast.type.Type;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
-import sun.jvm.hotspot.debugger.cdbg.Sym;
 
 /**
  * The common features of binary expressions.
