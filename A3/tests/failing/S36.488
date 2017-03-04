@@ -1,0 +1,6 @@
+{
+    function f(x : Boolean) : Boolean{
+        return with x
+    }
+    f(1 + 2)
+}

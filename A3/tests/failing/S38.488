@@ -1,0 +1,4 @@
+{
+    var glob_arr [ 5 ] : Integer
+    glob_arr := 8
+}

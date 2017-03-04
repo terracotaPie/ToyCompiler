@@ -1,0 +1,4 @@
+{
+    var x = Boolean
+    x := 7 + 8
+}

@@ -1,0 +1,6 @@
+{
+    function f : Integer {
+        return with 8
+    }
+    f(7)
+}

@@ -1,0 +1,4 @@
+{
+    var x := Integer
+    x := true and false
+}

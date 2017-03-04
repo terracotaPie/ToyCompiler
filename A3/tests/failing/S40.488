@@ -1,0 +1,6 @@
+{
+    function f : Integer {
+        return with 7
+    }
+    k
+}
