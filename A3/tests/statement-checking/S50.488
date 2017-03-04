@@ -1,0 +1,9 @@
+{
+  var x : Integer
+  x := 10 
+  while ( x not = 0 ) do
+  { 
+    exit when x = 5 
+    x := x - 1
+  }
+}

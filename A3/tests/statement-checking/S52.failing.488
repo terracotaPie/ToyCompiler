@@ -1,5 +1,3 @@
 {
-  procedure p : {
     return with 1
-  }
 }
