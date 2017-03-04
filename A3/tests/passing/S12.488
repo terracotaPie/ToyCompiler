@@ -1,0 +1,6 @@
+{
+  function a(b : Integer) : Integer {
+    return with a
+  }
+}
+

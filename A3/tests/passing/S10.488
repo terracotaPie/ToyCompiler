@@ -1,0 +1,6 @@
+{
+   int x : Integer
+   int y : Boolean
+   x := 1
+   y := true
+}
