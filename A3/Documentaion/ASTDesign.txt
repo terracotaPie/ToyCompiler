@@ -1,0 +1,7 @@
+-- AST Design --
+ 
+For the AST design, we augmented the AST files given to us by adding a
+different type, and implementing some new functions (and fixing some weird
+toString and indentation statements). For the cup file, we just added  a 1-1
+mapping between `compiler488.ast.*` and the grammar. So we gave each
+nonterminal a type and defined the actions accordingly. 
