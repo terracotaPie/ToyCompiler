@@ -1,5 +1,5 @@
 {
-  function f () : Integer
+  function f : Integer
   {
     return with 0
   }

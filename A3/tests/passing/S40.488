@@ -1,5 +1,5 @@
 {
-  function f() : Integer
+  function f : Integer
   {
     var B: Integer
     B := 1

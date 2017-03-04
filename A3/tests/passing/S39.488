@@ -1,9 +1,7 @@
 {
-  function f() : Integer
+  function f(B: Integer) : Integer
   {
-    var B: Integer
-    B := 1
     return with B
   }
-  f
+  f(10)
 }
