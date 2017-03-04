@@ -1,11 +1,15 @@
 package compiler488.ast.expn;
 
 import compiler488.ast.ASTList;
+import compiler488.ast.decl.RoutineBody;
 import compiler488.ast.decl.RoutineDecl;
+import compiler488.ast.decl.ScalarDecl;
 import compiler488.ast.type.Type;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
 import compiler488.symbol.SymbolTableEntry;
+
+import java.util.Iterator;
 
 /**
  * Represents a function call with or without arguments.
@@ -47,7 +51,6 @@ public class FunctionCallExpn extends Expn {
 		int num_args;
 		num_args = 0;
 		b = true;
-		// TODO: Wait for symbol table: Check if arguments/types match and set return_type
 		SymbolTableEntry s = semanticObject.getSymbolTable().getEntry(ident);
 
 		// check that this is a routine that is a function
@@ -55,6 +58,31 @@ public class FunctionCallExpn extends Expn {
 			return false;
 		}
 
+        RoutineDecl functionDeclaration = (RoutineDecl)s.getValue();
+		RoutineBody functionBody = (RoutineBody)functionDeclaration.getRoutineBody();
+
+		// check that this has the same number of arguments
+	    if (arguments.size() != functionBody.getParameters().size()) {
+	    	return false;
+		}
+
+		// check that the types match
+		ScalarDecl param;
+	    Expn arg;
+	    Iterator<ScalarDecl> params = functionBody.getParameters().getIterator();
+	    Iterator<Expn> args = arguments.getIterator();
+	    while (params.hasNext() && args.hasNext()) {
+	    	param = params.next();
+	    	arg = args.next();
+
+	    	boolean sameType = param.getType().equals(arg.getType());
+
+	    	if (!sameType) {
+	    		return false;
+			}
+		}
+
+		// TODO: check return type
 
 		return b;
 	}

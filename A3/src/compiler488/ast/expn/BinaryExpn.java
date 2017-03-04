@@ -6,7 +6,6 @@ import compiler488.ast.type.IntegerType;
 import compiler488.ast.type.Type;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
-import sun.jvm.hotspot.debugger.cdbg.Sym;
 
 /**
  * The common features of binary expressions.
@@ -69,7 +68,7 @@ public class BinaryExpn extends Expn
 				c = left.getTypeFromSymbolTable(sb) instanceof IntegerType && right.getTypeFromSymbolTable(sb) instanceof IntegerType; /* S31 */
 				if (!c)
 				{
-					semanticObject.addError("TypeError: Integer expected");
+					semanticObject.addError(String.format("TypeError in `%s`: Integer expected", this.toString()));
 				}
 				break;
 			case "and":
@@ -77,7 +76,7 @@ public class BinaryExpn extends Expn
 				c = left.getTypeFromSymbolTable(sb) instanceof BooleanType && right.getTypeFromSymbolTable(sb) instanceof BooleanType; /* S30 */
 				if (!c)
 				{
-					semanticObject.addError("TypeError: Boolean expected");
+					semanticObject.addError(String.format("TypeError in `%s`: Boolean expected", this.toString()));
 				}
 				break;
 			case "=":

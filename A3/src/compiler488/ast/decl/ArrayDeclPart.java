@@ -45,9 +45,11 @@ public class ArrayDeclPart extends DeclarationPart {
 
 	@Override
 	public boolean semantic_visit(SemanticObject semanticObject) {
-		if (lb > ub)
+		if (lb > ub) {
+			semanticObject.addError("Check your bounds for " + name);
 			return false; /* S46, S48 */
-		/* TODO: S19 S47*/
+		}
+		/* S19 S47 done by symbol table */
 		return true;
 	}
 

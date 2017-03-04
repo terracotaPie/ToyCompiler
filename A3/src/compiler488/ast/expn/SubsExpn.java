@@ -54,8 +54,6 @@ public class SubsExpn extends UnaryExpn implements Readable {
 
 		b &= operand.semantic_visit(semanticObject) && operand.getTypeFromSymbolTable(st) instanceof IntegerType; /* S31 */
 
-		// TODO: Check indent for variable, then check if it is integer
-
 		return b;
 	}
 	@Override
