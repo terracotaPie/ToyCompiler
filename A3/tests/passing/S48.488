@@ -1,4 +1,4 @@
 {
-  var B[1 .. 2] : Integer
+  var B[10] : Integer
   B[1] := 1
 }

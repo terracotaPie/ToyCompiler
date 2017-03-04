@@ -1,0 +1,5 @@
+{
+ var A[-10..-1] : Integer
+write 1
+
+}
