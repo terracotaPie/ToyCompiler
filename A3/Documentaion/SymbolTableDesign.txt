@@ -1,0 +1,12 @@
+For our symbol table we used visitor pattern start at the top level scope and
+for every declaration and statement we call visit recursively. This traverses
+the tree top to bottom
+
+Main data structure is a hash table with symbol identifier as a key and
+ArrayList of Symbol Table Entries as a value - which stores all symbols with
+specific identifier and their respective Type(Int,Bool,...) and enumeration to
+keep track of the symbol type(function, procedure, scalar, array)
+for later semantic checks.
+
+Symbol table handles some name conflicts, which is a design flaw and needs
+to be controlled by a semantic analyzer.
