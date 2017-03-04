@@ -1,0 +1,11 @@
+{
+  var A : Integer
+  var B : Integer
+
+  A := 10
+  B := 10
+  if A == B then
+    write "OK"
+  else
+    write "BOO"
+}
