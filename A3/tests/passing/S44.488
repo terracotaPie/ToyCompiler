@@ -1,0 +1,7 @@
+{
+  function f () : Integer
+  {
+    return with 0
+  }
+  f
+}

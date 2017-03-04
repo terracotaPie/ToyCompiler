@@ -1,0 +1,8 @@
+{
+  procedure f () : Integer
+  {
+    var B: Integer
+    B := 1
+  }
+  f
+}
