@@ -4,5 +4,6 @@
     d := 1
     return with d
   }
+  write "ok"
 }
 

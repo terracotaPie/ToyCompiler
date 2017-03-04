@@ -1,3 +1,4 @@
 {
-  procedure a (f : integer) {}
+  procedure a (f : Integer) {}
+  write "ok"
 }
