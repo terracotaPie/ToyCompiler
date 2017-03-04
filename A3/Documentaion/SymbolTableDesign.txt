@@ -1,12 +1,24 @@
-For our symbol table we used approach #2 starting at the top level scope and
-for every declaration and statement we call visit recursively. This traverses
-the tree top to bottom
+-- SYMBOL TABLE DESIGN --
 
-Main data structure is a hash table with symbol identifier as a key and
-ArrayList of Symbol Table Entries as a value - which stores all symbols with
-specific identifier and their respective Type(Int,Bool,...) and enumeration to
-keep track of the symbol type(function, procedure, scalar, array)
-for later semantic checks.
+We chose option 2 for our semantic analysis (building it into the AST classes)
+so naturally an analogous approach was prudent for our symbol table generation.
+The table is constructed through a top-down approach: starting from the parent
+scope and recursively going deeper, visiting each scopes declarations and 
+statement (in that order). We also keep track of scope depth to ensure integrity of
+identifiers (for example, when dealing with identifiers of the same name used in 
+both major and minor scopes). 
+
+The symbol table is represented as a hash table mapping from a string identifier to
+an arraylist of its respective symbol table entries. Since an identifier can have 
+a distinct use in each scope, we handle collisions in the hash table by chaining in
+order of scope depth. This way when we are accesing the symbol table (e.g. for semantic
+analysis) the head of the chain the appropriate entry so no search is necessary. Once 
+our visit exits a scope, it's symbol table entries are popped from the list so as to 
+avoid ambiguity when dealing with different scopes at the same depth.
+
+Symbol table entries consist of the symbol's value, type (bool/int), and a symbol type
+enum (function, procedure, scalar, array). The symbol type is helpful to handle semantic
+checks (i.e.: if an entry is a function, would will then need to check it's return type). 
 
 Symbol table handles some name conflicts, which is a design flaw and needs
 to be controlled by a semantic analyzer.
