@@ -1,0 +1,5 @@
+{
+  function p : Integer {
+    return with 1
+  }
+}

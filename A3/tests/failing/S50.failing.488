@@ -1,0 +1,5 @@
+{ % exit is not in a loop
+  var x : Integer
+  x := 1
+  exit when x = 1
+}
