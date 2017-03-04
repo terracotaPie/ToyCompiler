@@ -1,4 +1,4 @@
-For our symbol table we used visitor pattern start at the top level scope and
+For our symbol table we used approach #2 starting at the top level scope and
 for every declaration and statement we call visit recursively. This traverses
 the tree top to bottom
 
