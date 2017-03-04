@@ -1,5 +1,11 @@
+The tests are designed to check every Semantic attribute, S00-S53. We split
+them into passing test files and failing test files to differentiate, and kept the files
+small so they only test one thing.
+
+--Usage--
 To run all of the tests, do 
     `sh RUNTESTS.sh`
 To run a test on one file, and output to another, run
     `sh RUNTESTS.sh <input> <output>`
-Otherwise it will output to STDOUT if no output is given
+Otherwise it will output to STDOUT if no output is given, by running
+    `sh RUNTESTS.sh <input>`

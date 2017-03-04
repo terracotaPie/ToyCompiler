@@ -1,0 +1,12 @@
+-- Semantic Analysis Design --
+
+We do a depth-first walk of the AST to perform the semantic analysis by
+enforcing the semantic checks listed in the assignment pdf. Every child of an
+AST was augmented with a semantic visit function to facilitate this. For type
+checking, AST nodes were tagged with the symbol type enum (described in Symbol
+Table Design) which we used for type tagging to differentiate between function
+and prodecures to implement the proper semantic checks.  We also propogate
+errors through an error list in the semanticObjects class which contains
+helpful error information and messages. Scope conflics are resolved in the
+symbol table.
+
