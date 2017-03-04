@@ -1,5 +1,5 @@
 {
-  procedure f () : Integer
+  procedure f ()
   {
     var B: Integer
     B := 1
