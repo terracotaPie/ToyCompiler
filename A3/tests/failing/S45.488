@@ -1,0 +1,9 @@
+{
+    function f () : Integer {
+        return with 7
+    }
+    
+    function f (x : Integer) : Integer {
+        return with x
+    }
+}

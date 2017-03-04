@@ -1,0 +1,10 @@
+{
+    procedure PrintAssertEq ( a : Integer , b : Integer )
+        {
+            if ( a = b ) then
+                write "OK" , newline
+            else
+                write "BAD " , a , " =/= " , b , newline
+        }
+    hello(7, 8)
+}
