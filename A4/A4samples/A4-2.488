@@ -1,0 +1,38 @@
+%  Assignment 4 Sample Program 2			% 2-1
+{							% 2-2
+   var a, b, c , d : Integer				% 2-3
+   var p, q, r : Boolean				% 2-4
+   a := b + c - d*c + b/c				% 2-5
+   p := not false or not q and r			% 2-6
+   if p then  a := 3 					% 2-7
+   if p or not p then b := 2 else b := 0 		% 2-8
+   while c < 7 do  c := 6 			 	% 2-9
+   while true do  b := b + 1 				% 2-10
+   repeat { a := 3 exit b := 7 } until false		% 2-11
+   while q or r and not p do  exit when b not= 10 	% 2-12
+   write "Value is " , a / b, " or not ", newline	% 2-13
+   read  a, c, b					% 2-14
+   {							% 2-15
+       var a, b, c : Boolean				% 2-16
+       a := not p or q					% 2-17
+       {						% 2-18
+          var p, q, r : Integer				% 2-19
+          p := ( b ? q : r )				% 2-20
+       }						% 2-21
+   }							% 2-22
+   while true do  {					% 2-23
+       exit when p or r 				% 2-24
+       repeat  {					% 2-25
+          var w, x : Integer				% 2-26
+          if w <= a then exit 				% 2-27
+          while  p or q or r do				% 2-28
+             {						% 2-29
+                var  t, u : Integer			% 2-30
+       		p := not q 				% 2-31
+                t := ( p or q ? t + 1 : t - 1 )		% 2-32
+	        exit 3 when t > 12			% 2-33
+             }   % while				% 2-34
+             exit 2					% 2-35
+        } until p and r  % repeat			% 2-36
+   }  % while						% 2-37
+}							% 2-38

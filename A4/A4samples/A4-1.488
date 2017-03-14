@@ -1,0 +1,29 @@
+%  Assignment 4 Sample Program 1		% 1-1
+{						% 1-2
+   var i, j, k, l, m : Integer			% 1-3
+   var p, q, r, s, t : Boolean			% 1-4
+   var A[7] , B[ -100 .. 50 ] : Integer		% 1-5
+   var C[ -7 .. -3 ], D[ 400 ]	: Boolean	% 1-6
+   i := 1					% 1-7
+   j := i + 3					% 1-8
+   k := i - j 					% 1-9
+   l := j * k					% 1-10
+   m := k / l					% 1-11
+   p := true					% 1-11
+   q := false					% 1-12
+   r := not q					% 1-13
+   s := p or q					% 1-14
+   t := s and p					% 1-15
+   p := i < j					% 1-16
+   q := k <= l					% 1-17
+   r := j = l					% 1-18
+   s := k not = m				% 1-19
+   t := j > k					% 1-20
+   t := j >= k					% 1-21
+   q := r = s					% 1-22
+   t := s not = r 				% 1-23
+   A[5] := 5					% 1-24
+   B[i+1] := A[j-2]				% 1-25
+   C[-4] := p or q				% 1-26
+   r := D[ i + 200 ]				% 1-27
+}						% 1-28

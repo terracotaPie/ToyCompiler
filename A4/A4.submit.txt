@@ -1,0 +1,16 @@
+What to submit / How to submit Assignment 4
+
+1) Your submitted files should contain: 
+
+   Your code generation templates and any other code generation design documents.
+
+   If you submit multiple documents, identify them in a file named INDEX.
+
+   All submitted documents should be in a format that's easy to read on
+   CDF, i.e. text files, PDF files.
+
+   Each of the A4 sample programs in a separate file
+   Any other documents you think are relevant.  
+   You should not  resubmit documents from previous assignments.
+
+   The Who-did-What description

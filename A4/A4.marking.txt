@@ -1,0 +1,57 @@
+Assignment 4 Marking Scheme
+
+This marking scheme closely follows the code generation template document.
+
+General documentation of the teams  code generation strategy can count 
+toward marks in the various categories below;
+
+1. storage of scalar and array variables, constants				15 marks
+   a. variables in the main program				3 marks
+   b. variables in procedures and functions			5 marks
+   c. variables in minor scopes					2 marks
+   d. integer and boolean constants				2 marks
+   e. text constants						3 marks
+
+2.  expressions									25 marks
+    a. describe how the values of constants 			2 marks
+	(including text constants) will be accessed.
+    b. describe how the values of scalar variables 		1 mark
+       will be accessed.  
+    c. Describe how array elements will be accessed.		5 marks
+       Show details of array subscripting.
+    d. describe how you will implement each of the arithmetic   3 marks
+       operators  +, -, *, and /
+    e. describe how you will implement each of the comparison	5 marks
+       operators  <, <=, =, not =,  >=, > 
+    f. describe how you will implement each of the boolean	5 marks
+       operators  and , or and not 
+    g. describe how you will implement conditional expressions	4 marks
+
+3.  functions and procedures							25 marks
+     a. the activation record for functions and procedures.		4 marks
+     b. procedure and function entrance code (activation record setup,  5 marks
+        allocation of local variables, etc)				
+     c. procedure and function exit code (cleanup, return values, etc)	3 marks
+     d. describe how you will implement parameter passing.		4 marks
+     e. describe how you will implement function call and function	3 marks
+        value return.
+     f. describe how you will implement procedure call			3 marks
+     g. describe your display management strategy			3 marks
+
+4.  statements 									18 marks
+    a. assignment statement						3 marks
+    b. if statements							3 marks
+    c. while and repeat statements					3 marks
+    d. exit statements							3 marks
+    e. return statements						3 marks
+    f. read and write statements					3 marks
+
+5.  Other									5 marks
+    a. main program initialization and  termination
+    b. any handling of scopes not described above
+    c. any other information that you think is relevant.
+
+6 Sample Programs								12 marks
+    A4-01.488								4 marks
+    A4-02.488								4 marks
+    A4-03.488								4 marks
