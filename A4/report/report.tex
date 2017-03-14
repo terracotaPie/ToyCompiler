@@ -1,0 +1,73 @@
+\documentclass[12pt]{article}
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage[]{listings}
+\usepackage{graphicx}
+\lstdefinelanguage{abc}
+{
+  % list of keywords
+  morekeywords={
+    HALT,
+    ADDR,
+    LOAD,
+    STORE,
+    PUSH,
+    PUSHMT,
+    SETD,
+    POP,
+    POPN,
+    DUP,
+    DUPN,
+    BR,
+    BF,
+    NEG,
+    ADD,
+    SUB,
+    MUL,
+    DIV,
+    EQ,
+    LT,
+    OR,
+    SWAP,
+    READC,
+    PRINTC,
+    READI,
+    PRINTI,
+    TRON,
+    TROFF,
+    ILIMIT
+  },
+  sensitive=false, % keywords are not case-sensitive
+  morecomment=[l]{//}, % l is for line comment
+  morecomment=[s]{/*}{*/}, % s is for start and end delimiter
+}
+\lstnewenvironment{code}[1][]%
+{\noindent
+    \minipage{\linewidth} 
+    \vspace{0.5\baselineskip}
+    \lstset{language={abc},
+      basicstyle=\bfseries\footnotesize,
+      commentstyle=\normalfont,
+      frame=tb,
+      title={#1},
+    }
+  }
+  {\endminipage}
+
+\begin{document}
+
+\tableofcontents
+
+\input{content/storage}
+
+\begin{code}[A title for the code goes here]
+  SUB def // hello
+\end{code}
+\input{content/expressions}
+
+\input{content/functions-and-procedures}
+
+\input{content/statements}
+
+\end{document}
