@@ -57,10 +57,10 @@ ADDR 0 a           % [a]
 ADDR 0 b           % [a b]
 ADDR 0 c           % [a b c]
 ADDR 0 d           % [a b c d]
-LOAD               % [a b c 0]
-ADDR 0 c           % [a b c 0 c]
-LOAD               % [a b c 0 0]
-MUL                % [a b c 0]
+LOAD               % [a b c 'd]
+ADDR 0 c           % [a b c 'd c]
+LOAD               % [a b c 'd 'c]
+MUL                % [a b c]
 ADDR 0 b           % [a b c 0 b]
 LOAD               % [a b c 0 0]
 ADDR 0 c           % [a b c 0 0 c]
@@ -134,12 +134,12 @@ BF
 ADDR 0 c          % [c]
 PUSH 6            % [c 6]
 STORE             % []
-PUSH loop_cond    % [loop_cond]
+PUSH loop_cond_address    % [loop_cond_address]
 BR                % go to loop condition
                   % exit_address
 
 % 2-10 while true do  b := b + 1
-% loop_cond
+% loop_cond_address
 PUSH MACHINE_TRUE
 NEG
 PUSH 1
@@ -152,8 +152,160 @@ LOAD              % [b b]
 PUSH 1            % [b b 1]
 ADD               % [b ( b + 1 )]
 STORE             % []
-PUSH loop_cond    % [loop_cond]
+PUSH loop_cond_address    % [loop_cond_address]
 BR                % go to loop condition
 % exit_address
 
 % 2-11 'repeat { a := 3 exit b := 7 } until false'
+%loop_begin_address
+ADDR 0 a % [a]
+PUSH 3   % [a 3]
+STORE    % []
+PUSH exit_address
+BR
+ADDR 0 b % [b]
+PUSH 3   % [b 7]
+STORE    % []
+PUSH MACHINE_FALSE
+PUSH loop_begin_address
+BF
+
+% 2-12 while q or r and not p do exit when b not= 10
+ADDR 0 q % [q]
+LOAD
+ADDR 0 r % [q r]
+LOAD
+ADDR 0 p % [q r p]
+LOAD     % [q r p]
+NEG      % [q r -p]
+PUSH 1   % [q r -p 1]
+ADD      % [q r !p]
+AND  % [q ( r and !p )
+OR   % [( q or ( cr and !pc ) )]
+NEG
+PUSH 1
+PUSH exit_address
+BF
+ADDR 0 b
+LOAD
+NEG
+PUSH 1
+ADD
+PUSH 10
+EQ
+PUSH MACHINE_FALSE
+EQ
+PUSH exit_address
+BF
+PUSH loop_begin_address
+BR
+
+% 2-13 'write "Value is " , a / b, " or not ", newline'
+PUSH 'V'
+PUSH 'a'
+PUSH 'l'
+PUSH 'u'
+PUSH 'e'
+PUSH ' '
+PUSH 'i'
+PUSH 's'
+PUSH ' '
+PRINT
+PRINT
+PRINT
+PRINT
+PRINT
+PRINT
+PRINT
+PRINT
+PRINT
+
+ADDR 0 a
+LOAD
+ADDR 0 b
+LOAD
+DIV
+PRINT
+
+PUSH 'o'
+PUSH 'r'
+PUSH ' '
+PUSH 'n'
+PUSH 'o'
+PUSH 't'
+PUSH '\n'
+PRINT
+PRINT
+PRINT
+PRINT
+PRINT
+PRINT
+PRINT 
+% 2-14 'read  a, c, b'
+ADDR 0 a
+READI
+STORE
+ADDR 0 c
+READI
+STORE
+ADDR 0 b
+READI
+STORE
+
+% 2-15 '{'
+ADDR 1 0       % put pointer on stack
+PUSHMT         % push stack pointer
+SETD 1
+               % 2-16    'var a, b, c : Boolean'
+PUSH UNDEFINED % a
+PUSH UNDEFINED % b
+PUSH UNDEFINED % c
+               % 2-17    'a := not p or q'
+ADDR 1 a       % [a]
+ADDR 0 p       % [a p]
+LOAD           % [a ( p )]
+NEG            % [a ( -p )]
+PUSH 1         %[a ( -p 1 )]
+ADD            % [a !p]
+ADDR 1 q       % [a !p q]
+LOAD           % [a !p 'q]
+OR             % [a ( !p or 'q )]
+STORE []
+% 2-18    '{'
+ADDR 2 0 % 2 scope stack pointer 
+PUSHMT % push stack pointer 
+SETD 2
+% 2-19          'var p, q, r : Integer'
+PUSH UNDEFINED % p
+PUSH UNDEFINED % q
+PUSH UNDEFINED % r
+% 2-20          'p := ( b ? q : r )'
+ADDR 2 b
+LOAD
+NEG
+PUSH 1
+ADD
+PUSH else_address
+ADDR 1 p
+ADDR 2 q
+LOAD
+STORE
+PUSH end_statement
+BR
+%else_address
+ADDR 1 p
+ADDR 2 r
+LOAD
+STORE
+%end_statement
+
+% 2-21    '}'
+POP            % r
+POP            % q
+POP            % p
+SETD    2      % exit_scope
+               % 2-22 '}'
+POP            % c
+POP            % b
+POP            % a
+SETD    1      % exit scope
