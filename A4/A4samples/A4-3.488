@@ -29,3 +29,274 @@
   }                                                        % 3-29
   Q( not p or q , b * c , p not= q )                       % 3-30
 }                                                          % 3-31
+
+  %   var a, b, c, d : Integer (4)
+  %   var p, q, r, s : Boolean (4)
+  % procedure P 
+  % function F
+  % procedure Q
+  PUSHMT          % Push stack pointer onto stack
+  SETD 0          % set display
+  PUSH UNDEFINED  % unitialized vars are undefined
+  PUSH 8          % 4 + 4 + 3 = 11
+  DUPN            % alloc
+
+  ADDR 0 P
+  PUSHMT
+  PUSH Pbody
+  ADD
+  STORE
+
+  ADDR 0 F
+  PUSHMT
+  PUSH Fbody
+  ADD
+  STORE
+
+  ADDR 0 Q
+  PUSHMT
+  PUSH Qbody
+  ADD
+  STORE
+
+  % skip over function bodies
+  PUSH MAIN
+  BR
+
+  %  procedure P                                             % 3-5
+  %  {                                                       % 3-6
+  %    var e, f : Integer                                    % 3-7
+  %    if q then return                                      % 3-8
+  %    e := a                                                % 3-9
+  %    return                                                % 3-10
+  %  }                                                       % 3-11
+PBody:
+  PUSHMT % Push stack pointer
+  SETD 1 % set display
+  PUSH UNDEFINED % unitialized vars are undefined
+  PUSH 2 % 2 vars
+  DUPN % alloc
+  ADDR 0 q % q from program scope
+  LOAD
+  PUSH ENDP % Branch to return
+  BF
+  ADDR 1 e
+  ADDR 0 a
+  STORE
+  % return
+  PUSH 2
+  POPN
+  BR
+ENDP:
+  % return
+  PUSH 2
+  POPN
+  BR
+
+
+  % function F( m : Integer, n : Boolean ) : Integer         % 3-12
+  % {                                                        % 3-13
+  %    if n then  return with  m + b                         % 3-14
+  %    else  return with  c - m                              % 3-14
+  % }
+FBody:
+  PUSHMT % Push stack pointer
+  PUSH 2
+  SUB % push pointer up so parameters are part of the stack
+  SETD 1 % set display
+  %  if n then
+  ADDR 1 n
+  SWAP
+  STORE
+  PUSH FELSE
+  BF
+  % return with  m + b
+  ADDR 1 m
+  LOAD
+  ADDR 0 b
+  LOAD
+  ADD
+  % pop n
+  SWAP
+  POP
+  % pop m
+  SWAP
+  POP
+  % jump to return address and keep return value
+  SWAP
+  BR
+FELSE:
+  % else return with  c - m
+  ADDR 0 c
+  LOAD
+  ADDR 1 m
+  LOAD
+  SUB
+  % pop n
+  SWAP
+  POP
+  % pop m
+  SWAP
+  POP
+  % jump to return address and keep return value
+  SWAP
+  BR
+
+
+  % procedure Q( m : Boolean , n : Integer , p : Boolean)    % 3-16
+  % {                                                        % 3-17
+  %     var t, u, v  : Integer                               % 3-18
+  %     function G : Integer                                 % 3-19
+  %     {                                                    % 3-20
+  %            var w, x : Integer                            % 3-21
+  %            return with                                   % 3-22
+  %               (  m or p ? v + n : u - b )                % 3-23
+  %     }                                                    % 3-25
+  %     if G < 7 then return                                 % 3-26
+  %     if F( t, not r ) = 17 then return                    % 3-27
+  %                                                          % 3-28
+  % }                                                        % 3-29
+QBody:
+  PUSHMT % Push stack pointer
+  PUSH 3
+  SUB
+  SETD 1 % set display to 3 pos behind (to include parameters)
+
+  PUSH UNDEFINED
+  PUSH 4 % 3 variables and 1 function
+  DUPN
+
+  ADDR 1 G
+  PUSH GBody
+  STORE
+
+  PUSH QStatement
+  BR
+
+  %     function G : Integer                                 % 3-19
+  %     {                                                    % 3-20
+  %            var w, x : Integer                            % 3-21
+  %            return with                                   % 3-22
+  %               (  m or p ? v + n : u - b )                % 3-23
+  %     }   
+GBody:
+  PUSHMT % Push stack pointer
+  SETD 2 % set display
+  PUSH UNDEFINED % unitialized vars are undefined
+  PUSH 2 % 2 vars
+  DUPN % alloc
+  % m or p ?
+  ADDR 1 m
+  LOAD
+  ADDR 1 p
+  LOAD
+  OR
+  PUSH 7 % Branch to u - b
+  % return with v + n
+  BF
+  ADDR 1 v
+  LOAD
+  ADDR 1 n
+  LOAD
+  ADD
+  % pop w
+  SWAP
+  POP
+  % pop x
+  SWAP
+  POP
+  % store return value and goto return address
+  SWAP
+  BR
+  % return u - b
+  ADDR 1 u
+  LOAD
+  ADDR 0 b
+  LOAD
+  SUB
+  % pop w
+  SWAP
+  POP
+  % pop x
+  SWAP
+  POP
+  % store return value and goto return address
+  SWAP
+  BR
+
+QStatement:
+  % if [G] < 7 then return
+  PUSH POSTG
+  PUSH GBody
+  BR
+POSTG:
+  % if [G < 7]
+  PUSH 7
+  LT
+  PUSH QELSE
+  BF
+  % return
+  PUSH 7 % 3 parameters 3 variables 1 function
+  POPN
+  BR
+QELSE:
+  % if F( t, not r ) = 17 then return
+  % F( t, not r )
+  PUSH POSTF
+  ADDR 1 t
+  LOAD
+  ADDR 0 r
+  LOAD
+  NEG
+  % goto F body
+  ADDR 0 F
+  LOAD
+  BR
+POSTF:
+  % if F( t, not r ) = 17
+  PUSH 17
+  EQ
+  % then return
+  PUSH ENDQ
+  BF
+  % return
+  PUSH 7 % 3 parameters 3 variables 1 function
+  POPN
+  BR
+
+  % end of procedure Q
+ENDQ:
+  % return
+  PUSH 7 % 3 parameters 3 variables 1 function
+  POPN
+  BR
+
+MAIN:
+  % Q( not p or q , b * c , p not= q )                       % 3-30
+  PUSH POSTQ
+  % not p or q
+  ADDR 0 p % [&p]
+  LOAD % [p]
+  NEG % [-p]
+  ADDR 0 q % [-p &q]
+  LOAD % [-p q]
+  OR %[(-p or q)]
+  % b * c
+  ADDR 0 b % [&b]
+  LOAD % [b]
+  ADDR 0 c % [b &c]
+  LOAD % [b c]
+  MUL % [(b * c)]
+  % p not= q
+  ADDR 0 p % [&p]
+  LOAD % [p]
+  ADDR 0 q % [p &q]
+  LOAD % [p q]
+  EQ % [(p or q)]
+  NEG % [-(p or q)]
+  PUSH QBody % [RETURN_ADDR (-p or q) (b * c) -(p or q) &QBody]
+  LOAD % [RETURN_ADDR (-p or q) (b * c) -(p or q) QBody]
+  BR
+POSTQ:
+  HALT
+
