@@ -1,38 +1,159 @@
-%  Assignment 4 Sample Program 2			% 2-1
-{							% 2-2
-   var a, b, c , d : Integer				% 2-3
-   var p, q, r : Boolean				% 2-4
-   a := b + c - d*c + b/c				% 2-5
-   p := not false or not q and r			% 2-6
-   if p then  a := 3 					% 2-7
-   if p or not p then b := 2 else b := 0 		% 2-8
-   while c < 7 do  c := 6 			 	% 2-9
-   while true do  b := b + 1 				% 2-10
-   repeat { a := 3 exit b := 7 } until false		% 2-11
-   while q or r and not p do  exit when b not= 10 	% 2-12
+% Assignment 4 Sample Program 2                   % 2-1
+{                                                 % 2-2
+   var a, b, c , d : Integer                      % 2-3
+   var p, q, r : Boolean                          % 2-4
+   a := b + c - d*c + b/c                         % 2-5
+   p := not false or not q and r                  % 2-6
+   if p then  a := 3                              % 2-7
+   if p or not p then b := 2 else b := 0          % 2-8
+   while c < 7 do  c := 6                         % 2-9
+   while true do  b := b + 1                      % 2-10
+   repeat { a := 3 exit b := 7 } until false      % 2-11
+   while q or r and not p do  exit when b not= 10 % 2-12
    write "Value is " , a / b, " or not ", newline	% 2-13
-   read  a, c, b					% 2-14
-   {							% 2-15
-       var a, b, c : Boolean				% 2-16
-       a := not p or q					% 2-17
-       {						% 2-18
-          var p, q, r : Integer				% 2-19
-          p := ( b ? q : r )				% 2-20
-       }						% 2-21
-   }							% 2-22
-   while true do  {					% 2-23
-       exit when p or r 				% 2-24
-       repeat  {					% 2-25
-          var w, x : Integer				% 2-26
-          if w <= a then exit 				% 2-27
-          while  p or q or r do				% 2-28
-             {						% 2-29
-                var  t, u : Integer			% 2-30
-       		p := not q 				% 2-31
-                t := ( p or q ? t + 1 : t - 1 )		% 2-32
-	        exit 3 when t > 12			% 2-33
-             }   % while				% 2-34
-             exit 2					% 2-35
-        } until p and r  % repeat			% 2-36
-   }  % while						% 2-37
-}							% 2-38
+   read  a, c, b                                  % 2-14
+   {                                              % 2-15
+       var a, b, c : Boolean                      % 2-16
+       a := not p or q                            % 2-17
+       {                                          % 2-18
+          var p, q, r : Integer                   % 2-19
+          p := ( b ? q : r )                  An instruction may occupy one, two, or three words of memory. The first word contains an op-code, specifying    % 2-20
+       }                                        % 2-21
+   }                                            % 2-22
+   while true do  {                             % 2-23
+       exit when p or r                         % 2-24
+       repeat  {                                % 2-25
+          var w, x : Integer                    % 2-26
+          if w <= a then exit                   % 2-27
+          while  p or q or r do                 % 2-28
+             {                                  % 2-29
+                var  t, u : Integer             % 2-30
+                p := not q                      % 2-31
+                t := ( p or q ? t + 1 : t - 1 )	% 2-32
+	        exit 3 when t > 12                    % 2-33
+             } % while				                  % 2-34
+             exit 2                             % 2-35
+        } until p and r % repeat			          % 2-36
+   } % while						                        % 2-37
+}                                               % 2-38
+%%%%%
+% a,b,c,d = 4 (0,1,2,3)
+% p,q,r = 3 (4,5,6)
+% Total: 3 + 4 = 7
+%%%%%%
+PUSHMT -% Push stack pointer onto stack
+SETD 0 -% set display
+PUSH UNDEFINED % unitialized vars are undefined
+PUSH 7
+DUPN % alloc
+
+%%
+% using var names for easy reading
+%%
+
+% 2-5 'a := b + c - d*c + b/c'
+% b + (c - ((d*c) + (b/c)))
+ADDR 0 a           % [a]
+ADDR 0 b           % [a b]
+ADDR 0 c           % [a b c]
+ADDR 0 d           % [a b c d]
+LOAD               % [a b c 0]
+ADDR 0 c           % [a b c 0 c]
+LOAD               % [a b c 0 0]
+MUL                % [a b c 0]
+ADDR 0 b           % [a b c 0 b]
+LOAD               % [a b c 0 0]
+ADDR 0 c           % [a b c 0 0 c]
+LOAD               % [a b c 0 0 0]
+DIV                % [a b c 0 0]
+ADD                % [a b c 0] (d*c) + (b/c)
+SUB                % [a b c]   c - (d*c) + (b/c)
+ADD                % [a b]     b + c - (d*c) + (b/c)
+STORE              % [a]       a := b + c - (d*c) + (b/c)
+
+% 2-6 'p := not false or not q and r'
+ADDR 0	p          % [p]
+PUSH MACHINE_FALSE % [p false]
+NEG                % [p -false]
+PUSH 1             % [p -false 1]
+ADD                % [p notFalse]
+ADDR 0 q           % [p notFalse q]
+LOAD               % [p notFalse 0]
+NEG                % [p notFalse -0]
+PUSH 1             % [p notFalse -0 1]
+ADD                % [p notFalse !q]
+ADDR 0 r           % [p notFalse !q r]
+LOAD               % [p notFalse !q r]
+MUL                % [p notFalse ( !q & r )]
+OR                 % [p ( notFalse | ( !q & r ) )]
+STORE              % []
+
+% 2-7 'if p then  a := 3'
+ADDR 0 p           % [p]
+LOAD               % [p]
+PUSH else_address  % [p else_address]
+BF                 % []
+ADDR 0 a           % [a]
+PUSH 0 3           % [a 3]
+STORE              % []
+
+% 2-8 'if p or not p then b := 2 else b := 0'
+ADDR 0 p          % [p]
+LOAD
+ADDR 0 p          % [p p]
+LOAD
+NEG               % [p -p]
+PUSH 1            % [p -p 1]
+ADD               % [p !p]
+OR                % [( p | !p )]
+PUSH else_address % [( p | !p ) else_address]
+BF                % []
+                  % THEN
+ADDR 0 b          % [b]
+PUSH 2            % [b 2]
+STORE             % []
+PUSH end_address  % [end_address]
+BR                % []
+                  % ELSE
+ADDR 0 b          % [b]
+PUSH 0            % [b 0]
+STORE             % []
+
+% 2-9 'while c < 7 do  c := 6'
+% loop_cond
+ADDR 0 c % [c]
+LOAD     % [c]
+PUSH 7   % [c 7]
+LT
+% if ! ( C < 7 ) exit
+NEG
+PUSH 1
+ADD
+PUSH exit_address % the address of the end of the loop
+BF
+ADDR 0 c          % [c]
+PUSH 6            % [c 6]
+STORE             % []
+PUSH loop_cond    % [loop_cond]
+BR                % go to loop condition
+                  % exit_address
+
+% 2-10 while true do  b := b + 1
+% loop_cond
+PUSH MACHINE_TRUE
+NEG
+PUSH 1
+ADD
+PUSH exit_address % the address of the end of the loop
+BF                % if not true then exit
+ADDR 0 b          % [b]
+ADDR 0 b          % [b b]
+LOAD              % [b b]
+PUSH 1            % [b b 1]
+ADD               % [b ( b + 1 )]
+STORE             % []
+PUSH loop_cond    % [loop_cond]
+BR                % go to loop condition
+% exit_address
+
+% 2-11 'repeat { a := 3 exit b := 7 } until false'
