@@ -1,8 +1,159 @@
 \section{Expression}
+
+Some notation before we start. $<name>$ will refer to an identifier,
+$<\#name>$ will be its address, and $<@name>$ will refer to its lexical level.
 \subsection{Constants}
+The constants are Text, Integers, and Booleans. As desribed before, these are
+directly inserted into code generation (replacing \texttt{true} [\texttt{false}]
+with \texttt{MACHINE\_TRUE} [\texttt{MACHINE\_FALSE}]).
+Because of the way we insert text constants, we may end up with multiple copies
+of the same word, but it's easier to implement.
+
 \subsection{Scalars}
+Scalar variables are accessed as follows:
+
+\begin{code}[Accessing scalars]
+// x
+ADDR <@x> <#x>
+LOAD
+\end{code}
+
 \subsection{Array elements}
+Because we 0-index arrays intenally, arithmetic operations within array brackets
+have to be normalized:
+
+\begin{code}[Array Elements and Normalization]
+// A[-2] where A[-3..0]
+PUSH -2
+PUSH 3
+ADD
+ADDR <@A> <#A>
+ADD
+LOAD // load A[-2] <=> Machine A[1]
+
+// A[5] where A[3..6]
+PUSH 5
+PUSH -3
+ADD
+ADDR <@A> <#A>
+ADD
+LOAD // load A[5] <=> Machine A[2]
+
+// A[2]  where A[5] (regular)
+PUSH 2
+PUSH 0
+ADD
+ADDR <@A> <#A>
+ADD
+LOAD
+\end{code}
+
 \subsection{Arithmetic Operators}
+Let $\texttt{op} \in \{\texttt{SUB,ADD,MULT,DIV}\}$. Suppose that we have the
+steps to get the values of \texttt{L} and \texttt{R}, then the following is the
+template for \texttt{L op R}
+
+\begin{code}[Arithmetic Operators]
+...
+LOAD L
+...
+LOAR R
+op
+\end{code}
+
 \subsection{Comparison Operators}
+
+Let $\texttt{comp} in \{\texttt{LT, GT, EQ, LTE, GTE}\}$. Suppose that we have
+steps to get the values of \texttt{L} and \texttt{R}, then the following is the
+for \texttt{L comp R}
+
+\begin{code}[Comparison Operators]
+...
+LOAD L
+...
+LOAR R
+comp
+\end{code}
+
+
+The following are templates for \texttt{GT, GTE, LTE}. (\texttt{EQ} and
+\texttt{LT} are available in machine.pdf)
+
+
+\begin{code}[GT]
+/* a > b */
+PUSH -1
+ADDR <@a> <#a>
+LOAD
+MULT            // -a
+PUSH -1
+ADDR <@b> <#b>
+LOAD
+MULT            // -b
+LT              // -a < -b <=> b > a
+\end{code}
+
+\begin{code}[LTE]
+/* a <= b equiv a < b+1 */
+ADDR <@a> <#a>
+LOAD
+PUSH 1
+ADDR <@b> <#b>
+LOAD
+ADD
+LT
+\end{code}
+
+\begin{code}[GTE]
+/* a >= b equiv a+1 > b
+PUSH 1
+ADDR <@a> <#a>
+LOAD
+ADD
+ADDR <@b> <#b>
+LOAD
+GT
+\end{code}
+
 \subsection{Boolean Operators}
+Let \texttt{bop} $\in$ \texttt{AND, OR}, then the following are implementations
+for the two in the set and for \texttt{NOT}
+
+\begin{code}[Boolean Operators]
+// L bop R 
+...
+LOAD L
+...
+LOAD R
+bop
+
+// NOT A
+...
+LOAD A
+NOT
+\end{code}
+
+Templates for \texttt{AND} and \texttt{NOT}
+
+\begin{code}[NOT]
+// NOT a
+ADDR <@a> <#a>
+LOAD
+PUSH MACHINE_FALSE
+EQ 
+/* 
+  a=true, then true=false => false
+  a=false, then false=false => true
+*/
+\end{code}
+
+\begin{code}[AND]
+// a&b equiv !a|!b
+ADDR <@a> <#a> // 
+LOAD           // a 
+NOT            // !a
+ADDR <@b> <#b> //
+NOT            // !b
+OR             // !a|!b
+\end{code}
 \subsection{Conditionals}

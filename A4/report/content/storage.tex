@@ -1,25 +1,90 @@
 \section{Storage}
+ We will augment our symbol table to store offsets and lexical levels, as well
+ as the PC for each routine to allow for easy branching. We explain in more
+ detail below.
 \subsection{Variables}
-  Variables are either free or bound in any particular scope. We say a variable
-  is bound if it is declared in that scope, otherwise it is free.
+ Each variable stores its offset from 0 and increments the scope's offset, so
+ that following variables can calculate their offset. Both \texttt{Boolean}s and
+ \texttt{Integer}s will take up one word on the frame. Generally, arrays come in
+ the form \texttt{A[len1][len2]}, and so we need to store $len1 \times len2$,
+ when both $len1$ and $len2$ are adjusted to be 0 indexed.
+\subsubsection{Main}
+  When entering a major scope, we will calculate the size required for all
+  the variables and allocate space accordingly, and we will give the scope an
+  frame/activation record and a block for control information. These variables
+  also get the lexical level of the nearest scope. Each child of
+  \texttt{SybmolTableObject} will get their lexical level from the
+  \texttt{SymbolTable} they are associated with, and their \texttt{offset} is
+  based off of 0 from from that SymbolTable. This remains consistent with our
+  implementatoin of objects in our \texttt{SymbolTable}. For arrays, we will add
+  the initial (possibly negative) bounds so that we have a base to do array
+  arithmetic with.  Because of this, we have an array index and a machine array
+  index that our classes have to keep track of.
 
-  \begin{code}[Bound vs Free]
+  \begin{code}[Array Indexing]
+    A[-1..10] : Integer
+    /** The following will be tracked 
+      { arrayOffset1 = -1
+      , arrayOffset2 = None
+      , len1 = 11 
+      , len2 = 1
+      , ...
+      }
+    */
+    B[5,5..10] : Integer
+    /** The following will be tracked 
+      { arrayOffset1 = 0
+      , arrayOffset2 = 5
+      , len1 = 5
+      , len2 = 5
+      , ...
+      }
+    */
+  \end{code}
+  
+\subsubsection{Procedures and Functions}
+  Because functions and procedures are not the highest scope, they have a
+  nonzero offset. Variables declared in procedures and functions will have their
+  offset calculated treating the initial offset as 0. So a variable $v$ offset
+  $o_v$ from the start of the procedure $p$ at offset $o_p$ has an actual offset
+  of $o_v + o_p$.
+  
+  \begin{code}[Function Offset]
+  function hello (a: Integer): Integer
   {
-    var x:Integer // x bound
-    {
-      var y:Integer // y bound
-      x:= 1 // x free
-    }
+    var x: Bool
+    var y: Integer
+   
+    return a
   }
   \end{code}
 
-  Because our AST checks that every free variable has been declared, all free
-  variables are declared \textit{somewhere}. We will augment our symbol table
-  from A3 to now include offsets.
-\subsubsection{Main}
-  When entering the program scope, we will calculate the size required for all
-  the variables and allocate space accordingly.
-\subsubsection{Procedures and Functions}
+  Here $y$ has an offset of 4 words (return + argument + return address + var
+  x), but an actual offset of $o_{\text{hello}} + 4$.
+  For functions in functions, everything is treated as if it belongs to the top
+  function, so the code generation will output the necessary branch.
 \subsubsection{Minor Scopes}
+  Because minor scopes are independnent (things declared in one minor scope
+  cannot be used in another), they may have overlapping space reserved in the
+  frame.
 \subsection{Integers and Booleans}
+  Integers and Booleans are written as is into the assembly code (with
+  \texttt{true} as \texttt{MACHINE\_TRUE}, and \texttt{false} as
+  \texttt{MACHINE\_FALSE}
 \subsection{Text}
+  Strings will be pushed character by character starting from the last one.
+  \begin{code}[Text]
+    // write ``csc488''
+    PUSH `8'
+    PUSH `8'
+    PUSH `4'
+    PUSH `c'
+    PUSH `s'
+    PUSH `c'
+    PRINTC
+    PRINTC
+    PRINTC
+    PRINTC
+    PRINTC
+    PRINTC
+  \end{code}
