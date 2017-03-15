@@ -253,7 +253,7 @@ ADDR 0 i % [r D i]
 LOAD     % [r D <i>]
 PUSH 200 % [r D <i> 200]
 ADD      % [r D <i + 200>]
-ADD      % [r D[<i>+200]
+ADD      % [r D[<i>+200]]
 LOAD     % [r <{D} + i + 200>]
 STORE
 
