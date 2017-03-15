@@ -43,7 +43,8 @@
   morecomment=[s]{/*}{*/}, % s is for start and end delimiter
 }
 \lstnewenvironment{code}[1][]%
-{\noindent
+{
+  \noindent
     \minipage{\linewidth} 
     \vspace{0.5\baselineskip}
     \lstset{language={abc},
@@ -59,15 +60,15 @@
 
 \tableofcontents
 
-\input{content/storage}
 
 \begin{code}[A title for the code goes here]
   SUB def // hello
 \end{code}
+
+\input{content/overview}
+\input{content/storage}
 \input{content/expressions}
-
 \input{content/functions-and-procedures}
-
 \input{content/statements}
 
 \end{document}

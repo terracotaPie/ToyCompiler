@@ -1,0 +1,13 @@
+\section{Overview}
+We will walk the AST generated in A3 to create code in A5.
+
+\subsection{Visitor Pattern}
+When building the AST (A3), we chose to implement an \texttt{ast\_visit} method
+for each type of node within the class for that node. For A5, we will
+instead choose to use a visitor pattern. This provides cleaner code that can be
+easily swapped and adjusted. We will have a \texttt{CodeGenVisitor} class that
+defines how code is generated for each type of AST node. We will also create a
+\texttt{LHSVisitor} class to generate code for the left-hand side of assignment
+statements (\texttt{:=}).
+
+

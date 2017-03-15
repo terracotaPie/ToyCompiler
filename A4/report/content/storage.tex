@@ -1,6 +1,24 @@
 \section{Storage}
 \subsection{Variables}
+  Variables are either free or bound in any particular scope. We say a variable
+  is bound if it is declared in that scope, otherwise it is free.
+
+  \begin{code}[Bound vs Free]
+  {
+    var x:Integer // x bound
+    {
+      var y:Integer // y bound
+      x:= 1 // x free
+    }
+  }
+  \end{code}
+
+  Because our AST checks that every free variable has been declared, all free
+  variables are declared \textit{somewhere}. We will augment our symbol table
+  from A3 to now include offsets.
 \subsubsection{Main}
+  When entering the program scope, we will calculate the size required for all
+  the variables and allocate space accordingly.
 \subsubsection{Procedures and Functions}
 \subsubsection{Minor Scopes}
 \subsection{Integers and Booleans}

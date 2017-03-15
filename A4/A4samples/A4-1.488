@@ -1,29 +1,262 @@
-%  Assignment 4 Sample Program 1		% 1-1
-{						% 1-2
-   var i, j, k, l, m : Integer			% 1-3
-   var p, q, r, s, t : Boolean			% 1-4
-   var A[7] , B[ -100 .. 50 ] : Integer		% 1-5
-   var C[ -7 .. -3 ], D[ 400 ]	: Boolean	% 1-6
-   i := 1					% 1-7
-   j := i + 3					% 1-8
-   k := i - j 					% 1-9
-   l := j * k					% 1-10
-   m := k / l					% 1-11
-   p := true					% 1-11
-   q := false					% 1-12
-   r := not q					% 1-13
-   s := p or q					% 1-14
-   t := s and p					% 1-15
-   p := i < j					% 1-16
-   q := k <= l					% 1-17
-   r := j = l					% 1-18
-   s := k not = m				% 1-19
-   t := j > k					% 1-20
-   t := j >= k					% 1-21
-   q := r = s					% 1-22
-   t := s not = r 				% 1-23
-   A[5] := 5					% 1-24
-   B[i+1] := A[j-2]				% 1-25
-   C[-4] := p or q				% 1-26
-   r := D[ i + 200 ]				% 1-27
-}						% 1-28
+%  assignment 4 sample program 1               % 1-1
+{                                              % 1-2
+   var i, j, k, l, m : Integer                 % 1-3
+   var p, q, r, s, t : Boolean                 % 1-4
+   var A[7] , B[ -100 .. 50 ] : Integer        % 1-5
+   var C[ -7 .. -3 ], D[ 400 ]  : Boolean      % 1-6
+   i := 1                                      % 1-7
+   j := i + 3                                  % 1-8
+   k := i - j                                  % 1-9
+   l := j * k                                  % 1-10
+   m := k / l                                  % 1-11
+   p := true                                   % 1-12
+   q := false                                  % 1-13
+   r := not q                                  % 1-14
+   s := p or q                                 % 1-15
+   t := s and p                                % 1-16
+   p := i < j                                  % 1-17
+   q := k <= l                                 % 1-18
+   r := j = l                                  % 1-19
+   s := k not = m                              % 1-20
+   t := j > k                                  % 1-21
+   t := j >= k                                 % 1-22
+   q := r = s                                  % 1-23
+   t := s not = r                              % 1-24
+   A[5] := 5                                   % 1-25
+   B[i+1] := A[j-2]                            % 1-26
+   C[-4] := p or q                             % 1-27
+   r := D[ i + 200 ]                           % 1-28
+}                                              % 1-29
+
+%%%%%
+% i,j,k,l,m = 5 (0,1,2,3,4)
+% p,q,r,s,t = 5 (5,6,7,8,9)
+% A = 7  (10..16)
+% B = 150 (17...166)
+% C = 4 (167...170)
+% D = 400 (171...570)
+% Total: 5+5+7+150+4+400 = 571
+%%%%%%
+PUSHMT -% Push stack pointer onto stack
+SETD 0 -% set display
+PUSH UNDEFINED % unitialized vars are undefined
+PUSH 571
+DUPN % alloc
+
+%%
+% using var names for easy reading
+%%
+
+% 1-7 `i:=1`
+ADDR 0 i
+PUSH 1
+STORE
+
+% 1-8 `j := i + 3`
+ADDR 0 j % [j]
+ADDR 0 i % [j i]
+LOAD     % [j 1]
+PUSH 3   % [j 1 3]
+ADD      % [j 4]
+STORE    % [] j<-4
+
+% 1-9 `k := i - j`
+ADDR 0 k % [k]
+ADDR 0 i % [k i]
+LOAD     % [k 1]
+ADDR 0 j % [k 1 j]
+LOAD     % [k 1 4]
+SUB
+STORE
+
+% 1-10 `l := j * k`
+ADDR 0 l % [l]
+ADDR 0 j % [l j]
+LOAD     % [l 4]
+ADDR 0 k % [l 4 k]
+LOAD     % [1 4 -1]
+MULT     % [1 -4]
+STORE
+
+% 1-11 `m := k / l`
+ADDR 0 m
+ADDR 0 k
+LOAD
+ADDR 0 l
+LOAD
+DIV
+
+% 1-12 `p := true`
+ADDR 0 p
+PUSH MACHINE_TRUE
+STORE
+
+% 1-13 `q := false`
+ADDR 0 q
+PUSH MACHINE_FALSE
+STORE
+
+% 1-14 `r := not q`
+ADDR 0 r           % [r]
+ADDR 0 q           % [r q]
+LOAD               % [r false]
+PUSH MACHINE_FALSE % [r false false]
+EQ                 % [r true]
+STORE
+
+% 1-15 `s := p or q`
+ADDR 0 s % [s]
+ADDR 0 p % [s p]
+LOAD     % [s true] 
+ADDR 0 q % [s true q]
+LOAD     % [s true false] 
+OR       % [s true]
+STORE
+
+% 1-16 `t := s and p`
+ADDR 0 t           % [t]
+ADDR 0 s           % [t s]
+LOAD               % [t true]
+PUSH MACHINE_FALSE % [t true false] - !s
+EQ                 % [t false]
+ADDR 0 p           % [t false p]
+LOAD               % [t false true]
+PUSH MACHINE_FALSE % [t false true false]
+EQ                 % [t false false] !s
+EQ                 % [t true] !(!s or !p) => s !or p => s and p 
+STORE
+
+% 1-17 `p := i < j`
+ADDR 0 p
+ADDR 0 i
+LOAD
+ADDR 0 j
+LOAD
+LT
+STORE
+
+% 1-18 `q := k <= l`
+ADDR 0 q
+ADDR 0 l % [q l]
+LOAD
+ADDR 0 k % [q l k]
+LOAD
+LT       % 
+PUSH MACHINE_FALSE
+EQ
+STORE
+
+% 1-19 `r := j = l`
+ADDR 0 r
+ADDR 0 j
+LOAD
+ADDR 0 l
+LOAD
+EQ
+STORE
+
+% 1-20 `s := k not = m`
+ADDR 0 s
+ADDR 0 k
+LOAD
+ADDR 0 m
+LOAD
+EQ
+PUSH MACHINE_FALSE
+EQ
+STORE
+
+% 1-21 `t := j > k`
+ADDR 0 t
+ADDR 0 j
+LOAD
+ADDR 0 k
+LOAD
+LT
+STORE
+
+% 1-22 `t := j >= k`
+ADDR 0 t
+ADDR 0 j
+LOAD
+ADDR 0 k
+LOAD
+LT      
+PUSH MACHINE_FALSE
+EQ
+STORE
+
+% 1-23 `q := r = s`
+ADDR 0 q
+ADDR 0 r
+LOAD
+ADDR 0 s
+LOAD
+EQ
+STORE
+
+% 1-24
+% 1-24 `t := s not = r`
+ADDR 0 t
+ADDR 0 s
+LOAD
+ADDR 0 r
+EQ
+PUSH MACHINE_FALSE
+EQ
+STORE
+
+% 1-25 `A[5] := 5`
+ADDR 0 A
+PUSH 5
+ADD
+PUSH 5
+STORE
+
+% 1-26 `B[i+1] := A[j-2]`
+%% <.> := value at .
+%% <{.}> := value at address of .
+%% A[.] := address of A at .
+%% i := address of i
+%% 
+ADDR 0 B % [B]
+ADDR 0 i % [B i]
+LOAD     % [B <i>]
+PUSH 1   % [B <i> 1]
+ADD      % [B <i+1>]
+ADD      % [B[i+1]]
+ADDR 0 A % [B[i+1] A]
+ADDR 0 j % [B[i+1] A j]
+LOAD     % [B[i+1] A <j>]
+PUSH 2   % [B[i+1] A <j> 2]
+SUB      % [B[i+1] A <j-2>]
+ADD      % [B[i+1] <{A} + j-2>]
+LOAD     % [B[i+1] <A[j-2]>]
+STORE    % [] B[i+1] <- A[j-2]
+
+% 1-27 `C[-4] := p or q`
+%% (-7 = 0)
+ADDR 0 C % [C]
+PUSH -4  % [C -4]
+ADD      % [C[-4]]
+ADDR 0 p % [C[-4] p]
+LOAD     % [C[-4] <p>] 
+ADDR 0 q % [C[-4] <p> q]
+LOAD     % [C[-4] <p> <q>]
+OR       % [C[-4] (p or q)]
+STORE
+
+% 1-28 `r := D[ i + 200 ]`
+ADDR 0 r % [r]
+ADDR 0 D % [r D]
+ADDR 0 i % [r D i]
+LOAD     % [r D <i>]
+PUSH 200 % [r D <i> 200]
+ADD      % [r D <i + 200>]
+ADD      % [r D[<i>+200]
+LOAD     % [r <{D} + i + 200>]
+STORE
+
+% 1-29 }
+HALT
+
