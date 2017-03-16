@@ -1,8 +1,56 @@
 \section{Functions and Procedures}
 \subsection{Activation Record}
 \subsection{Entrance Code}
+
+\begin{code}[Entrance Code]
+ADDR 0 F
+PUSHMT
+PUSH Fbody // label to body of function
+\end{code}
 \subsection{Exit Code}
+
+\begin{code}[Exit Code]
+/* 
+Swap and pop to preserve the return value while 
+popping all the variables in the stack
+*/
+SWAP
+POP
+...
+/* 
+Put return address on top of stack and goto 
+the return address 
+*/
+SWAP
+BR
+\end{code}
+
 \subsection{Parameter passing}
+If a procedure or a function takes $n$ parameters, we move the stack pointer
+back $n$ to grab those parameters before setting the display data. We don't have
+to store \texttt{PrevD} or \texttt{n} because it is calculated at compile time.
+
+\begin{code}[Parameter Passing]
+PUSHMT
+PUSH <n>
+SUB
+SETD <prevD + 1>
+\end{code}
+
 \subsection{Function Calls and Value Return}
+
+\begin{code}[Function Calls and Value Return]
+PUSH RETURN_ADDRESS
+PUSH PARAMS // label for parameters
+PUSH FUNC_BODY // label for function body
+/* FUNC_BODY handles exit code */  
+BR // return value is on top of the stack after the function.
+\end{code}
+
 \subsection{Procedure Calls}
+This is the same as the function call but there is no return value on top of the
+stack.
+
 \subsection{Display Management}
+When we enter a new scope, we increment its display. This is handled at compile
+time.

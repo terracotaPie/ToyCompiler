@@ -43,11 +43,10 @@
   \end{code}
   
 \subsubsection{Procedures and Functions}
-  Because functions and procedures are not the highest scope, they have a
-  nonzero offset. Variables declared in procedures and functions will have their
-  offset calculated treating the initial offset as 0. So a variable $v$ offset
-  $o_v$ from the start of the procedure $p$ at offset $o_p$ has an actual offset
-  of $o_v + o_p$.
+  Procedures and functions may have a nonzero offset, so variables declared in
+  procedures and functions will have their offset calculated treating the
+  initial offset as 0. So a variable $v$ offset $o_v$ from the start of the
+  procedure $p$ at offset $o_p$ has an actual offset of $o_v + o_p$.
   
   \begin{code}[Function Offset]
   function hello (a: Integer): Integer
@@ -58,13 +57,14 @@
     return a
   }
   \end{code}
-
-  Here $y$ has an offset of 4 words (return + argument + return address + var
-  x), but an actual offset of $o_{\text{hello}} + 4$.
+  When entering a function, we push on MSP and decrement it by the number of
+  paramters, so the return value is under MSP.
+  Here $y$ has an offset of 2 words (argument + var).
+  x), but an actual offset of $o_{\text{hello}} + 2$.
   For functions in functions, everything is treated as if it belongs to the top
   function, so the code generation will output the necessary branch.
 \subsubsection{Minor Scopes}
-  Because minor scopes are independnent (things declared in one minor scope
+  Because minor scopes are independent (things declared in one minor scope
   cannot be used in another), they may have overlapping space reserved in the
   frame.
 \subsection{Integers and Booleans}

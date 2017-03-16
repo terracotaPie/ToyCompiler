@@ -2,6 +2,13 @@
 
 Some notation before we start. $<name>$ will refer to an identifier,
 $<\#name>$ will be its address, and $<@name>$ will refer to its lexical level.
+
+Code used in the templates that are not given in machine.pdf refer to other code
+in this template, where we replace the code with the code in that block. For
+example, \texttt{GT} is not defined in machine.pdf, but it is used in some
+places and defined explicity in terms of things in machine.pdf. (Basically,
+we're saying that this is psuedocode)
+
 \subsection{Constants}
 The constants are Text, Integers, and Booleans. As desribed before, these are
 directly inserted into code generation (replacing \texttt{true} [\texttt{false}]
@@ -54,10 +61,8 @@ steps to get the values of \texttt{L} and \texttt{R}, then the following is the
 template for \texttt{L op R}
 
 \begin{code}[Arithmetic Operators]
-...
-LOAD L
-...
-LOAR R
+generate_code(L)
+generate_code(R)
 op
 \end{code}
 
@@ -68,16 +73,16 @@ steps to get the values of \texttt{L} and \texttt{R}, then the following is the
 for \texttt{L comp R}
 
 \begin{code}[Comparison Operators]
-...
-LOAD L
-...
-LOAR R
+generate_code(L)
+generate_code(R)
 comp
 \end{code}
 
 
 The following are templates for \texttt{GT, GTE, LTE}. (\texttt{EQ} and
-\texttt{LT} are available in machine.pdf)
+\texttt{LT} are available in machine.pdf). These assume that we do these
+operations on variables. Replace \texttt{ADDR <@name> <\#name>; LOAD} with 
+\texttt{generate\_code(name)} if these are not variables.
 
 
 \begin{code}[GT]
@@ -121,15 +126,12 @@ for the two in the set and for \texttt{NOT}
 
 \begin{code}[Boolean Operators]
 // L bop R 
-...
-LOAD L
-...
-LOAD R
+generate_code(L)
+generate_code(R)
 bop
 
 // NOT A
-...
-LOAD A
+generate_code(A)
 NOT
 \end{code}
 
