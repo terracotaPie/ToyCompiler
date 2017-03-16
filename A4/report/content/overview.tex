@@ -13,4 +13,7 @@ statements (\texttt{:=}).
 \subsection{Termination}
 We handle termination by processing HALT.
 
-
+\subsection{Initialization}
+We must initialzie our program counter and pointers. The PC is set to 0, the MSP
+is set to point to the start of the stack, and the MLP is set to point to the memory
+chunk just before constants.
