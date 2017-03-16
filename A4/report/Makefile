@@ -27,3 +27,6 @@ endif
 .PHONY: clean
 clean:
 	latexrun --clean-all && rm -rf *.out 
+
+pls:
+	latexrun report.tex
