@@ -20,12 +20,12 @@
           p := ( b ? q : r )                  An instruction may occupy one, two, or three words of memory. The first word contains an op-code, specifying    % 2-20
        }                                        % 2-21
    }                                            % 2-22
-   while true do  {                             % 2-23
-       exit when p or r                         % 2-24
+   while true do  {  %1                           % 2-23
+       exit when p or r %1                        % 2-24
        repeat  {                                % 2-25
           var w, x : Integer                    % 2-26
           if w <= a then exit                   % 2-27
-          while  p or q or r do                 % 2-28
+          while  p or q or r do %3                % 2-28
              {                                  % 2-29
                 var  t, u : Integer             % 2-30
                 p := not q                      % 2-31
@@ -33,7 +33,7 @@
 	        exit 3 when t > 12                    % 2-33
              } % while				                  % 2-34
              exit 2                             % 2-35
-        } until p and r % repeat			          % 2-36
+        } until p and r % repeat	%2		          % 2-36
    } % while						                        % 2-37
 }                                               % 2-38
 %%%%%
@@ -60,15 +60,15 @@ ADDR 0 d           % [a b c d]
 LOAD               % [a b c 'd]
 ADDR 0 c           % [a b c 'd c]
 LOAD               % [a b c 'd 'c]
-MUL                % [a b c]
-ADDR 0 b           % [a b c 0 b]
-LOAD               % [a b c 0 0]
-ADDR 0 c           % [a b c 0 0 c]
-LOAD               % [a b c 0 0 0]
-DIV                % [a b c 0 0]
-ADD                % [a b c 0] (d*c) + (b/c)
-SUB                % [a b c]   c - (d*c) + (b/c)
-ADD                % [a b]     b + c - (d*c) + (b/c)
+MUL                % [a b c ('d*'c)]
+ADDR 0 b           % [a b c ('d*'c) b]
+LOAD               % [a b c ('d*'c) 'b]
+ADDR 0 c           % [a b c ('d*'c) 'b c]
+LOAD               % [a b c ('d*'c) 'b 'c]
+DIV                % [a b c ('d*'c) ('b/'c)]
+ADD                % [a b c (('d*'c) + ('b/'c))]
+SUB                % [a b (c - ('d*'c) + ('b/'c))]
+ADD                % [a (b + (c - (d*c) + (b/c))]
 STORE              % [a]       a := b + c - (d*c) + (b/c)
 
 % 2-6 'p := not false or not q and r'
@@ -184,6 +184,7 @@ AND  % [q ( r and !p )
 OR   % [( q or ( cr and !pc ) )]
 NEG
 PUSH 1
+ADD
 PUSH exit_address
 BF
 ADDR 0 b
@@ -240,7 +241,7 @@ PRINT
 PRINT
 PRINT
 PRINT
-PRINT 
+PRINT
 % 2-14 'read  a, c, b'
 ADDR 0 a
 READI
@@ -256,11 +257,13 @@ STORE
 ADDR 1 0       % put pointer on stack
 PUSHMT         % push stack pointer
 SETD 1
-               % 2-16    'var a, b, c : Boolean'
+
+% 2-16    'var a, b, c : Boolean'
 PUSH UNDEFINED % a
 PUSH UNDEFINED % b
 PUSH UNDEFINED % c
-               % 2-17    'a := not p or q'
+
+% 2-17    'a := not p or q'
 ADDR 1 a       % [a]
 ADDR 0 p       % [a p]
 LOAD           % [a ( p )]
@@ -272,8 +275,8 @@ LOAD           % [a !p 'q]
 OR             % [a ( !p or 'q )]
 STORE []
 % 2-18    '{'
-ADDR 2 0 % 2 scope stack pointer 
-PUSHMT % push stack pointer 
+ADDR 2 0 % 2 scope stack pointer
+PUSHMT % push stack pointer
 SETD 2
 % 2-19          'var p, q, r : Integer'
 PUSH UNDEFINED % p
@@ -304,8 +307,159 @@ POP            % r
 POP            % q
 POP            % p
 SETD    2      % exit_scope
-               % 2-22 '}'
+% 2-22 '}'
 POP            % c
 POP            % b
 POP            % a
 SETD    1      % exit scope
+
+% 2-23  while true do {
+PUSH MACHINE_TRUE
+NEG
+PUSH 1
+ADD
+PUSH exit_address_1 % the address of the end of the loop
+BF                % if not true then exit
+
+% 2-24 exit when p or r
+ADDR 0 p % [p]
+LOAD
+ADDR 0 r % [p r]
+LOAD
+OR % [(p or r)]
+NEG
+PUSH 1
+ADD
+PUSH exit_address_1
+BF
+
+% 2-25 repeat {
+ADDR 1 0       % put pointer on stack
+PUSHMT         % push stack pointer
+SETD 1
+
+% 2-26 var w, x : Integer
+PUSH UNDEFINED % w
+PUSH UNDEFINED % x
+
+% 2-27 if w <= a then exit
+ADDR 1 w    % [w]
+LOAD
+PUSH 1
+ADDR 1 a    % [w a]
+LOAD
+ADD
+LT
+NEG
+PUSH 1
+ADD
+PUSH exit_address_2
+BF
+
+% 2-28 while  p or q or r do
+ADDR 0 p    % [p]
+LOAD
+ADDR 0 q    % [p q]
+LOAD
+ADDR 0 r    % [p q r]
+LOAD
+OR
+OR    % [(p or q or r)]
+NEG
+PUSH 1
+ADD
+PUSH exit_address_3
+BF
+
+% 2-29 {
+ADDR 2 0       % put pointer on stack
+PUSHMT         % push stack pointer
+SETD 2
+
+% 2-30 var  t, u : Integer
+PUSH UNDEFINED    % t
+PUSH UNDEFINED    % u
+
+% 2-31 p := not q
+ADDR 0 p    % [p]
+ADDR 0 q    % [p q]
+LOAD
+NEG         % [p -q]
+PUSH 1
+ADD
+STORE
+
+% 2-32 t := ( p or q ? t + 1 : t - 1 )
+ADDR 0 p    % [p]
+LOAD
+ADDR 0 q    % [p q]
+LOAD
+OR          % [(p or q)]
+NEG
+PUSH 1      % [(-(p or q)) 1]
+ADD
+PUSH else_address
+BF
+ADDR 2 t
+ADDR 2 t
+LOAD
+PUSH 1
+ADD
+STORE
+PUSH end_statement
+BR
+%else_address
+ADDR 2 t
+ADDR 2 t
+LOAD
+PUSH 1
+NEG
+ADD
+STORE
+
+% 2-33 exit 3 when t > 12
+PUSH -1
+ADDR 2 t
+LOAD
+MULT
+PUSH -1
+PUSH 12
+MULT
+LT
+PUSH 4
+POPN
+
+% 2-34 } % while
+PUSH loop_begin_address
+BR
+
+% 2-35 exit 2
+PUSH 2
+POPN
+
+% 2-36 } until p and r % repeat
+ADDR 0 p
+LOAD
+PUSH MACHINE_FALSE
+EQ
+ADDR 0 r
+LOAD
+PUSH MACHINE_FALSE
+EQ
+OR
+PUSH MACHINE_FALSE
+EQ
+LOAD exit_address_2
+BF
+PUSH loop_begin_address
+BR
+
+% 2-37
+PUSH 2
+POPN
+
+% 2-38
+PUSH loop_cond_address    % [loop_cond_address]
+BR                % go to loop condition
+
+HALT
