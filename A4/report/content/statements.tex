@@ -68,6 +68,21 @@ PUSH end_line
 BR
 \end{code}
 
+\subsection{Exit}
+
+When we exit we push the next line after the block we are exiting from and then
+branch to that line (i.e.: when exiting from a loop we want to branch to the line
+immediately after the loop).
+
+\begin{code}[Exit]
+PUSH next_line
+BR
+\end{code}
+
+If exit is called with an integer following, we clear of that many number of
+scopes and branch our of the scope. For exit on condition, we simply evaluate the
+condition first and use BF to skip the exit machine code.
+
 \subsection{Reading and Writing}
 
 To write a string we push it's characters to the stack in reverse order and follow
