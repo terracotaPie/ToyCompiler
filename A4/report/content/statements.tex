@@ -31,5 +31,44 @@ codegen(false_block)    // else_line
 \end{code}
 
 \subsection{While and Repeat}
+
+
+
 \subsection{Returns}
+
+When returning we store any return value at address 0 in that level, and then
+branch to the end.
+
+\begin{code}[IfStatement]
+ADDR ll 0
+PUSH ret_val
+STORE
+PUSH end_line
+BR
+\end{code}
+
+
 \subsection{Reading and Writing}
+
+To write a string we push it's characters to the stack in reverse order and follow
+this by one PRINTC for every character in the string. To write an integer, we push
+the integer and follow this with a PRINTI command.
+
+\begin{code}[Writing]
+// write "fun"
+PUSH "n"
+PUSH "u"
+PUSH "f"
+PRINTC
+PRINTC
+PRINTC
+\end{code}
+
+To read a character/integer, we perform a READC/READI and then get an address to 
+store this data and call store on the aforementioned values.
+
+\begin{code}[Writing]
+READI
+ADDR ll addr
+STORE
+\end{code}
