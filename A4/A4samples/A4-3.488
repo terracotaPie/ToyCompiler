@@ -71,14 +71,14 @@
   %    return                                                % 3-10
   %  }                                                       % 3-11
 PBody:
-  PUSHMT % Push stack pointer
-  SETD 1 % set display
-  PUSH UNDEFINED % unitialized vars are undefined
-  PUSH 2 % 2 vars
-  DUPN % alloc
-  ADDR 0 q % q from program scope
+  PUSHMT          % Push stack pointer
+  SETD 1          % set display
+  PUSH UNDEFINED  % unitialized vars are undefined
+  PUSH 2          % 2 vars
+  DUPN            % alloc
+  ADDR 0 q        % q from program scope
   LOAD
-  PUSH ENDP % Branch to return
+  PUSH ENDP       % Branch to return
   BF
   ADDR 1 e
   ADDR 0 a
@@ -100,10 +100,10 @@ ENDP:
   %    else  return with  c - m                              % 3-14
   % }
 FBody:
-  PUSHMT % Push stack pointer
+  PUSHMT      % Push stack pointer
   PUSH 2
-  SUB % push pointer up so parameters are part of the stack
-  SETD 1 % set display
+  SUB         % push pointer up so parameters are part of the stack
+  SETD 1      % set display
   %  if n then
   ADDR 1 n
   SWAP
@@ -157,13 +157,13 @@ FELSE:
   %                                                          % 3-28
   % }                                                        % 3-29
 QBody:
-  PUSHMT % Push stack pointer
+  PUSHMT      % Push stack pointer
   PUSH 3
   SUB
-  SETD 1 % set display to 3 pos behind (to include parameters)
+  SETD 1      % set display to 3 pos behind (to include parameters)
 
   PUSH UNDEFINED
-  PUSH 4 % 3 variables and 1 function
+  PUSH 4      % 3 variables and 1 function
   DUPN
 
   ADDR 1 G
@@ -180,18 +180,18 @@ QBody:
   %               (  m or p ? v + n : u - b )                % 3-23
   %     }   
 GBody:
-  PUSHMT % Push stack pointer
-  SETD 2 % set display
-  PUSH UNDEFINED % unitialized vars are undefined
-  PUSH 2 % 2 vars
-  DUPN % alloc
+  PUSHMT          % Push stack pointer
+  SETD 2          % set display
+  PUSH UNDEFINED  % unitialized vars are undefined
+  PUSH 2          % 2 vars
+  DUPN            % alloc
   % m or p ?
   ADDR 1 m
   LOAD
   ADDR 1 p
   LOAD
   OR
-  PUSH 7 % Branch to u - b
+  PUSH 7      % Branch to u - b
   % return with v + n
   BF
   ADDR 1 v
@@ -199,10 +199,10 @@ GBody:
   ADDR 1 n
   LOAD
   ADD
-  % pop w
+  % pop x
   SWAP
   POP
-  % pop x
+  % pop w
   SWAP
   POP
   % store return value and goto return address
@@ -214,10 +214,10 @@ GBody:
   ADDR 0 b
   LOAD
   SUB
-  % pop w
+  % pop x
   SWAP
   POP
-  % pop x
+  % pop w
   SWAP
   POP
   % store return value and goto return address
@@ -236,7 +236,7 @@ POSTG:
   PUSH QELSE
   BF
   % return
-  PUSH 7 % 3 parameters 3 variables 1 function
+  PUSH 7        % 3 parameters 3 variables 1 function
   POPN
   BR
 QELSE:
@@ -260,14 +260,14 @@ POSTF:
   PUSH ENDQ
   BF
   % return
-  PUSH 7 % 3 parameters 3 variables 1 function
+  PUSH 7        % 3 parameters 3 variables 1 function
   POPN
   BR
 
   % end of procedure Q
 ENDQ:
   % return
-  PUSH 7 % 3 parameters 3 variables 1 function
+  PUSH 7        % 3 parameters 3 variables 1 function
   POPN
   BR
 
@@ -275,27 +275,27 @@ MAIN:
   % Q( not p or q , b * c , p not= q )                       % 3-30
   PUSH POSTQ
   % not p or q
-  ADDR 0 p % [&p]
-  LOAD % [p]
-  NEG % [-p]
-  ADDR 0 q % [-p &q]
-  LOAD % [-p q]
-  OR %[(-p or q)]
+  ADDR 0 p      % [&p]
+  LOAD          % [p]
+  NEG           % [-p]
+  ADDR 0 q      % [-p &q]
+  LOAD          % [-p q]
+  OR            % [(-p or q)]
   % b * c
-  ADDR 0 b % [&b]
-  LOAD % [b]
-  ADDR 0 c % [b &c]
-  LOAD % [b c]
-  MUL % [(b * c)]
+  ADDR 0 b      % [&b]
+  LOAD          % [b]
+  ADDR 0 c      % [b &c]
+  LOAD          % [b c]
+  MUL           % [(b * c)]
   % p not= q
-  ADDR 0 p % [&p]
-  LOAD % [p]
-  ADDR 0 q % [p &q]
-  LOAD % [p q]
-  EQ % [(p or q)]
-  NEG % [-(p or q)]
-  PUSH QBody % [RETURN_ADDR (-p or q) (b * c) -(p or q) &QBody]
-  LOAD % [RETURN_ADDR (-p or q) (b * c) -(p or q) QBody]
+  ADDR 0 p      % [&p]
+  LOAD          % [p]
+  ADDR 0 q      % [p &q]
+  LOAD          % [p q]
+  EQ            % [(p or q)]
+  NEG           % [-(p or q)]
+  PUSH QBody    % [RETURN_ADDR (-p or q) (b * c) -(p or q) &QBody]
+  LOAD          % [RETURN_ADDR (-p or q) (b * c) -(p or q) QBody]
   BR
 POSTQ:
   HALT
