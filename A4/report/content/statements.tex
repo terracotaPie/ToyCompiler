@@ -32,7 +32,28 @@ codegen(false_block)    // else_line
 
 \subsection{While and Repeat}
 
+We control while loops with branch statements at the end of the loop block that go
+back to the loop condition (or for repeat loops, go back to the beginning of the
+code inside the loop).
 
+\begin{code}[Loops]
+// while loop
+codegen(condition)
+PUSH end_line
+BF 
+codegen(inside_loop)
+PUSH condition_start_line
+BR 
+
+// repeat loop
+codegen(inside_loop)
+codegen(condition)
+PUSH end_line
+BF
+PUSH loop_begin
+BR
+...                 // end line
+\end{code}
 
 \subsection{Returns}
 
@@ -46,7 +67,6 @@ STORE
 PUSH end_line
 BR
 \end{code}
-
 
 \subsection{Reading and Writing}
 
