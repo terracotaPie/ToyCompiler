@@ -88,14 +88,14 @@ operations on variables. Replace \texttt{ADDR <@name> <\#name>; LOAD} with
 \begin{code}[GT]
 /* a > b */
 PUSH -1
-ADDR <@a> <#a>
-LOAD
-MULT            // -a
-PUSH -1
 ADDR <@b> <#b>
 LOAD
+MULT           
+PUSH -1
+ADDR <@a> <#a>
+LOAD
 MULT            // -b
-LT              // -a < -b <=> b > a
+LT              // -b < -a <=> a > b
 \end{code}
 
 \begin{code}[LTE]
