@@ -115,15 +115,15 @@ STORE
 
 % 1-16 `t := s and p`
 ADDR 0 t           % [t]
-ADDR 0 s           % [t s]
-LOAD               % [t true]
-PUSH MACHINE_FALSE % [t true false] - !s
-EQ                 % [t false]
-ADDR 0 p           % [t false p]
-LOAD               % [t false true]
-PUSH MACHINE_FALSE % [t false true false]
-EQ                 % [t false false] !s
-EQ                 % [t true] !(!s or !p) => s !or p => s and p 
+ADDR 0 s           % [t <s>]
+LOAD               % [t s]
+PUSH MACHINE_FALSE % [t s false]
+EQ                 % [t !s]
+ADDR 0 p           % [t !s <p>]
+LOAD               % [t !s p]
+PUSH MACHINE_FALSE % [t !s p false]
+EQ                 % [t !s !p]
+OR                 % [t (!s|!p)
 STORE
 
 % 1-17 `p := i < j`
@@ -136,14 +136,14 @@ LT
 STORE
 
 % 1-18 `q := k <= l`
-ADDR 0 q
-ADDR 0 l % [q l]
-LOAD
-ADDR 0 k % [q l k]
-LOAD
-LT       % 
-PUSH MACHINE_FALSE
-EQ
+ADDR 0 q % [<q>]
+ADDR 0 k % [<q> <k>]
+LOAD     % [<q> k]
+ADDR 0 l % [<q> k <l>]
+LOAD     % [<q> k l]
+PUSH 1   % [<q> k l 1]
+ADD      % [<q> k (l+1)]
+LT       % [<q> (k<l+1)]
 STORE
 
 % 1-19 `r := j = l`
@@ -167,11 +167,15 @@ EQ
 STORE
 
 % 1-21 `t := j > k`
-ADDR 0 t
-ADDR 0 j
-LOAD
-ADDR 0 k
-LOAD
+ADDR 0 t % [<t>]
+ADDR 0 k % [<t> <k>]
+LOAD     % [<t> k]
+PUSH -1  % [<t> k -1]
+MULT     % [<t> -k]
+ADDR 0 j % [<t> -k <j>]
+LOAD     % [<t> -k j]
+PUSH -1
+MULT     % [<t> -k -j]
 LT
 STORE
 
