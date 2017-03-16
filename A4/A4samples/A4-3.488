@@ -38,7 +38,7 @@
   PUSHMT          % Push stack pointer onto stack
   SETD 0          % set display
   PUSH UNDEFINED  % unitialized vars are undefined
-  PUSH 8          % 4 + 4 + 3 = 11
+  PUSH 11         % 4 + 4 + 3 = 11
   DUPN            % alloc
 
   ADDR 0 P
