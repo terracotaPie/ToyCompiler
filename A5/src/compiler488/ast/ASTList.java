@@ -1,6 +1,7 @@
 package compiler488.ast;
 
 import compiler488.codegen.Instruction;
+import compiler488.parser.SyntaxErrorException;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
 
@@ -111,7 +112,7 @@ public class ASTList<E> extends AST {
 		return ll.listIterator();
 	}
 
-	public void table_visit(SymbolTable symbolTable){
+	public void table_visit(SymbolTable symbolTable) {
 		for (E e: ll) {
 			((AST)e).table_visit(symbolTable);
 		}

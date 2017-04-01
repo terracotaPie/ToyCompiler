@@ -6,6 +6,7 @@ import java.util.*;
 import compiler488.ast.decl.*;
 import compiler488.ast.type.Type;
 import compiler488.ast.AST;
+import compiler488.parser.SyntaxErrorException;
 
 /** Symbol Table
  *  This almost empty class is a framework for implementing
@@ -72,20 +73,24 @@ public class SymbolTable {
 	public void openScope() {
 	    depth++;
     }
+
     public void cleanCurrentScope() {
 
 	    for(String key : symbols.keySet()) {
-	    	/* Deleting through an array while looping breaks,
-	    	   so iterate over a copy and remove from the original.
-	    	   We could also use a stream (java8 collections?) but I'll just
-	    	   do this for now
-	    	 */
             ArrayList<SymbolTableEntry> clone =
                     (ArrayList<SymbolTableEntry>) symbols.get(key).clone();
 
             for(SymbolTableEntry entry : clone) {
 	    	    if (entry.depth == depth) {
-	    	        // TODO might be broken
+                /*
+                 * Deleting through an array while looping will result in an error,
+                 * so iterate over a copy and remove from the original.
+                 * We could also use a stream and filter (java8 collections?) but I'll just
+                 * do this for now.
+                 *
+                 * Issue resolved.
+                 * - Nagee
+                 */
 	    	        symbols.get(key).remove(entry);
 				}
 			}
@@ -108,15 +113,23 @@ public class SymbolTable {
      * Add a new SymbolTableEntry given by name, kind, value, type. Return true if
      * the new entry was successfully inserted
      */
-    public void addEntry(String identifier, Declaration value, Type type, SymbolTableEntry.VarType var_type) {
-        SymbolTableEntry entry = new SymbolTableEntry(identifier, value, type, depth, var_type);
+    public void addEntry(String identifier,
+                         Declaration value,
+                         Type type,
+                         SymbolTableEntry.VarType var_type) {
+        SymbolTableEntry entry = new SymbolTableEntry(identifier,
+                                                value,
+                                                type,
+                                                depth,
+                                                var_type);
         if (this.hasEntry(identifier)){
             for(SymbolTableEntry e : symbols.get(identifier)) {
                 if (entry.depth == e.depth) {
-                // TODO throw exception
+                    // TODO: handle error case properly
+                    return;
 				} else {
-					this.symbols.get(identifier).add(0,entry);
-				}
+                    this.symbols.get(identifier).add(0, entry);
+                }
 			}
         } else {
             ArrayList<SymbolTableEntry> chain = new ArrayList<SymbolTableEntry>();

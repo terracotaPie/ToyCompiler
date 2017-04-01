@@ -33,8 +33,10 @@ public class IdentExpn extends Expn implements Readable
 	@Override
 	public boolean semantic_visit(SemanticObject semanticObject) {
     	boolean exists = semanticObject.getSymbolTable().getEntry(ident) != null;
-    	if (!exists)
-    		semanticObject.addError("%s is not declared".format(ident));
+    	if (!exists) {
+			semanticObject.addError("%s is not declared".format(ident));
+			return false;
+		}
 		return true;
 	}
 

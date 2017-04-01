@@ -58,6 +58,8 @@ public class Scope extends Stmt {
 			semanticObject.addError("statement error");
 		}
 		semanticObject.popScope();
+		semanticObject.getSymbolTable().cleanCurrentScope();
+		semanticObject.getSymbolTable().closeScope();
 		return b;
 	}
 
@@ -119,9 +121,6 @@ public class Scope extends Stmt {
 				iter_s.next().table_visit(symbolTable);
 			}
 		}
-		symbolTable.cleanCurrentScope();
-
-		symbolTable.closeScope();
 	}
 
 }

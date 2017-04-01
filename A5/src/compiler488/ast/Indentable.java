@@ -1,6 +1,7 @@
 package compiler488.ast;
 
 import compiler488.codegen.Instruction;
+import compiler488.parser.SyntaxErrorException;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
 
@@ -74,7 +75,7 @@ public class Indentable extends AST {
 		/* Has to be overwritten by child */
 		return false;
 	}
-	public void table_visit(SymbolTable symbolTable) {
+	public void table_visit(SymbolTable symbolTable){
 		//pass
 	}
 

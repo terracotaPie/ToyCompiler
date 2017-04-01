@@ -1,6 +1,7 @@
 package compiler488.ast;
 
 import compiler488.codegen.Instruction;
+import compiler488.parser.SyntaxErrorException;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
 

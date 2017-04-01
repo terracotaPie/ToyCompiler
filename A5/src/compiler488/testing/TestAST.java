@@ -15,6 +15,7 @@ import compiler488.parser.Lexer;
 import compiler488.parser.Parser;
 import compiler488.ast.stmt.Program;
 import compiler488.semantics.SemanticObject;
+import compiler488.symbol.SymbolTable;
 import java_cup.runtime.Symbol;
 
 import java.io.File;
@@ -49,6 +50,7 @@ class TestAST {
 		s.printOn(System.out, 0);
 		SemanticObject so = new SemanticObject();
 		System.out.println("Semantic: " + s.semantic_visit(so));
+		s.table_visit(new SymbolTable());
 		System.out.print(so);
 	}
 

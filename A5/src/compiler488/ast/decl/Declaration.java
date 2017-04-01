@@ -2,6 +2,7 @@ package compiler488.ast.decl;
 
 import compiler488.ast.Indentable;
 import compiler488.ast.type.Type;
+import compiler488.parser.SyntaxErrorException;
 import compiler488.symbol.SymbolTable;
 
 /**

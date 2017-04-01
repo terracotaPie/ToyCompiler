@@ -4,7 +4,7 @@
 {
     % test functions:
     procedure testInt(actual : Integer, expected : Integer, id : Integer) {
-        if actual = expected then 
+        if actual = expected then
             write "✓ (id ", id, ")", newline
         else
             write "✗ (id", id, ")", newline
