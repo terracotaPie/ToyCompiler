@@ -3,8 +3,11 @@ package compiler488.ast.expn;
 
 import compiler488.ast.type.BooleanType;
 import compiler488.ast.type.Type;
+import compiler488.codegen.Instruction;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
+
+import java.util.ArrayList;
 
 /** Represents a conditional expression (i.e., x>0?3:4). */
 public class ConditionalExpn extends Expn {
@@ -56,6 +59,11 @@ public class ConditionalExpn extends Expn {
 
 	@Override
 	public void table_visit(SymbolTable symbolTable){}
+
+	@Override
+	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
+		return null;
+	}
 
 	@Override
 	public boolean semantic_visit(SemanticObject semanticObject) {

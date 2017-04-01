@@ -36,4 +36,5 @@ public abstract class Declaration extends Indentable {
 	}
 
 	public abstract void table_visit(SymbolTable symbolTable);
+	public abstract int size_visit();
 }

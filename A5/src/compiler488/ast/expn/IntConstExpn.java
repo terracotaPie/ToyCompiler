@@ -1,9 +1,12 @@
 package compiler488.ast.expn;
 
+import compiler488.codegen.Instruction;
 import compiler488.symbol.SymbolTable;
 import compiler488.ast.type.IntegerType;
 import compiler488.ast.type.Type;
 import compiler488.semantics.SemanticObject;
+
+import java.util.ArrayList;
 
 /**
  * Represents a literal integer constant.
@@ -26,7 +29,12 @@ public class IntConstExpn extends ConstExpn
     @Override
     public void table_visit(SymbolTable symbolTable){}
 
-	@Override
+		@Override
+		public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
+			return null;
+		}
+
+		@Override
 	public boolean semantic_visit(SemanticObject semanticObject) {
 		return true;
 	}

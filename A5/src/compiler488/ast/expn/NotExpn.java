@@ -2,8 +2,11 @@ package compiler488.ast.expn;
 
 import compiler488.ast.type.BooleanType;
 import compiler488.ast.type.Type;
+import compiler488.codegen.Instruction;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
+
+import java.util.ArrayList;
 
 /**
  * Represents the boolean negation of an expression.
@@ -29,4 +32,9 @@ public class NotExpn extends UnaryExpn {
     }
     @Override
     public void table_visit(SymbolTable symbolTable){}
+
+    @Override
+    public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
+        return null;
+    }
 }

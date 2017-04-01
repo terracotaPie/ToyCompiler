@@ -1,6 +1,7 @@
 package compiler488.ast.decl;
 
 import java.io.PrintStream;
+import java.lang.reflect.Array;
 import java.util.ListIterator;
 
 import compiler488.ast.ASTList;
@@ -77,6 +78,21 @@ public class MultiDeclarations extends Declaration {
 			    symbolTable.addEntry(t.getName(),this, getType(), vt);
 			}
 		}
+	}
+
+	public int size_visit() {
+	   ListIterator<DeclarationPart> iter_d = elements.getIterator();
+	   int size = 0;
+        for (ListIterator<DeclarationPart> it = iter_d; it.hasNext(); ) {
+            DeclarationPart d = it.next();
+            if (d instanceof ArrayDeclPart) {
+                size += ((ArrayDeclPart) d).getSize();
+            }
+            else {
+                size++;
+            }
+        }
+        return size;
 	}
 
 }

@@ -1,8 +1,10 @@
 package compiler488.ast.decl;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
 
 import compiler488.ast.Indentable;
+import compiler488.codegen.Instruction;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
 import compiler488.symbol.SymbolTableEntry.VarType;
@@ -52,6 +54,12 @@ public class RoutineDecl extends Declaration {
 		symbolTable.addEntry(name,this, getType(),
 				getType() == null ? VarType.PROC : VarType.FUNC);
 	}
+
+	@Override
+	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
+		return null;
+	}
+
 	/**
 	 * Prints a description of the function/procedure.
 	 * 
@@ -72,5 +80,13 @@ public class RoutineDecl extends Declaration {
 
 	public void setRoutineBody(RoutineBody routineBody) {
 		this.routineBody = routineBody;
+	}
+
+	@Override
+	public int size_visit() {
+		/*
+		Params are considered part of the scope
+		 */
+		return 1;
 	}
 }

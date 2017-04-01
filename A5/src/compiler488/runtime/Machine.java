@@ -452,8 +452,7 @@ public final class Machine
      *  private instance variables 'pc', and 'msp'.
      *  @throws ExecutionException
      */
-    public final static void run ( )
-	throws ExecutionException 
+    public final static void run ( ) throws ExecutionException
 	{
 	short opCode = 0;		//current instruction code
 	boolean tracing = Main.traceExecution ;

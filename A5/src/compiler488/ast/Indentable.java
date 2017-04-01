@@ -1,9 +1,11 @@
 package compiler488.ast;
 
+import compiler488.codegen.Instruction;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
 
 /**
  * Generic features of constructs that cannot be expected to print on a single
@@ -74,5 +76,10 @@ public class Indentable extends AST {
 	}
 	public void table_visit(SymbolTable symbolTable) {
 		//pass
+	}
+
+	@Override
+	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
+		return null;
 	}
 }

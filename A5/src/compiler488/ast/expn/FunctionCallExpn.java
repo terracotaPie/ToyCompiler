@@ -5,10 +5,12 @@ import compiler488.ast.decl.RoutineBody;
 import compiler488.ast.decl.RoutineDecl;
 import compiler488.ast.decl.ScalarDecl;
 import compiler488.ast.type.Type;
+import compiler488.codegen.Instruction;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
 import compiler488.symbol.SymbolTableEntry;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -101,4 +103,9 @@ public class FunctionCallExpn extends Expn {
 
 	@Override
 	public void table_visit(SymbolTable symbolTable){}
+
+	@Override
+	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
+		return null;
+	}
 }

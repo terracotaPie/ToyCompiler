@@ -11,14 +11,14 @@ package compiler488.testing;
  * This simple minded driver does not read from standard input
  */
 
+import compiler488.parser.Lexer;
+import compiler488.parser.Parser;
 import compiler488.ast.stmt.Program;
-import compiler488.ast.stmt.Scope;
-import compiler488.parser.*;
 import compiler488.semantics.SemanticObject;
-import compiler488.symbol.SymbolTable;
 import java_cup.runtime.Symbol;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
 
 
 /**

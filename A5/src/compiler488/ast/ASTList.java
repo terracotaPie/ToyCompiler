@@ -1,9 +1,11 @@
 package compiler488.ast;
 
+import compiler488.codegen.Instruction;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
@@ -113,5 +115,10 @@ public class ASTList<E> extends AST {
 		for (E e: ll) {
 			((AST)e).table_visit(symbolTable);
 		}
+	}
+
+	@Override
+	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
+		return null;
 	}
 }
