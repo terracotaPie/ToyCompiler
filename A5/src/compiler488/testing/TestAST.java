@@ -11,6 +11,7 @@ package compiler488.testing;
  * This simple minded driver does not read from standard input
  */
 
+import compiler488.codegen.Instruction;
 import compiler488.parser.Lexer;
 import compiler488.parser.Parser;
 import compiler488.ast.stmt.Program;
@@ -20,6 +21,8 @@ import java_cup.runtime.Symbol;
 
 import java.io.File;
 import java.io.FileReader;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 
 /**
@@ -50,8 +53,11 @@ class TestAST {
 		s.printOn(System.out, 0);
 		SemanticObject so = new SemanticObject();
 		System.out.println("Semantic: " + s.semantic_visit(so));
-		s.table_visit(new SymbolTable());
+		SymbolTable t = new SymbolTable();
+		s.table_visit(t);
+		ArrayList<Instruction> is = s.machine_visit(t);
 		System.out.print(so);
+        System.out.println(is);
 	}
 
 }

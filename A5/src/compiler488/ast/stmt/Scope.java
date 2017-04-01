@@ -10,6 +10,7 @@ import compiler488.ast.ASTList;
 import compiler488.ast.Indentable;
 import compiler488.ast.decl.Declaration;
 import compiler488.codegen.Instruction;
+import compiler488.runtime.Machine;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
 
@@ -60,8 +61,8 @@ public class Scope extends Stmt {
 			semanticObject.addError("statement error");
 		}
 		semanticObject.popScope();
-		semanticObject.getSymbolTable().cleanCurrentScope();
-		semanticObject.getSymbolTable().closeScope();
+//		semanticObject.getSymbolTable().cleanCurrentScope();
+//		semanticObject.getSymbolTable().closeScope();
 		return b;
 	}
 
@@ -130,29 +131,49 @@ public class Scope extends Stmt {
 
 	    ArrayList<Instruction> instructions = new ArrayList<>();
 	    /*
-	     Add instructions common to all scopes
+	     Add instructions common to all scopes:
+	     PUSHMT
+	     SETD n
 	    */
+	    Instruction pushStackPointer = new Instruction(Machine.PUSHMT);
+	    Instruction display = new Instruction(Machine.SETD);
+	    display.addNumberArg((short)0);
+
+	    instructions.add(pushStackPointer);
+	    instructions.add(display);
 
 		/* Machine visit on the declarations */
 		if (declarations.size() > 0) {
             // Get the amount of space we need to allocate
             ListIterator<Declaration> declIterator = declarations.getIterator();
-            int alloc = 0;
+            short alloc = 0;
             while (declIterator.hasNext()) {
                 Declaration decl = declIterator.next();
                 alloc += decl.size_visit();
             }
 
-            /* TODO: add instructions for size to `instructions` */
+            /*
+             * PUSH UNDEFINED
+             * PUSH n
+             * DUPN
+             */
+            Instruction varInitial = new Instruction(Machine.PUSH, Machine.UNDEFINED);
+            Instruction numVars = new Instruction(Machine.PUSH);
+            numVars.addNumberArg(alloc);
+            Instruction declareVars = new Instruction(Machine.DUPN);
+
+            instructions.add(varInitial);
+            instructions.add(numVars);
+            instructions.add(declareVars);
         }
 
         /* Machine visit on the Statements */
         if (statements.size() > 0) {
-            ListIterator<Stmt> stmtIterator = statements.getIterator();
-            while (stmtIterator.hasNext()) {
-                Stmt stmt = stmtIterator.next();
-                instructions.addAll(stmt.machine_visit(symbolTable));
-            }
+//            ListIterator<Stmt> stmtIterator = statements.getIterator();
+//            while (stmtIterator.hasNext()) {
+//                Stmt stmt = stmtIterator.next();
+//                instructions.addAll(stmt.machine_visit(symbolTable));
+//            }
         }
 
         return instructions;

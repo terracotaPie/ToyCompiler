@@ -2,23 +2,7 @@
 %
 % This file tests the usage of arithmetic, logical, and comparison operators
 {
-    % test functions:
-    procedure testInt(actual : Integer, expected : Integer, id : Integer) {
-        if actual = expected then
-            write "✓ (id ", id, ")", newline
-        else
-            write "✗ (id", id, ")", newline
-    }
-
-    procedure testBool(actual : Boolean, expected : Boolean, id : Integer) {
-        if actual = expected then
-        {
-            write "✓ (id ", id, ")", newline
-        }
-        else
-            write "✗ (id", id, ")", newline
-    }
-
-    testInt(1,2,3)
-
+   var i, j, k : Integer
+   var A[10] : Integer
+   i := 1
 }
