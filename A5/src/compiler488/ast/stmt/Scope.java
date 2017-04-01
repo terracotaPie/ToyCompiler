@@ -1,6 +1,7 @@
 package compiler488.ast.stmt;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
@@ -8,6 +9,7 @@ import java.util.Set;
 import compiler488.ast.ASTList;
 import compiler488.ast.Indentable;
 import compiler488.ast.decl.Declaration;
+import compiler488.codegen.Instruction;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
 
@@ -123,4 +125,36 @@ public class Scope extends Stmt {
 		}
 	}
 
+	@Override
+	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
+
+	    ArrayList<Instruction> instructions = new ArrayList<>();
+	    /*
+	     Add instructions common to all scopes
+	    */
+
+		/* Machine visit on the declarations */
+		if (declarations.size() > 0) {
+            // Get the amount of space we need to allocate
+            ListIterator<Declaration> declIterator = declarations.getIterator();
+            int alloc = 0;
+            while (declIterator.hasNext()) {
+                Declaration decl = declIterator.next();
+                alloc += decl.size_visit();
+            }
+
+            /* TODO: add instructions for size to `instructions` */
+        }
+
+        /* Machine visit on the Statements */
+        if (statements.size() > 0) {
+            ListIterator<Stmt> stmtIterator = statements.getIterator();
+            while (stmtIterator.hasNext()) {
+                Stmt stmt = stmtIterator.next();
+                instructions.addAll(stmt.machine_visit(symbolTable));
+            }
+        }
+
+        return instructions;
+	}
 }
