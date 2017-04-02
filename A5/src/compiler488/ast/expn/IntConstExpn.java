@@ -1,6 +1,7 @@
 package compiler488.ast.expn;
 
 import compiler488.codegen.Instruction;
+import compiler488.runtime.Machine;
 import compiler488.symbol.SymbolTable;
 import compiler488.ast.type.IntegerType;
 import compiler488.ast.type.Type;
@@ -12,11 +13,11 @@ import java.util.ArrayList;
  * Represents a literal integer constant.
  */
 public class IntConstExpn extends ConstExpn
-    {
-    private Integer value;	// The value of this literal.
+{
+	private Integer value;	// The value of this literal.
 
-    /** Returns a string representing the value of the literal. */
-    @Override
+	/** Returns a string representing the value of the literal. */
+	@Override
 	public String toString () { return value.toString (); }
 
 	public Integer getValue() {
@@ -26,15 +27,11 @@ public class IntConstExpn extends ConstExpn
 	public void setValue(Integer value) {
 		this.value = value;
 	}
-    @Override
-    public void table_visit(SymbolTable symbolTable){}
+	@Override
+	public void table_visit(SymbolTable symbolTable){}
 
-		@Override
-		public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
-			return null;
-		}
 
-		@Override
+	@Override
 	public boolean semantic_visit(SemanticObject semanticObject) {
 		return true;
 	}
@@ -44,8 +41,17 @@ public class IntConstExpn extends ConstExpn
 		return new IntegerType();
 	}
 
-		@Override
-		public Type getTypeFromSymbolTable(SymbolTable sb) {
-			return getType();
-		}
+	@Override
+	public Type getTypeFromSymbolTable(SymbolTable sb) {
+		return getType();
 	}
+
+	@Override
+	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
+	    ArrayList<Instruction> pushNumber = new ArrayList<>();
+	    pushNumber.add(new Instruction(Machine.PUSH, value));
+
+        return pushNumber;
+
+	}
+}
