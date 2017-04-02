@@ -169,11 +169,11 @@ public class Scope extends Stmt {
 
         /* Machine visit on the Statements */
         if (statements.size() > 0) {
-//            ListIterator<Stmt> stmtIterator = statements.getIterator();
-//            while (stmtIterator.hasNext()) {
-//                Stmt stmt = stmtIterator.next();
-//                instructions.addAll(stmt.machine_visit(symbolTable));
-//            }
+            ListIterator<Stmt> stmtIterator = statements.getIterator();
+            while (stmtIterator.hasNext()) {
+                Stmt stmt = stmtIterator.next();
+                instructions.addAll(stmt.machine_visit(symbolTable));
+            }
         }
 
         return instructions;
