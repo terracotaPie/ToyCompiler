@@ -3,6 +3,7 @@ package compiler488.ast.expn;
 import compiler488.ast.Printable;
 import compiler488.ast.type.Type;
 import compiler488.codegen.Instruction;
+import compiler488.runtime.Machine;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
 
@@ -48,6 +49,12 @@ public class TextConstExpn extends ConstExpn implements Printable {
 
 	@Override
 	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
-		return null;
+		// read string backwards
+		ArrayList<Instruction> pushChars = new ArrayList();
+		for (int i = value.length(); i > 0; i++) {
+			// TODO: make sure that nothing is lost lol
+			pushChars.add(new Instruction(Machine.PUSH, (short)value.charAt(i)));
+		}
+		return pushChars;
 	}
 }
