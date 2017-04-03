@@ -65,12 +65,12 @@ public class AssignStmt extends Stmt {
 	    // [PUSH <location of i>, LOAD]
 	    ArrayList<Instruction> location = lval.machine_visit(symbolTable);
 	    // [PUSH 2, PUSH 3, ADD]
-	    ArrayList<Instruction> value = lval.machine_visit(symbolTable);
+	    ArrayList<Instruction> value = rval.machine_visit(symbolTable);
 	    // [STORE]
 		Instruction store = new Instruction(Machine.STORE);
 
 	    // [<location of i> (PUSH <location of i>, LOAD), 5 (PUSH 2, PUSH 3, ADD), STORE]
-		assignment.addAll(location);
+//		assignment.addAll(location);
 		assignment.addAll(value);
 	    assignment.add(store);
 
