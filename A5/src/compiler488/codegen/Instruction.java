@@ -5,6 +5,11 @@ import java.util.ArrayList;
 
 /**
  * Created by isthisnagee on 3/30/17.
+ * It would be better to rewrite this so that Instruction is an abstract (or parent) class,
+ * and children inherit. So we can define a class for each instruction. This gives us an illusion of
+ * types, where some take arguments as chars, ints, shorts, or no args.
+ *
+ * BUT, given the whole deadline fiasco...that won't be happening :)
  */
 public class Instruction {
     private short code;
@@ -58,7 +63,8 @@ public class Instruction {
     }
 
     public void addNumberArg(short num) {
-        short notInstruction = (short)(29 + num);
+        /* oh well, numbers will not be printed correctly */
+        short notInstruction = num;
         this.args.add(notInstruction);
     }
 
