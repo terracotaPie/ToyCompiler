@@ -1,5 +1,6 @@
 package compiler488.codegen;
 
+import javax.xml.stream.events.Characters;
 import java.util.ArrayList;
 
 /**
@@ -27,9 +28,21 @@ public class Instruction {
         args.add(arg);
     }
 
+    public Instruction(short code, char arg) {
+        this.code = code;
+        this.args = new ArrayList<>();
+        args.add((short)arg);
+    }
+
     public Instruction(short code) {
         this.code = code;
         this.args = new ArrayList<>();
+    }
+
+    public Instruction(short code, int arg) {
+        this.code = code;
+        this.args = new ArrayList<>();
+        this.addNumberArg((short)arg);
     }
 
     public void addArg(short arg) {
@@ -81,7 +94,7 @@ public class Instruction {
             case 26: return "TRON"  ;
             case 27: return "TROFF" ;
             case 28: return "ILIMIT";
-            default: return new Short((short)(i-29)).toString();
+            default: return new Short(i).toString();
         }
     }
     @Override
