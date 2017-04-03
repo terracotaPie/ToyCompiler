@@ -22,6 +22,7 @@ public class Scope extends Stmt {
 
 	private ASTList<Stmt> statements; // The statements to execute.
 
+	private int depth = -1;
 	public Scope() {
 		declarations = new ASTList<Declaration>();
 		statements = new ASTList<Stmt>();
@@ -30,6 +31,8 @@ public class Scope extends Stmt {
 	@Override
 	public boolean semantic_visit(SemanticObject semanticObject) {
 		semanticObject.pushScope();
+		/* getNumScopes gives us the number of scopes, but our depth for the first scope is 0, so -- */
+		depth = semanticObject.numActiveScopes() - 1;
 		this.table_visit(semanticObject.getSymbolTable());
 		boolean b;
 		ListIterator<Declaration> iter_d;
@@ -137,7 +140,7 @@ public class Scope extends Stmt {
 	    */
 	    Instruction pushStackPointer = new Instruction(Machine.PUSHMT);
 	    Instruction display = new Instruction(Machine.SETD);
-	    display.addNumberArg((short)0);
+	    display.addNumberArg((short)depth);
 
 	    instructions.add(pushStackPointer);
 	    instructions.add(display);

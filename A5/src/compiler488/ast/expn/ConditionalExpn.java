@@ -60,10 +60,6 @@ public class ConditionalExpn extends Expn {
 	@Override
 	public void table_visit(SymbolTable symbolTable){}
 
-	@Override
-	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
-		return null;
-	}
 
 	@Override
 	public boolean semantic_visit(SemanticObject semanticObject) {
@@ -78,5 +74,17 @@ public class ConditionalExpn extends Expn {
 		b &= falseValue.semantic_visit(semanticObject);
 		b &= trueValue.getTypeFromSymbolTable(st).equals(falseValue.getTypeFromSymbolTable(st)); /* S33 */
 		return b;
+	}
+
+	@Override
+	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
+		ArrayList<Instruction> conditionInstruction = condition.machine_visit(symbolTable);
+		ArrayList<Instruction> trueBlock = trueValue.machine_visit(symbolTable);
+		ArrayList<Instruction> falseBlock = falseValue.machine_visit(symbolTable);
+
+		int i = numLines(trueBlock);
+		int j = numLines(falseBlock);
+		/* jump to true, and true
+
 	}
 }

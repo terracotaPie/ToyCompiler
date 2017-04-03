@@ -1,0 +1,8 @@
+% Contributors: Nagee Elghassein
+%
+% This file tests the usage of arithmetic, logical, and comparison operators
+{
+   var i, j, k : Integer
+   var A[10] : Integer
+   i := 1
+}

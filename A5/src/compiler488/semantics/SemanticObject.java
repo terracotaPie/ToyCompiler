@@ -64,4 +64,8 @@ public class SemanticObject {
     {
         sb.append(s + '\n');
     }
+
+    public int numActiveScopes() {
+        return S35.size();
+    }
 }
