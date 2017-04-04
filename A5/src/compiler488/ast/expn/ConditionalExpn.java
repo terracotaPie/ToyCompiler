@@ -4,6 +4,8 @@ package compiler488.ast.expn;
 import compiler488.ast.type.BooleanType;
 import compiler488.ast.type.Type;
 import compiler488.codegen.Instruction;
+import compiler488.codegen.MachineUtils;
+import compiler488.runtime.Machine;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
 
@@ -76,15 +78,26 @@ public class ConditionalExpn extends Expn {
 		return b;
 	}
 
+
 	@Override
 	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
-		ArrayList<Instruction> conditionInstruction = condition.machine_visit(symbolTable);
+	    ArrayList<Instruction> output = new ArrayList<>();
+		/*
+		 */
+		ArrayList<Instruction> conditionInstructions = condition.machine_visit(symbolTable);
 		ArrayList<Instruction> trueBlock = trueValue.machine_visit(symbolTable);
 		ArrayList<Instruction> falseBlock = falseValue.machine_visit(symbolTable);
 
-		int i = numLines(trueBlock);
-		int j = numLines(falseBlock);
-		/* jump to true, and true
+		int offset = conditionInstructions.get(0).getLineNumber();
 
+		int trueLines = MachineUtils.numLines(trueBlock) + offset ;
+		int falseLines = MachineUtils.numLines(falseBlock) + trueLines + offset; /* TODO: +2 ?? */
+
+		output.add(new Instruction(Machine.PUSH, trueLines));
+		output.addAll(conditionInstructions);
+
+		/* jump to true, and true */
+
+		return output;
 	}
 }
