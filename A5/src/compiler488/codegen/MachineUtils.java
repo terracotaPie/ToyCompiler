@@ -1,5 +1,7 @@
 package compiler488.codegen;
 
+import compiler488.runtime.Machine;
+
 import java.util.ArrayList;
 
 /**
@@ -21,6 +23,10 @@ public class MachineUtils {
      * @return
      */
     public ArrayList<Instruction> MachineGT(ArrayList<Instruction> a, ArrayList<Instruction> b) {
+        ArrayList<Instruction> result = new ArrayList<>();
+        result.addAll(b);
+        result.addAll(a);
+        result.add(new Instruction(Machine.LT));
         return new ArrayList<>();
     }
 
@@ -43,6 +49,5 @@ public class MachineUtils {
     public ArrayList<Instruction> MachineLTE(ArrayList<Instruction> a, ArrayList<Instruction> b) {
         return new ArrayList<>();
     }
-
 
 }
