@@ -83,18 +83,43 @@ public class ConditionalExpn extends Expn {
 	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
 	    ArrayList<Instruction> output = new ArrayList<>();
 		/*
+		TODO: this offset is evaluated here, we need to propogate this evaluation...
 		 */
 		ArrayList<Instruction> conditionInstructions = condition.machine_visit(symbolTable);
 		ArrayList<Instruction> trueBlock = trueValue.machine_visit(symbolTable);
 		ArrayList<Instruction> falseBlock = falseValue.machine_visit(symbolTable);
 
-		int offset = conditionInstructions.get(0).getLineNumber();
+        int lastConditionInst = conditionInstructions.size() - 1;
+        int offset = conditionInstructions.get(lastConditionInst).getLineNumber();
 
-		int trueLines = MachineUtils.numLines(trueBlock) + offset ;
-		int falseLines = MachineUtils.numLines(falseBlock) + trueLines + offset; /* TODO: +2 ?? */
+        int breakLines = 2;
+		int trueLines = MachineUtils.numLines(trueBlock);
+		int falseLines = MachineUtils.numLines(falseBlock);
 
-		output.add(new Instruction(Machine.PUSH, trueLines));
+		/* TODO: might need a -1 */
+		int trueLineStart = offset + breakLines;
+		int falseLineStart = trueLineStart + trueLines + breakLines;
+		int exitLine = falseLineStart + falseLines;
+
+		/*
+		 codegen(condition)
+		 PUSH <else start>
+		 BF
+		 codegen(trueblock)
+		 PUSH <exit line>
+		 BR (exit)
+		 codegen(falseblock)
+		 // exit line num
+		 */
 		output.addAll(conditionInstructions);
+		output.add(new Instruction(Machine.PUSH, falseLineStart));
+		output.add(new Instruction(Machine.BF));
+
+		output.addAll(trueBlock);
+		output.add(new Instruction(Machine.PUSH, exitLine));
+		output.add(new Instruction(Machine.BR));
+
+		output.addAll(falseBlock);
 
 		/* jump to true, and true */
 
