@@ -15,6 +15,7 @@ import compiler488.codegen.Instruction;
 import compiler488.parser.Lexer;
 import compiler488.parser.Parser;
 import compiler488.ast.stmt.Program;
+import compiler488.runtime.Machine;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
 import java_cup.runtime.Symbol;
@@ -56,8 +57,24 @@ class TestAST {
 		SymbolTable t = new SymbolTable();
 		s.table_visit(t);
 		ArrayList<Instruction> is = s.machine_visit(t);
+		for (int l = 1; l < is.size() + 1; l++) {
+			is.get(l-1).setLineNumber(l);
+		}
+		/* feed into machine */
 		System.out.print(so);
         System.out.println(is);
+
+		Machine.powerOn();
+		short addr = 0;
+		for (Instruction inst : is) {
+			for (short arg : inst.getArgs()) {
+				Machine.writeMemory(addr, arg);
+				addr++;
+			}
+			Machine.writeMemory(inst.getCode(), addr);
+		    addr++;
+		}
+		Machine.run();
 	}
 
 }

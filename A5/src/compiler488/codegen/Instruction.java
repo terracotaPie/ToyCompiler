@@ -12,15 +12,19 @@ import java.util.ArrayList;
  * BUT, given the whole deadline fiasco...that won't be happening :)
  */
 public class Instruction {
+    private int startLine;
     private short code;
     private ArrayList<Short> args;
+    private int lineNumber;
 
     public Instruction(short code, ArrayList<Short> args) {
+        int startLine = 0;
         this.code = code;
         this.args = args;
     }
 
     public Instruction(short code, short arg1, short arg2) {
+        int startLine = 0;
         this.code = code;
         this.args = new ArrayList<>();
         args.add(arg1);
@@ -28,18 +32,21 @@ public class Instruction {
     }
 
     public Instruction(short code, short arg) {
+        int startLine = 0;
         this.code = code;
         this.args = new ArrayList<>();
         args.add(arg);
     }
 
     public Instruction(short code, char arg) {
+        int startLine = 0;
         this.code = code;
         this.args = new ArrayList<>();
         args.add((short)arg);
     }
 
     public Instruction(short code) {
+        int startLine = 0;
         this.code = code;
         this.args = new ArrayList<>();
     }
@@ -110,5 +117,12 @@ public class Instruction {
             s += " " + instructionString(inst);
         }
         return s;
+    }
+
+    public void setLineNumber(int lineNumber) {
+        this.lineNumber = lineNumber;
+    }
+    public int getLineNumber() {
+        return lineNumber;
     }
 }
