@@ -60,10 +60,16 @@ public class SubsExpn extends UnaryExpn implements Readable {
 		return b;
 	}
 	@Override
-	public void table_visit(SymbolTable symbolTable){}
+	public void table_visit(SymbolTable symbolTable){
+	    // TODO
+	}
 
 	@Override
 	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
-		return null;
+	    // GET VARIABLE
+		ArrayList<Instruction> ithElem = new ArrayList<>();
+		ArrayList<Instruction> index = operand.machine_visit(symbolTable);
+		// TODO
+		return ithElem;
 	}
 }
