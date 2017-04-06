@@ -69,6 +69,7 @@ public class SubsExpn extends UnaryExpn implements Readable {
 	    // GET VARIABLE
 		ArrayList<Instruction> ithElem = new ArrayList<>();
 		ArrayList<Instruction> index = operand.machine_visit(symbolTable);
+		// adjust index
 		// TODO
 		return ithElem;
 	}
