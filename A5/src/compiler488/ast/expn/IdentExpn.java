@@ -3,6 +3,7 @@ package compiler488.ast.expn;
 import compiler488.ast.Readable;
 import compiler488.ast.type.Type;
 import compiler488.codegen.Instruction;
+import compiler488.runtime.Machine;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
 import compiler488.symbol.SymbolTableEntry;
@@ -57,6 +58,15 @@ public class IdentExpn extends Expn implements Readable
 
 	@Override
 	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
-		return null;
-	}
+	    // GET LEXICAL LEVEL
+        short ll = 0;
+        // GET ADDRESS
+        short address = 1;
+
+        ArrayList<Instruction> mach_ident = new ArrayList<>();
+        mach_ident.add(new Instruction(Machine.ADDR, ll, address));
+
+        // TODO
+        return mach_ident;
+    }
 }
