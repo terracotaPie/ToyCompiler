@@ -64,17 +64,17 @@ class TestAST {
 		System.out.print(so);
         System.out.println(is);
 
-		Machine.powerOn();
-		short addr = 0;
-		for (Instruction inst : is) {
-			for (short arg : inst.getArgs()) {
-				Machine.writeMemory(addr, arg);
-				addr++;
-			}
-			Machine.writeMemory(inst.getCode(), addr);
-		    addr++;
-		}
-		Machine.run();
+//		Machine.powerOn();
+//		short addr = 0;
+//		for (Instruction inst : is) {
+//			for (short arg : inst.getArgs()) {
+//				Machine.writeMemory(addr, arg);
+//				addr++;
+//			}
+//			Machine.writeMemory(inst.getCode(), addr);
+//		    addr++;
+//		}
+//		Machine.run();
 	}
 
 }

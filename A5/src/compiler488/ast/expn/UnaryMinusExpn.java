@@ -3,6 +3,7 @@ package compiler488.ast.expn;
 import compiler488.ast.type.IntegerType;
 import compiler488.ast.type.Type;
 import compiler488.codegen.Instruction;
+import compiler488.runtime.Machine;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
 
@@ -30,6 +31,10 @@ public class UnaryMinusExpn extends UnaryExpn {
 
     @Override
     public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
-        return null;
+        ArrayList<Instruction> negatedVal = new ArrayList<>();
+        ArrayList<Instruction> val = operand.machine_visit(symbolTable);
+        negatedVal.addAll(val);
+        negatedVal.add(new Instruction(Machine.NEG));
+        return negatedVal;
     }
 }

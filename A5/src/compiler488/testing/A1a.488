@@ -4,5 +4,5 @@
 {
    var i, j, k : Integer
    var A[10] : Integer
-   i := 1
+   i := -50
 }
