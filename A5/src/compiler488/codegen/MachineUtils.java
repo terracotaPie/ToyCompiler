@@ -2,6 +2,7 @@ package compiler488.codegen;
 
 import compiler488.runtime.Machine;
 
+import javax.crypto.Mac;
 import java.util.ArrayList;
 
 /**
@@ -29,6 +30,84 @@ public class MachineUtils {
         result.add(new Instruction(Machine.LT));
         return result;
     }
+
+    public static ArrayList<Instruction> applyOperator(ArrayList<Instruction> a, ArrayList<Instruction> b, String opSymbol) {
+        ArrayList<Instruction> ordered_instructions = new ArrayList<>();
+        switch (opSymbol) {
+            case "+":
+                ordered_instructions.addAll(a);
+                ordered_instructions.addAll(b);
+                ordered_instructions.add(new Instruction(Machine.ADD));
+                break;
+            case "-":
+                ordered_instructions.addAll(a);
+                ordered_instructions.addAll(b);
+                ordered_instructions.add(new Instruction(Machine.SUB));
+                break;
+            case "*":
+                ordered_instructions.addAll(a);
+                ordered_instructions.addAll(b);
+                ordered_instructions.add(new Instruction(Machine.MUL));
+                break;
+            case "/":
+                ordered_instructions.addAll(a);
+                ordered_instructions.addAll(b);
+                ordered_instructions.add(new Instruction(Machine.DIV));
+                break;
+            case ">":
+                ordered_instructions.addAll(b);
+                ordered_instructions.addAll(a);
+                ordered_instructions.add(new Instruction(Machine.LT));
+                break;
+            case ">=":
+                ordered_instructions.addAll(a);
+                ordered_instructions.addAll(b);
+                ordered_instructions.add(new Instruction(Machine.LT));
+                ordered_instructions.addAll(generateNegation());
+                break;
+            case "<":
+                ordered_instructions.addAll(a);
+                ordered_instructions.addAll(b);
+                ordered_instructions.add(new Instruction(Machine.LT));
+                break;
+            case "<=":
+                ordered_instructions.addAll(b);
+                ordered_instructions.addAll(a);
+                ordered_instructions.add(new Instruction(Machine.LT));
+                ordered_instructions.addAll(generateNegation());
+                break;
+            case "!=":
+                ordered_instructions.addAll(a);
+                ordered_instructions.addAll(b);
+                ordered_instructions.add(new Instruction(Machine.EQ));
+                ordered_instructions.addAll(generateNegation());
+                break;
+            case "and":
+                ordered_instructions.addAll(a);
+                ordered_instructions.addAll(generateNegation());
+                ordered_instructions.addAll(b);
+                ordered_instructions.addAll(generateNegation());
+                ordered_instructions.add(new Instruction(Machine.OR));
+                break;
+            case "or":
+                ordered_instructions.addAll(a);
+                ordered_instructions.addAll(b);
+                ordered_instructions.add(new Instruction(Machine.OR));
+                break;
+            case "=":
+                break;
+        }
+        return ordered_instructions;
+    }
+
+    public static ArrayList<Instruction> generateNegation() {
+        ArrayList<Instruction> negation = new ArrayList<>();
+        negation.add(new Instruction(Machine.PUSH, 1));
+        negation.add(new Instruction(Machine.SUB));
+        negation.add(new Instruction(Machine.NEG));
+        return negation;
+    }
+
 
     /**
      * Return instructinos for `a >= b`
