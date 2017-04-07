@@ -60,6 +60,10 @@ public class MachineUtils {
                 ordered_instructions.add(new Instruction(Machine.LT));
                 break;
             case ">=":
+                ordered_instructions.addAll(a);
+                ordered_instructions.addAll(b);
+                ordered_instructions.add(new Instruction(Machine.LT));
+                ordered_instructions.addAll(generateNegation());
                 break;
             case "<":
                 ordered_instructions.addAll(a);
@@ -67,6 +71,10 @@ public class MachineUtils {
                 ordered_instructions.add(new Instruction(Machine.LT));
                 break;
             case "<=":
+                ordered_instructions.addAll(b);
+                ordered_instructions.addAll(a);
+                ordered_instructions.add(new Instruction(Machine.LT));
+                ordered_instructions.addAll(generateNegation());
                 break;
             case "!=":
                 ordered_instructions.addAll(a);
