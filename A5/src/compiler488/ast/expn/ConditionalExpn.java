@@ -89,40 +89,7 @@ public class ConditionalExpn extends Expn {
 		ArrayList<Instruction> trueBlock = trueValue.machine_visit(symbolTable);
 		ArrayList<Instruction> falseBlock = falseValue.machine_visit(symbolTable);
 
-        int lastConditionInst = conditionInstructions.size() - 1;
-        int offset = conditionInstructions.get(lastConditionInst).getLineNumber();
+		return MachineUtils.ifThenElse(conditionInstructions, trueBlock, falseBlock);
 
-        int breakLines = 2;
-		int trueLines = MachineUtils.numLines(trueBlock);
-		int falseLines = MachineUtils.numLines(falseBlock);
-
-		/* TODO: might need a -1 */
-		int trueLineStart = offset + breakLines;
-		int falseLineStart = trueLineStart + trueLines + breakLines;
-		int exitLine = falseLineStart + falseLines;
-
-		/*
-		 codegen(condition)
-		 PUSH <else start>
-		 BF
-		 codegen(trueblock)
-		 PUSH <exit line>
-		 BR (exit)
-		 codegen(falseblock)
-		 // exit line num
-		 */
-		output.addAll(conditionInstructions);
-		output.add(new Instruction(Machine.PUSH, falseLineStart));
-		output.add(new Instruction(Machine.BF));
-
-		output.addAll(trueBlock);
-		output.add(new Instruction(Machine.PUSH, exitLine));
-		output.add(new Instruction(Machine.BR));
-
-		output.addAll(falseBlock);
-
-		/* jump to true, and true */
-
-		return output;
 	}
 }

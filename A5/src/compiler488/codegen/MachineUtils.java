@@ -50,4 +50,43 @@ public class MachineUtils {
         return new ArrayList<>();
     }
 
+    public static ArrayList<Instruction> ifThenElse(ArrayList<Instruction> conditionInstructions, ArrayList<Instruction> trueBlock, ArrayList<Instruction> falseBlock) {
+        ArrayList<Instruction> output = new ArrayList<>();
+
+        int lastConditionInst = conditionInstructions.size() - 1;
+        int offset = conditionInstructions.get(lastConditionInst).getLineNumber();
+
+        int breakLines = 2;
+        int trueLines = MachineUtils.numLines(trueBlock);
+        int falseLines = MachineUtils.numLines(falseBlock);
+
+		/* TODO: might need a -1 */
+        int trueLineStart = offset + breakLines;
+        int falseLineStart = trueLineStart + trueLines + breakLines;
+        int exitLine = falseLineStart + falseLines;
+
+		/*
+		 codegen(condition)
+		 PUSH <else start>
+		 BF
+		 codegen(trueblock)
+		 PUSH <exit line>
+		 BR (exit)
+		 codegen(falseblock)
+		 // exit line num
+		 */
+        output.addAll(conditionInstructions);
+        output.add(new Instruction(Machine.PUSH, falseLineStart));
+        output.add(new Instruction(Machine.BF));
+
+        output.addAll(trueBlock);
+        output.add(new Instruction(Machine.PUSH, exitLine));
+        output.add(new Instruction(Machine.BR));
+
+        output.addAll(falseBlock);
+
+		/* jump to true, and true */
+
+        return output;
+    }
 }
