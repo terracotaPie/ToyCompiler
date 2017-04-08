@@ -54,6 +54,14 @@ public class BoolConstExpn extends ConstExpn
         return null;
     }
 
+    /**
+     * Generate the following code based on the `value` of the  BoolConstExpn </br>
+     * <code>
+     * PUSH (value)
+     * </code>
+     * @param symbolTable the symbol table from semantic check
+     * @return machine code representing a boolean constant
+     */
     @Override
     public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
         ArrayList<Instruction> pushNumber = new ArrayList<>();

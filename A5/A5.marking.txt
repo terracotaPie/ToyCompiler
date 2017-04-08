@@ -4,6 +4,7 @@ Documentation                                 20.00
    How well was their code
    generation documented?
 Expressions                                   15.00
+   newline                                    20.00
    arithmetic expressions                      3.00
    boolean expressions                         4.00
    comparisions                                4.00

@@ -84,6 +84,20 @@ public class ConditionalExpn extends Expn {
 	}
 
 
+	/**
+	 * Generate a condition statement (a?b:c) from `condition`, `trueval`, `falseval`
+	 * @see MachineUtils#ifThenElse(ArrayList, ArrayList, ArrayList) for more specific detail on the
+	 * machine code generated
+	 * @param symbolTable the result of symbol visits
+	 * @return An Instruction ArrayList representing the following machine code </br>
+	 * <code>
+     * intructions for condition
+	 * break to else block if condition is false
+	 * instructions for true block
+	 * break to the end of the false block
+	 * false block
+     * </code>
+	 */
 	@Override
 	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
 		ArrayList<Instruction> conditionInstructions = condition.machine_visit(symbolTable);

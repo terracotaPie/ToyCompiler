@@ -1,6 +1,0 @@
-{
-  while false do {
-     write 1
-     return
-  }
-}

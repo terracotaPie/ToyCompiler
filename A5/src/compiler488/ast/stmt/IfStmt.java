@@ -80,6 +80,15 @@ public class IfStmt extends Stmt {
 		this.whenTrue = whenTrue;
 	}
 
+    /**
+     * If statements come in two forms, `if a then b else c` and `if a then b`,
+     * in each case we use a helper found in Machine utils.
+     * @see MachineUtils
+     * @param symbolTable
+     * @return
+     * @see MachineUtils#ifThenElse(ArrayList, ArrayList, ArrayList) and
+     * @see MachineUtils#ifThen(ArrayList, ArrayList)
+     */
 	@Override
 	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
 		ArrayList<Instruction> conditionInstructions = condition.machine_visit(symbolTable);

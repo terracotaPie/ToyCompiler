@@ -44,6 +44,14 @@ public class SkipConstExpn extends ConstExpn implements Printable {
     @Override
 	public void table_visit(SymbolTable symbolTable){}
 
+    /**
+     * Generate code for a new line statement (newline)
+     * @param symbolTable
+     * @return the following machine code </br>
+     * <code>
+     * PUSH '\n'
+     * </code>
+     */
 	@Override
 	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
 		ArrayList<Instruction> newline = new ArrayList<>();

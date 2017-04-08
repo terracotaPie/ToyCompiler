@@ -57,6 +57,16 @@ public class AssignStmt extends Stmt {
 		return b && c;
 	}
 
+    /**
+     * Generates code for an assignemt, like `A[i] := 2`, or `v := 1+1`
+     * @param symbolTable the symbol table generated in semantic visits
+     * @return the following code </br>
+     * <code>
+     *    machine LHS visit for lval
+     *    machine visit for rval
+     *    STORE
+     * </code>
+     */
 	@Override
 	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
 	    MachineUtils.programOffset++;

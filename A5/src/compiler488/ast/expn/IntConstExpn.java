@@ -52,6 +52,14 @@ public class IntConstExpn extends ConstExpn
 		return null;
 	}
 
+	/**
+	 * Generates code for an integer constant
+	 * @param symbolTable the symbol table generated in the semantic visit
+	 * @return the following machine code <br>
+	 * <code>
+	 * PUSH (value)
+	 * </code>
+	 */
 	@Override
 	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
 	    ArrayList<Instruction> pushNumber = new ArrayList<>();

@@ -70,6 +70,22 @@ public class SubsExpn extends UnaryExpn implements Readable {
 	    // TODO
 	}
 
+    /**
+     * Generate code for indexing into an array. Note that this is _not_ what
+     * is used when an array is on the left hand side of an assignment, this is used
+     * when `A[i]` is used in something similar to the following
+     * `A[i] + 1`, and not `A[i] := 1`
+     * @param symbolTable the symbol table from the semantic visit
+     * @return the following machine code
+     * {@code
+     * instructions for (operand)
+     * PUSH (Math.abs(array lower bound))
+     * ADD // get normalized index
+     * PUSH (array start address)
+     * ADD // get address from array
+     * LOAD // NOTE: this is the difference between LHS function
+     * }
+     */
 	@Override
 	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
 	    // Get the start address
@@ -98,6 +114,19 @@ public class SubsExpn extends UnaryExpn implements Readable {
 
         return addr;
 	}
+
+    /**
+     * Generate code for indexing into an array
+     * @param symbolTable the symbol table from the semantic visit
+     * @return the following machine code </br>
+     * <code>
+     * instructions for (operand)
+     * PUSH (Math.abs(array lower bound))
+     * ADD // get normalized index
+     * PUSH (array start address)
+     * ADD // get address from array
+     * </code>
+     */
     @Override
     public ArrayList<Instruction> machine_lhs_vist(SymbolTable symbolTable) {
 	    // Get the start address
@@ -123,5 +152,6 @@ public class SubsExpn extends UnaryExpn implements Readable {
         addr.add(new Instruction(Machine.PUSH, arrayStartAddr));
         addr.add(new Instruction(Machine.ADD));
 
-        return addr;    }
+        return addr;
+    }
 }

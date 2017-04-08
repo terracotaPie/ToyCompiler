@@ -166,7 +166,47 @@ public class MachineUtils {
         return output;
     }
 
-    public static ArrayList<Instruction> loop(ArrayList<Instruction> condition, ArrayList<Instruction> block) {
+    /**
+     *
+     * @param condition
+     * @param block
+     * @return </br>
+     * <code>
+     *     generate block code
+     *     generate condition code
+     *     PUSH (exit line)
+     *     BF
+     *     PUSH (start line)
+     *     BR
+     * </code>
+     */
+    public static ArrayList<Instruction> repeatUntil(ArrayList<Instruction> condition, ArrayList<Instruction> block) {
+        programOffset += 6;
+
+        short blockLines = (short)numLines(block);
+        short conditionLines = (short)numLines(condition);
+
+        short startLine = (short)(programOffset - blockLines - conditionLines - 6);
+        short endLine = (short)programOffset;
+
+        ArrayList<Instruction> gotoEndLine = new ArrayList<>();
+        ArrayList<Instruction> gotoStartLine = new ArrayList<>();
+
+        gotoEndLine.add(new Instruction(Machine.PUSH, endLine));
+        gotoEndLine.add(new Instruction(Machine.BF));
+
+        gotoStartLine.add(new Instruction(Machine.PUSH, startLine));
+        gotoStartLine.add(new Instruction(Machine.BR));
+
+        ArrayList<Instruction> untilLoop = new ArrayList<Instruction>();
+        untilLoop.addAll(block);
+        untilLoop.addAll(condition);
+        untilLoop.addAll(gotoEndLine);
+        untilLoop.addAll(gotoStartLine);
+        return untilLoop;
+    }
+
+    public static ArrayList<Instruction> whileDo(ArrayList<Instruction> condition, ArrayList<Instruction> block) {
         programOffset += 6;
 
         short conditionLines = (short)numLines(condition);

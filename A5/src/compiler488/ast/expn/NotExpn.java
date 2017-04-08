@@ -40,6 +40,16 @@ public class NotExpn extends UnaryExpn {
     @Override
     public void table_visit(SymbolTable symbolTable){}
 
+
+    /**
+     * Generate machine code for `not (expn)`
+     * @param symbolTable the symbol table generated in the semantic check
+     * @return the following machine code <br>
+     * <code>
+     * operand machine code
+     * @see MachineUtils#generateNegation()
+     * </code>
+     */
     @Override
     public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
         ArrayList<Instruction> negation = new ArrayList<>();

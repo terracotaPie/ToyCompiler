@@ -53,13 +53,22 @@ public class TextConstExpn extends ConstExpn implements Printable {
     @Override
 	public void table_visit(SymbolTable symbolTable){}
 
+    /**
+     * Generate machine code for a string
+     * @param symbolTable the symbol table generated in semantic checks
+     * @return the following machine code
+     * Suppose that value is "488", the the following is generated </br>
+     * <code>
+     * PUSH 8
+     * PUSH 8
+     * PUSH 4
+     * </code>
+     */
 	@Override
 	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
 		// read string backwards
 		ArrayList<Instruction> pushChars = new ArrayList();
 		for (int i = value.length() - 1; i >= 0; i--) {
-			System.out.println(value.charAt(i));
-			// TODO: make sure that nothing is lost lol
             MachineUtils.programOffset += 2;
             pushChars.add(new Instruction(Machine.PUSH, (short)value.charAt(i)));
 		}

@@ -81,6 +81,11 @@ public class MultiDeclarations extends Declaration {
 	}
 
 
+	/**
+	 * Get the size of all of the arguments. If the arguments look like `a,b,A[10]`, then we
+	 * return 12.
+	 * @return an integer representing the size of the argumens
+	 */
 	public int size_visit() {
 	   ListIterator<DeclarationPart> iter_d = elements.getIterator();
 	   int size = 0;

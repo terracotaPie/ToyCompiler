@@ -167,8 +167,12 @@ public class Scope extends Stmt {
                         symbolTable.getEntry(declPart.getName()).setAddr((short) (alloc - size));
                     }
                 }
-                else if (decl instanceof RoutineDecl) { }
-                else if (decl instanceof ScalarDecl) { }
+                else if (decl instanceof RoutineDecl) {
+                    alloc += ((RoutineDecl)decl).size_visit();
+                }
+                else if (decl instanceof ScalarDecl) {
+                    alloc += ((ScalarDecl)decl).size_visit();
+                }
 
             }
 

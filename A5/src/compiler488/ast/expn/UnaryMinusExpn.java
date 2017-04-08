@@ -36,6 +36,16 @@ public class UnaryMinusExpn extends UnaryExpn {
     @Override
     public void table_visit(SymbolTable symbolTable){}
 
+    /**
+     * Generate a minus
+     * @param symbolTable the symbol table from the semantic check
+     * @return the following machine code </br>
+     * <code>
+     * machine visit for val </br>
+     * NEG
+     * </code>
+     *
+     */
     @Override
     public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
         ArrayList<Instruction> negatedVal = new ArrayList<>();

@@ -45,12 +45,4 @@ public abstract class LoopingStmt extends Stmt
 		semanticObject.S50 -= 1;
 		return b;
 	}
-
-	@Override
-	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
-		ArrayList<Instruction> condition = new ArrayList<>();
-		condition.addAll(expn.machine_visit(symbolTable));
-		ArrayList<Instruction> block = body.machine_visit(symbolTable);
-		return MachineUtils.loop(condition, block);
-	}
 }
