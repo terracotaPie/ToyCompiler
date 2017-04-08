@@ -8,9 +8,14 @@ import compiler488.ast.expn.Expn;
 import compiler488.ast.expn.IdentExpn;
 import compiler488.ast.expn.SubsExpn;
 import compiler488.ast.type.IntegerType;
+import compiler488.codegen.Instruction;
+import compiler488.codegen.MachineUtils;
+import compiler488.runtime.Machine;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
 
+import java.beans.Expression;
+import java.util.ArrayList;
 import java.util.ListIterator;
 
 /**
@@ -63,5 +68,22 @@ public class ReadStmt extends Stmt {
 			}
 		}
 		return b;
+	}
+
+	@Override
+	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
+	    ArrayList<Instruction> read_instructions = new ArrayList<>();
+		ListIterator<Readable> iterator = inputs.getIterator();
+
+		Expn p;
+		while (iterator.hasNext())
+		{
+		    MachineUtils.programOffset += 2;
+			p = (Expn)iterator.next();
+			read_instructions.add(new Instruction(Machine.READI));
+			read_instructions.addAll(p.machine_lhs_vist(symbolTable));
+			read_instructions.add(new Instruction(Machine.STORE));
+		}
+		return read_instructions;
 	}
 }
