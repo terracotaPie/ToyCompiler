@@ -165,6 +165,10 @@ public class MachineUtils {
         return output;
     }
 
+    public static ArrayList<Instruction> loop(ArrayList<Instruction> condition, ArrayList<Instruction> block) {
+        
+    }
+
     public static AST pullFromMultiDeclaration(MultiDeclarations multidecs, String name) {
         ListIterator<DeclarationPart> iter = multidecs.getElements().getIterator();
         while (iter.hasNext()) {
@@ -174,4 +178,5 @@ public class MachineUtils {
         }
         return null;
     }
+
 }
