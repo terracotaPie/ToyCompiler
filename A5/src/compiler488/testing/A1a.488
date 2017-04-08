@@ -2,7 +2,6 @@
 %
 % This file tests the usage of arithmetic, logical, and comparison operators
 {
-   var i, j, k : Integer
-   var A[10] : Integer
-   i := -50
+   write 1, " "
+   write " ", 2, " ", false, true
 }

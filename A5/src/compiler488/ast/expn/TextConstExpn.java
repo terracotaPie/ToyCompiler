@@ -51,7 +51,8 @@ public class TextConstExpn extends ConstExpn implements Printable {
 	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
 		// read string backwards
 		ArrayList<Instruction> pushChars = new ArrayList();
-		for (int i = value.length(); i > 0; i++) {
+		for (int i = value.length() - 1; i >= 0; i--) {
+			System.out.println(value.charAt(i));
 			// TODO: make sure that nothing is lost lol
 			pushChars.add(new Instruction(Machine.PUSH, (short)value.charAt(i)));
 		}
