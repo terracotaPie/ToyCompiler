@@ -15,7 +15,7 @@ public class Instruction {
     private int startLine;
     private short code;
     private ArrayList<Short> args;
-    private int lineNumber;
+    private int lineNumber = 0;
 
     public Instruction(short code, ArrayList<Short> args) {
         int startLine = 0;

@@ -1,6 +1,9 @@
 {
-    var X[10] : Integer
-    X[1] := 100
-    read X[1]
-    write X[1]
+   var a : Integer
+   procedure P(a : Integer)
+   {
+        write a
+   }
+   a := 10
+   P(10)
 }

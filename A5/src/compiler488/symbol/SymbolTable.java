@@ -26,7 +26,7 @@ public class SymbolTable {
 
 	public final static String version = "Winter 2017" ;
 
-    private int depth;
+    public int depth;
 
 	private HashMap<String, ArrayList<SymbolTableEntry>> symbols;
 

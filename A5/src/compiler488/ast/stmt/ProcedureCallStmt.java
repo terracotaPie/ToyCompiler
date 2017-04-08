@@ -5,9 +5,12 @@ import compiler488.ast.decl.RoutineBody;
 import compiler488.ast.decl.RoutineDecl;
 import compiler488.ast.decl.ScalarDecl;
 import compiler488.ast.expn.Expn;
+import compiler488.codegen.Instruction;
 import compiler488.semantics.SemanticObject;
+import compiler488.symbol.SymbolTable;
 import compiler488.symbol.SymbolTableEntry;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -77,5 +80,18 @@ public class ProcedureCallStmt extends Stmt {
 			}
 		}
 		return b;
+	}
+
+	@Override
+	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
+		ArrayList<Instruction> functionCallInstructions = new ArrayList<>();
+		Iterator<Expn> args = arguments.getIterator();
+		while (args.hasNext()) {
+			Expn arg = args.next();
+			functionCallInstructions.addAll(arg.machine_visit(symbolTable));
+		}
+		RoutineDecl a = (RoutineDecl) symbolTable.getEntry(name).getValue();
+		functionCallInstructions.addAll(a.machine_visit(symbolTable));
+		return functionCallInstructions;
 	}
 }

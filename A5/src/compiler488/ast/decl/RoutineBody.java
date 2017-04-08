@@ -1,12 +1,16 @@
 package compiler488.ast.decl;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.ListIterator;
 
 import compiler488.ast.ASTList;
 import compiler488.ast.Indentable;
 import compiler488.ast.stmt.Scope;
+import compiler488.codegen.Instruction;
+import compiler488.runtime.Machine;
 import compiler488.semantics.SemanticObject;
+import compiler488.symbol.SymbolTable;
 
 /**
  * Represents the parameters and instructions associated with a
@@ -31,6 +35,38 @@ public class RoutineBody extends Indentable {
 		}
 		b &= body.semantic_visit(semanticObject);
 		return b;
+	}
+
+	/**
+	 *
+	 * @param symbolTable
+	 * @return
+	 */
+	@Override
+	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
+
+		ListIterator<ScalarDecl> iterator;
+		short size = 0;
+		if (parameters.size() > 0)
+		{
+			iterator = parameters.getIterator();
+			while (iterator.hasNext())
+			{
+				size += iterator.next().size_visit();
+			}
+		}
+
+        ArrayList<Instruction> routineBodyInst = new ArrayList<Instruction>();
+		ArrayList<Instruction> switchInstr = new ArrayList<Instruction>();
+        ArrayList<Instruction> scopeInstr = body.machine_visit(symbolTable);
+
+        switchInstr.add(new Instruction(Machine.PUSH, size));
+        switchInstr.add(new Instruction(Machine.SUB));
+
+
+		routineBodyInst.addAll(scopeInstr);
+		routineBodyInst.addAll(1, switchInstr);
+		return routineBodyInst;
 	}
 
 	/**

@@ -13,7 +13,7 @@ import compiler488.ast.expn.*;
 import compiler488.ast.stmt.*;
 import compiler488.ast.type.*;
 
-/** CUP v0.11a beta 20060608 generated parser.
+/** CUP v0.11a beta 20060608 generated parser. <<<<<<< HEAD
   * @version Sat Apr 08 17:13:11 EDT 2017
   */
 public class Parser extends java_cup.runtime.lr_parser {

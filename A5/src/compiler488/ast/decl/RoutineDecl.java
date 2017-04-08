@@ -58,7 +58,7 @@ public class RoutineDecl extends Declaration {
 
 	@Override
 	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
-		return null;
+		return getRoutineBody().machine_visit(symbolTable);
 	}
 
 	/**
