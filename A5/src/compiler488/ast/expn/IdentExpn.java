@@ -3,6 +3,7 @@ package compiler488.ast.expn;
 import compiler488.ast.Readable;
 import compiler488.ast.type.Type;
 import compiler488.codegen.Instruction;
+import compiler488.codegen.MachineUtils;
 import compiler488.runtime.Machine;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
@@ -53,20 +54,34 @@ public class IdentExpn extends Expn implements Readable
 		return entry.getType();
 	}
 
-	@Override
+
+    @Override
 	public void table_visit(SymbolTable symbolTable){}
 
 	@Override
 	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
-	    // GET LEXICAL LEVEL
-        short ll = 0;
+        MachineUtils.programOffset += 5;
+        // -1 for 0 based vs 1 based
+        short ll = (short)(symbolTable.getEntry(ident).depth - 1);
         // GET ADDRESS
-        short address = 1;
+        short address = symbolTable.getEntry(ident).getAddr();
 
         ArrayList<Instruction> mach_ident = new ArrayList<>();
         mach_ident.add(new Instruction(Machine.ADDR, ll, address));
+        mach_ident.add(new Instruction(Machine.LOAD));
+        return mach_ident;
+    }
 
-        // TODO
+    @Override
+    public ArrayList<Instruction> machine_lhs_vist(SymbolTable symbolTable) {
+        MachineUtils.programOffset += 4;
+        // -1 for 0 based vs 1 based
+        short ll = (short)(symbolTable.getEntry(ident).depth - 1);
+        // GET ADDRESS
+        short address = symbolTable.getEntry(ident).getAddr();
+
+        ArrayList<Instruction> mach_ident = new ArrayList<>();
+        mach_ident.add(new Instruction(Machine.ADDR, ll, address));
         return mach_ident;
     }
 }

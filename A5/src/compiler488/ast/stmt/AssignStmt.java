@@ -2,6 +2,7 @@ package compiler488.ast.stmt;
 
 import compiler488.ast.expn.Expn;
 import compiler488.codegen.Instruction;
+import compiler488.codegen.MachineUtils;
 import compiler488.runtime.Machine;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
@@ -58,19 +59,16 @@ public class AssignStmt extends Stmt {
 
 	@Override
 	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
-	    /* EX: i := 2+3 */
-
+	    MachineUtils.programOffset++;
 		ArrayList<Instruction> assignment = new ArrayList<>();
 
-	    // [PUSH <location of i>, LOAD]
-	    ArrayList<Instruction> location = lval.machine_visit(symbolTable);
-	    // [PUSH 2, PUSH 3, ADD]
+	    ArrayList<Instruction> location = lval.machine_lhs_vist(symbolTable);
+
 	    ArrayList<Instruction> value = rval.machine_visit(symbolTable);
-	    // [STORE]
+
 		Instruction store = new Instruction(Machine.STORE);
 
-	    // [<location of i> (PUSH <location of i>, LOAD), 5 (PUSH 2, PUSH 3, ADD), STORE]
-//		assignment.addAll(location);
+        assignment.addAll(location);
 		assignment.addAll(value);
 	    assignment.add(store);
 

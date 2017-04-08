@@ -8,7 +8,7 @@ import java.util.Set;
 
 import compiler488.ast.ASTList;
 import compiler488.ast.Indentable;
-import compiler488.ast.decl.Declaration;
+import compiler488.ast.decl.*;
 import compiler488.codegen.Instruction;
 import compiler488.codegen.MachineUtils;
 import compiler488.runtime.Machine;
@@ -153,7 +153,23 @@ public class Scope extends Stmt {
             short alloc = 0;
             while (declIterator.hasNext()) {
                 Declaration decl = declIterator.next();
-                alloc += decl.size_visit();
+                short declSize = (short)decl.size_visit();
+                alloc += declSize;
+                if (decl instanceof MultiDeclarations) {
+                    ListIterator<DeclarationPart> declPartIter = ((MultiDeclarations) decl).getElements().getIterator();
+                    DeclarationPart declPart;
+                    while (declPartIter.hasNext()) {
+                        declPart = declPartIter.next();
+                        short size = 1;
+                        if (declPart instanceof ArrayDeclPart) {
+                            size = (short)(int)((ArrayDeclPart) declPart).getSize();
+                        }
+                        symbolTable.getEntry(declPart.getName()).setAddr((short) (alloc - size));
+                    }
+                }
+                else if (decl instanceof RoutineDecl) { }
+                else if (decl instanceof ScalarDecl) { }
+
             }
 
             /*

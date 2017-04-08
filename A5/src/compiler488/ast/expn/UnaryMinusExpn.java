@@ -27,6 +27,12 @@ public class UnaryMinusExpn extends UnaryExpn {
     public Type getType() {
         return new IntegerType(); /* S21 */
     }
+
+    @Override
+    public ArrayList<Instruction> machine_lhs_vist(SymbolTable symbolTable) {
+        return null;
+    }
+
     @Override
     public void table_visit(SymbolTable symbolTable){}
 

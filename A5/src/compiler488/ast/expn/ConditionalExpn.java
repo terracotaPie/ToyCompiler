@@ -60,6 +60,11 @@ public class ConditionalExpn extends Expn {
 	}
 
 	@Override
+	public ArrayList<Instruction> machine_lhs_vist(SymbolTable symbolTable) {
+		return null;
+	}
+
+	@Override
 	public void table_visit(SymbolTable symbolTable){}
 
 

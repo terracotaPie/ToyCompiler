@@ -48,6 +48,11 @@ public class IntConstExpn extends ConstExpn
 	}
 
 	@Override
+	public ArrayList<Instruction> machine_lhs_vist(SymbolTable symbolTable) {
+		return null;
+	}
+
+	@Override
 	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
 	    ArrayList<Instruction> pushNumber = new ArrayList<>();
 	    pushNumber.add(new Instruction(Machine.PUSH, value));

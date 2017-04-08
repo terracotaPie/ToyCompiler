@@ -1,9 +1,13 @@
 package compiler488.codegen;
 
+import compiler488.ast.AST;
+import compiler488.ast.decl.DeclarationPart;
+import compiler488.ast.decl.MultiDeclarations;
 import compiler488.runtime.Machine;
 
 import javax.crypto.Mac;
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 /**
  * Created by isthisnagee on 4/3/17.
@@ -159,5 +163,15 @@ public class MachineUtils {
         output.add(new Instruction(Machine.BF));
         output.addAll(trueBlock);
         return output;
+    }
+
+    public static AST pullFromMultiDeclaration(MultiDeclarations multidecs, String name) {
+        ListIterator<DeclarationPart> iter = multidecs.getElements().getIterator();
+        while (iter.hasNext()) {
+            DeclarationPart declPart = iter.next();
+            if (declPart.getName().equals(name))
+                    return declPart;
+        }
+        return null;
     }
 }

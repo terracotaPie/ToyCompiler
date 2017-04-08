@@ -80,6 +80,7 @@ public class MultiDeclarations extends Declaration {
 		}
 	}
 
+
 	public int size_visit() {
 	   ListIterator<DeclarationPart> iter_d = elements.getIterator();
 	   int size = 0;

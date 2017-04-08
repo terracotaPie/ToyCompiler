@@ -117,4 +117,9 @@ public class BinaryExpn extends Expn
     public Type getTypeFromSymbolTable(SymbolTable sb) {
         return left.getTypeFromSymbolTable(sb);
     }
+
+    @Override
+    public ArrayList<Instruction> machine_lhs_vist(SymbolTable symbolTable) {
+        return null;
+    }
 }

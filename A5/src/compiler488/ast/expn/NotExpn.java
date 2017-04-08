@@ -21,6 +21,11 @@ public class NotExpn extends UnaryExpn {
     }
 
     @Override
+    public ArrayList<Instruction> machine_lhs_vist(SymbolTable symbolTable) {
+        return null;
+    }
+
+    @Override
     public boolean semantic_visit(SemanticObject semanticObject) {
         SymbolTable st = semanticObject.getSymbolTable();
 

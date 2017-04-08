@@ -11,6 +11,12 @@ import compiler488.ast.AST;
  */
 public class SymbolTableEntry {
 
+    public short getAddr() {
+        return addr;
+    }
+
+
+
     public enum VarType{
         FUNC,
         PROC,
@@ -34,7 +40,8 @@ public class SymbolTableEntry {
     private AST value;
 
     /* position within this scopes*/
-    private int orderNo;
+    private short addr;
+
     /* scope depth */
     public int depth;
 
@@ -77,6 +84,10 @@ public class SymbolTableEntry {
     public SymbolTableEntry setType(Type type) {
         this.type = type;
         return this;
+    }
+
+    public void setAddr(short i) {
+        this.addr = i;
     }
 
 }

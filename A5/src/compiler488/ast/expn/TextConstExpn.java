@@ -45,7 +45,12 @@ public class TextConstExpn extends ConstExpn implements Printable {
 		return getType();
 	}
 
-	@Override
+    @Override
+    public ArrayList<Instruction> machine_lhs_vist(SymbolTable symbolTable) {
+        return null;
+    }
+
+    @Override
 	public void table_visit(SymbolTable symbolTable){}
 
 	@Override

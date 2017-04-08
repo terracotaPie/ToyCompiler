@@ -56,30 +56,7 @@ class TestAST {
 		System.out.println("Semantic: " + s.semantic_visit(so));
 		SymbolTable t = new SymbolTable();
 		s.table_visit(t);
-		ArrayList<Instruction> is = s.machine_visit(t);
-		for (int l = 1; l < is.size() + 1; l++) {
-			is.get(l-1).setLineNumber(l);
-		}
-		/* feed into machine */
 		System.out.print(so);
-        System.out.println(is);
-
-		Machine.powerOn();
-		short codeLength = 0;
-		for (Instruction inst : is) {
-		    System.out.println(inst.getCode());
-            Machine.writeMemory(codeLength, inst.getCode());
-            codeLength++;
-			for (short arg : inst.getArgs()) {
-			    System.out.println(arg);
-				Machine.writeMemory(codeLength, arg);
-				codeLength++;
-			}
-		}
-        Machine.setPC((short)(0));
-        Machine.setMLP((short)(Machine.memorySize - codeLength));
-        Machine.setMSP(codeLength);
-        Machine.run();
 	}
 
 }

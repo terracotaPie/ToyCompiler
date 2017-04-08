@@ -1,9 +1,14 @@
 package compiler488.ast.expn;
 
+import compiler488.ast.AST;
 import compiler488.ast.Readable;
+import compiler488.ast.decl.ArrayDeclPart;
+import compiler488.ast.decl.MultiDeclarations;
 import compiler488.ast.type.IntegerType;
 import compiler488.ast.type.Type;
 import compiler488.codegen.Instruction;
+import compiler488.codegen.MachineUtils;
+import compiler488.runtime.Machine;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
 import compiler488.symbol.SymbolTableEntry;
@@ -47,7 +52,8 @@ public class SubsExpn extends UnaryExpn implements Readable {
 		return entry.getType();
 	}
 
-	@Override
+
+    @Override
 	public boolean semantic_visit(SemanticObject semanticObject) {
 		boolean b;
 		SymbolTable st;
@@ -66,11 +72,56 @@ public class SubsExpn extends UnaryExpn implements Readable {
 
 	@Override
 	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
-	    // GET VARIABLE
-		ArrayList<Instruction> ithElem = new ArrayList<>();
-		ArrayList<Instruction> index = operand.machine_visit(symbolTable);
-		// adjust index
-		// TODO
-		return ithElem;
+	    // Get the start address
+        short arrayStartAddr = (short)(int)symbolTable.getEntry(variable).getAddr();
+
+        MachineUtils.programOffset += 7;
+        // get the array declaration so we can get the lower boudary
+        AST value = symbolTable.getEntry(variable).getValue();
+        ArrayDeclPart arrayDecl;
+        if (value instanceof MultiDeclarations) {
+            arrayDecl = (ArrayDeclPart) MachineUtils.pullFromMultiDeclaration((MultiDeclarations) value, variable);
+        } else {
+            arrayDecl = (ArrayDeclPart)value;
+        }
+
+        int offset = Math.abs(arrayDecl.getLowerBoundary());
+
+		ArrayList<Instruction> addr;
+
+        addr = operand.machine_visit(symbolTable);
+        addr.add(new Instruction(Machine.PUSH, offset));
+        addr.add(new Instruction(Machine.ADD));
+        addr.add(new Instruction(Machine.PUSH, arrayStartAddr));
+        addr.add(new Instruction(Machine.ADD));
+        addr.add(new Instruction(Machine.LOAD));
+
+        return addr;
 	}
+    @Override
+    public ArrayList<Instruction> machine_lhs_vist(SymbolTable symbolTable) {
+	    // Get the start address
+        short arrayStartAddr = (short)(int)symbolTable.getEntry(variable).getAddr();
+
+        MachineUtils.programOffset += 6;
+        // get the array declaration so we can get the lower boudary
+        AST value = symbolTable.getEntry(variable).getValue();
+        ArrayDeclPart arrayDecl;
+        if (value instanceof MultiDeclarations) {
+            arrayDecl = (ArrayDeclPart) MachineUtils.pullFromMultiDeclaration((MultiDeclarations) value, variable);
+        } else {
+            arrayDecl = (ArrayDeclPart)value;
+        }
+
+        int offset = Math.abs(arrayDecl.getLowerBoundary());
+
+		ArrayList<Instruction> addr;
+
+        addr = operand.machine_visit(symbolTable);
+        addr.add(new Instruction(Machine.PUSH, offset));
+        addr.add(new Instruction(Machine.ADD));
+        addr.add(new Instruction(Machine.PUSH, arrayStartAddr));
+        addr.add(new Instruction(Machine.ADD));
+
+        return addr;    }
 }

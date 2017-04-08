@@ -50,6 +50,11 @@ public class BoolConstExpn extends ConstExpn
     }
 
     @Override
+    public ArrayList<Instruction> machine_lhs_vist(SymbolTable symbolTable) {
+        return null;
+    }
+
+    @Override
     public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
         ArrayList<Instruction> pushNumber = new ArrayList<>();
         pushNumber.add(new Instruction(Machine.PUSH, (value ? Machine.MACHINE_TRUE : Machine.MACHINE_FALSE)));
