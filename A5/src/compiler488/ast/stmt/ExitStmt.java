@@ -1,7 +1,12 @@
 package compiler488.ast.stmt;
 
 import compiler488.ast.expn.*;
+import compiler488.codegen.Instruction;
+import compiler488.codegen.MachineUtils;
 import compiler488.semantics.SemanticObject;
+import compiler488.symbol.SymbolTable;
+
+import java.util.ArrayList;
 
 /**
  * Represents the command to exit from a loop.
@@ -52,5 +57,11 @@ public class ExitStmt extends Stmt {
 			semanticObject.addError("Exit has incorrect level");
 		}
 		return b;
+	}
+
+	@Override
+	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
+		MachineUtils.programOffset += 1;
+		return super.machine_visit(symbolTable);
 	}
 }

@@ -195,7 +195,7 @@ public class Scope extends Stmt {
                 instructions.addAll(stmt.machine_visit(symbolTable));
             }
         }
-
+        MachineUtils.scopeLines.add(0, (short)MachineUtils.numLines(instructions));
         return instructions;
 	}
 }

@@ -2,8 +2,12 @@ package compiler488.ast.stmt;
 
 import compiler488.ast.expn.Expn;
 import compiler488.ast.type.BooleanType;
+import compiler488.codegen.Instruction;
+import compiler488.codegen.MachineUtils;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
+
+import java.util.ArrayList;
 
 
 /**
@@ -42,4 +46,11 @@ public abstract class LoopingStmt extends Stmt
 		return b;
 	}
 
+	@Override
+	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
+		ArrayList<Instruction> condition = new ArrayList<>();
+		condition.addAll(expn.machine_visit(symbolTable));
+		ArrayList<Instruction> block = body.machine_visit(symbolTable);
+		return MachineUtils.loop(condition, block);
+	}
 }
