@@ -1,6 +1,7 @@
 package compiler488.ast.expn;
 
 import compiler488.codegen.Instruction;
+import compiler488.codegen.MachineUtils;
 import compiler488.runtime.Machine;
 import compiler488.symbol.SymbolTable;
 import compiler488.ast.type.IntegerType;
@@ -50,7 +51,8 @@ public class IntConstExpn extends ConstExpn
 	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
 	    ArrayList<Instruction> pushNumber = new ArrayList<>();
 	    pushNumber.add(new Instruction(Machine.PUSH, value));
-
+		MachineUtils.programOffset++;
+		MachineUtils.programOffset++;
         return pushNumber;
 
 	}

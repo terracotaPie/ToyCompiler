@@ -3,6 +3,7 @@ package compiler488.ast.stmt;
 
 
 import compiler488.codegen.Instruction;
+import compiler488.codegen.MachineUtils;
 import compiler488.runtime.Machine;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
@@ -29,6 +30,7 @@ public class Program extends Scope {
 
         // we need to tell it to stop :)
         allInst.add(new Instruction(Machine.HALT));
+        MachineUtils.programOffset += 1;
         return allInst;
     }
 }

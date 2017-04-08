@@ -81,10 +81,6 @@ public class ConditionalExpn extends Expn {
 
 	@Override
 	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
-	    ArrayList<Instruction> output = new ArrayList<>();
-		/*
-		TODO: this offset is evaluated here, we need to propogate this evaluation...
-		 */
 		ArrayList<Instruction> conditionInstructions = condition.machine_visit(symbolTable);
 		ArrayList<Instruction> trueBlock = trueValue.machine_visit(symbolTable);
 		ArrayList<Instruction> falseBlock = falseValue.machine_visit(symbolTable);

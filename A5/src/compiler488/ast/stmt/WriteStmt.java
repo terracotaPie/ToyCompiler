@@ -11,6 +11,7 @@ import compiler488.ast.type.BooleanType;
 import compiler488.ast.type.IntegerType;
 import compiler488.ast.type.Type;
 import compiler488.codegen.Instruction;
+import compiler488.codegen.MachineUtils;
 import compiler488.runtime.Machine;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
@@ -93,11 +94,13 @@ public class WriteStmt extends Stmt {
             // TODO: print "false", "true", as necessary
             if (t instanceof IntegerType || t instanceof BooleanType) {
                 printCommands.add(new Instruction(Machine.PRINTI));
+                MachineUtils.programOffset++;
             }
             else {
                 if (p instanceof TextConstExpn) {
                     for (int i = 0; i < ((TextConstExpn)p).getValue().length(); i++) {
                         printCommands.add(new Instruction(Machine.PRINTC));
+                        MachineUtils.programOffset++;
                     }
                 }
             }

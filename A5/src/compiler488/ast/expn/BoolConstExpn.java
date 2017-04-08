@@ -3,6 +3,7 @@ package compiler488.ast.expn;
 import compiler488.ast.type.BooleanType;
 import compiler488.ast.type.Type;
 import compiler488.codegen.Instruction;
+import compiler488.codegen.MachineUtils;
 import compiler488.runtime.Machine;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
@@ -52,7 +53,8 @@ public class BoolConstExpn extends ConstExpn
     public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
         ArrayList<Instruction> pushNumber = new ArrayList<>();
         pushNumber.add(new Instruction(Machine.PUSH, (value ? Machine.MACHINE_TRUE : Machine.MACHINE_FALSE)));
-
+        MachineUtils.programOffset++;
+        MachineUtils.programOffset++;
         return pushNumber;
     }
 }

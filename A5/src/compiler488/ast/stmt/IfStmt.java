@@ -1,10 +1,13 @@
 package compiler488.ast.stmt;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
 
 import compiler488.ast.Indentable;
 import compiler488.ast.expn.Expn;
 import compiler488.ast.type.BooleanType;
+import compiler488.codegen.Instruction;
+import compiler488.codegen.MachineUtils;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
 
@@ -75,5 +78,18 @@ public class IfStmt extends Stmt {
 
 	public void setWhenTrue(Stmt whenTrue) {
 		this.whenTrue = whenTrue;
+	}
+
+	@Override
+	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
+		ArrayList<Instruction> conditionInstructions = condition.machine_visit(symbolTable);
+		ArrayList<Instruction> trueBlock = whenTrue.machine_visit(symbolTable);
+		ArrayList<Instruction> falseBlock;
+		if (whenFalse == null) {
+		    return MachineUtils.ifThen(conditionInstructions, trueBlock);
+		} else {
+			falseBlock = whenFalse.machine_visit(symbolTable);
+            return MachineUtils.ifThenElse(conditionInstructions, trueBlock, falseBlock);
+		}
 	}
 }

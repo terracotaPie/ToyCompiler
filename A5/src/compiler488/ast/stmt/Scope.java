@@ -10,6 +10,7 @@ import compiler488.ast.ASTList;
 import compiler488.ast.Indentable;
 import compiler488.ast.decl.Declaration;
 import compiler488.codegen.Instruction;
+import compiler488.codegen.MachineUtils;
 import compiler488.runtime.Machine;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
@@ -139,8 +140,8 @@ public class Scope extends Stmt {
 	     SETD n
 	    */
 	    Instruction pushStackPointer = new Instruction(Machine.PUSHMT);
-	    Instruction display = new Instruction(Machine.SETD);
-	    display.addNumberArg((short)depth);
+	    Instruction display = new Instruction(Machine.SETD, depth);
+
 
 	    instructions.add(pushStackPointer);
 	    instructions.add(display);
@@ -161,8 +162,7 @@ public class Scope extends Stmt {
              * DUPN
              */
             Instruction varInitial = new Instruction(Machine.PUSH, Machine.UNDEFINED);
-            Instruction numVars = new Instruction(Machine.PUSH);
-            numVars.addNumberArg(alloc);
+            Instruction numVars = new Instruction(Machine.PUSH, alloc);
             Instruction declareVars = new Instruction(Machine.DUPN);
 
             instructions.add(varInitial);
@@ -170,6 +170,7 @@ public class Scope extends Stmt {
             instructions.add(declareVars);
         }
 
+        MachineUtils.programOffset += MachineUtils.numLines(instructions);
         /* Machine visit on the Statements */
         if (statements.size() > 0) {
             ListIterator<Stmt> stmtIterator = statements.getIterator();

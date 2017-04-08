@@ -3,6 +3,7 @@ package compiler488.ast.expn;
 import compiler488.ast.type.BooleanType;
 import compiler488.ast.type.Type;
 import compiler488.codegen.Instruction;
+import compiler488.codegen.MachineUtils;
 import compiler488.runtime.Machine;
 import compiler488.semantics.SemanticObject;
 import compiler488.symbol.SymbolTable;
@@ -38,11 +39,8 @@ public class NotExpn extends UnaryExpn {
     public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
         ArrayList<Instruction> negation = new ArrayList<>();
         ArrayList<Instruction> toNegate = operand.machine_visit(symbolTable);
-
         negation.addAll(toNegate);
-        negation.add(new Instruction(Machine.PUSH, Machine.MACHINE_FALSE));
-        negation.add(new Instruction(Machine.EQ));
-
+        negation.addAll(MachineUtils.generateNegation());
         return negation;
     }
 }
