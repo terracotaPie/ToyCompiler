@@ -1,0 +1,5 @@
+{
+    var X : Integer
+    read X
+    write X
+}
