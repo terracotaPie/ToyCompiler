@@ -1,6 +1,7 @@
 package compiler488.ast.expn;
 
 import compiler488.ast.Readable;
+import compiler488.ast.decl.RoutineDecl;
 import compiler488.ast.type.Type;
 import compiler488.codegen.Instruction;
 import compiler488.codegen.MachineUtils;
@@ -84,7 +85,7 @@ public class IdentExpn extends Expn implements Readable
 
             MachineUtils.programOffset += 5;
             // -1 for 0 based vs 1 based
-            short ll = (short) (symbolTable.getEntry(ident).depth);
+            short ll = (short) (symbolTable.getEntry(ident).depth );
             // GET ADDRESS
             short address = symbolTable.getEntry(ident).getAddr();
 

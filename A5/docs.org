@@ -1,0 +1,56 @@
+* Machine Code Generation
+** MachineUtils.java
+*** ApplyOperator
+Handles  +,-,*,/,<,<=,>,>=,=,!=,and,or for arithmetic and logical operators
+**** Non trivial cases
+***** Negation 
+- $$|TRUE - 1|  = FALSE$$
+- $$|FALSE - 1| = TRUE$$
+#+BEGIN_SRC java
+negation.add(new Instruction(Machine.PUSH, 1));
+negation.add(new Instruction(Machine.SUB));
+negation.add(new Instruction(Machine.NEG));
+#+END_SRC
+***** $a > b$
+Optimize to remove swap
+#+BEGIN_SRC java
+ordered_instructions.addAll(b);
+ordered_instructions.addAll(a);
+ordered_instructions.add(new Instruction(Machine.LT));
+#+END_SRC
+***** $a \geq b$
+$$A \geq B = \neg (A < B)$$
+#+BEGIN_SRC java
+ordered_instructions.addAll(a);
+ordered_instructions.addAll(b);
+ordered_instructions.add(new Instruction(Machine.LT));
+ordered_instructions.addAll(generateNegation());
+#+END_SRC
+***** $a \leq b$
+$$A \leq B = \neg (B < A)$$
+#+BEGIN_SRC java
+ordered_instructions.addAll(b);
+ordered_instructions.addAll(a);
+ordered_instructions.add(new Instruction(Machine.LT));
+ordered_instructions.addAll(generateNegation());
+#+END_SRC
+***** $a \neq b$
+De Morgan's laws $A \neq B == \neg ( A = B )$ 
+#+BEGIN_SRC java
+ordered_instructions.addAll(a);
+ordered_instructions.addAll(b);
+ordered_instructions.add(new Instruction(Machine.EQ));
+ordered_instructions.addAll(generateNegation());
+#+END_SRC
+***** a \land b
+De Morgan's laws s$\neg \neg A \land B == \neg ( ( \neg A ) \lor ( \neg B ) )$ 
+#+BEGIN_SRC java
+ordered_instructions.addAll(a);
+ordered_instructions.addAll(generateNegation());
+ordered_instructions.addAll(b);
+ordered_instructions.addAll(generateNegation());
+ordered_instructions.add(new Instruction(Machine.OR));
+ordered_instructions.addAll(generateNegation());
+#+END_SRC
+
+
