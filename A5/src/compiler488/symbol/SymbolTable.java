@@ -141,14 +141,19 @@ public class SymbolTable {
 		{
 			RoutineBody b = ((RoutineDecl) value).getRoutineBody();
 			ListIterator<ScalarDecl> iter;
-			if (b.getParameters().size() > 0)
+			if (b != null)
 			{
-				iter = b.getParameters().getIterator();
 
-				while (iter.hasNext())
+
+				if (b.getParameters().size() > 0)
 				{
-					ScalarDecl d = iter.next();
-					addEntry(d.getName(), d, d.getType(), SymbolTableEntry.VarType.SCALAR);
+					iter = b.getParameters().getIterator();
+
+					while (iter.hasNext())
+					{
+						ScalarDecl d = iter.next();
+						addEntry(d.getName(), d, d.getType(), SymbolTableEntry.VarType.SCALAR);
+					}
 				}
 			}
 		}
