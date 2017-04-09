@@ -96,15 +96,17 @@ public class WriteStmt extends Stmt {
                 printCommands.add(new Instruction(Machine.PRINTI));
                 MachineUtils.programOffset++;
             }
-            else {
-                if (p instanceof TextConstExpn) {
+            else if (p instanceof TextConstExpn) {
                     for (int i = 0; i < ((TextConstExpn)p).getValue().length(); i++) {
                         printCommands.add(new Instruction(Machine.PRINTC));
                         MachineUtils.programOffset++;
                     }
-                }
-            }
+            } else {
+				printCommands.add(new Instruction(Machine.PRINTC));
+				MachineUtils.programOffset++;
+			}
         }
+
 
         // print 1,2,3,4 -> [4,3,2,1,PRINTI, PRINTI, PRINTI, PRINTI]
         printer.addAll(printValues);
