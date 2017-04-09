@@ -7,6 +7,7 @@ import compiler488.runtime.Machine;
 
 import javax.crypto.Mac;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.ListIterator;
 
 /**
@@ -243,4 +244,26 @@ public class MachineUtils {
         return null;
     }
 
+
+    /**
+     * Used to pop a single variable off of the stack when returning
+     * @return
+     */
+    public static ArrayList<Instruction> swapPop() {
+        ArrayList<Instruction> swappop = new ArrayList<>();
+        swappop.add(new Instruction(Machine.SWAP));
+        swappop.add(new Instruction(Machine.POP));
+        return swappop;
+    }
+
+    /**
+     * Jump to return address and keep the value
+     * @return
+     */
+    public static ArrayList<Instruction> swapBr() {
+        ArrayList<Instruction> swapBr = new ArrayList<>();
+        swapBr.add(new Instruction(Machine.SWAP));
+        swapBr.add(new Instruction(Machine.BR));
+        return swapBr;
+    }
 }

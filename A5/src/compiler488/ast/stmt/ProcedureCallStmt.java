@@ -19,7 +19,7 @@ import java.util.Iterator;
 public class ProcedureCallStmt extends Stmt {
 	private String name; // The name of the procedure being called.
 
-	private ASTList<Expn> arguments; // The arguments passed to the procedure.
+	private ASTList<Expn> arguments = new ASTList<>(); // The arguments passed to the procedure.
 
 	/** Returns a string describing the procedure call. */
 	@Override

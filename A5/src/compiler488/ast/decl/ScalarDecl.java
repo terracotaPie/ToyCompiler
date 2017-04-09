@@ -2,6 +2,7 @@ package compiler488.ast.decl;
 
 import compiler488.ast.type.Type;
 import compiler488.codegen.Instruction;
+import compiler488.codegen.MachineUtils;
 import compiler488.parser.SyntaxErrorException;
 import compiler488.runtime.Machine;
 import compiler488.semantics.SemanticObject;
@@ -42,9 +43,9 @@ public class ScalarDecl extends Declaration {
 
 	@Override
 	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
+		MachineUtils.programOffset++;
 		ArrayList<Instruction> get_param_instructions = new ArrayList<>();
-		get_param_instructions.add(new Instruction(Machine.PUSH, 1));
-		get_param_instructions.add(new Instruction(Machine.SUB));
+		get_param_instructions.add(new Instruction(Machine.STORE));
 		return get_param_instructions;
 	}
 

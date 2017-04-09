@@ -141,7 +141,7 @@ public class SymbolTable {
 		{
 			RoutineBody b = ((RoutineDecl) value).getRoutineBody();
 			ListIterator<ScalarDecl> iter;
-			if (b != null)
+			if (b != null && b.getParameters() != null)
 			{
 
 

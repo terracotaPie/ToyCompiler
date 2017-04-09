@@ -50,4 +50,16 @@ public class ReturnStmt extends Stmt {
 		this.value = value;
 	}
 
+    /**
+     * The funtcion handles moving the return statement to where it needs to be
+     * @param symbolTable
+     * @return
+     */
+	@Override
+	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
+	    if (value != null) {
+	        return value.machine_visit(symbolTable);
+        }
+        return new ArrayList<>();
+	}
 }

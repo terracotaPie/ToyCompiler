@@ -31,7 +31,7 @@ public class SemanticObject {
             return false; /* S51/S52 */
         if (t == null)
             return S35.peek() == null; /* S52 */
-        return t.equals(S35.peek()); /* S35 */
+        return S35.peek() == null || t.equals(S35.peek()); /* S35 */
     }
 
     public void pushScope() {

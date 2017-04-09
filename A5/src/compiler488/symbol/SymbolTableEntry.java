@@ -78,7 +78,7 @@ public class SymbolTableEntry {
         return type;
     }
     public VarType getVarType() {
-        return varType;
+        return t;
     }
 
     public SymbolTableEntry setType(Type type) {

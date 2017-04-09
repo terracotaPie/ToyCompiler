@@ -132,7 +132,7 @@ public class Scope extends Stmt {
 
 	@Override
 	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
-
+	    MachineUtils.programOffset += 5;
 	    ArrayList<Instruction> instructions = new ArrayList<>();
 	    /*
 	     Add instructions common to all scopes:
@@ -196,6 +196,13 @@ public class Scope extends Stmt {
             ListIterator<Stmt> stmtIterator = statements.getIterator();
             while (stmtIterator.hasNext()) {
                 Stmt stmt = stmtIterator.next();
+                if (stmt instanceof ReturnStmt) {
+                    // need to pop off all declarations
+                    for (int i = 0; i < declarations.size(); i++) {
+                        instructions.addAll(MachineUtils.swapPop());
+                    }
+//                    instructions.addAll(MachineUtils.swapBr());
+                }
                 instructions.addAll(stmt.machine_visit(symbolTable));
             }
         }

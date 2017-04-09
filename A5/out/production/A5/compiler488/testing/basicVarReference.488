@@ -1,0 +1,5 @@
+{
+  var y : Integer
+  y := 100
+  write y
+}

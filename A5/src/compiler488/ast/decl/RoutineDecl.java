@@ -52,13 +52,12 @@ public class RoutineDecl extends Declaration {
 
 	@Override
 	public void table_visit(SymbolTable symbolTable) {
-		symbolTable.addEntry(name,this, getType(),
-				getType() == null ? VarType.PROC : VarType.FUNC);
+		symbolTable.addEntry(name,this, getType(), getType() == null ? VarType.PROC : VarType.FUNC);
 	}
 
 	@Override
 	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
-		return getRoutineBody().machine_visit(symbolTable);
+		return routineBody.machine_visit(symbolTable);
 	}
 
 	/**

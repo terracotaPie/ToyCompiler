@@ -17,7 +17,7 @@ import compiler488.symbol.SymbolTable;
  * function or procedure.
  */
 public class RoutineBody extends Indentable {
-	private ASTList<ScalarDecl> parameters; // The formal parameters of the routine.
+	private ASTList<ScalarDecl> parameters = new ASTList<>(); // The formal parameters of the routine.
 	private Scope body; // Execute this scope when routine is called.
 
 	@Override
@@ -25,7 +25,7 @@ public class RoutineBody extends Indentable {
 		boolean b;
 		b = true;
 		ListIterator<ScalarDecl> iterator;
-		if (parameters.size() > 0)
+		if (parameters != null && parameters.size() > 0)
 		{
 			iterator = parameters.getIterator();
 			while (iterator.hasNext())
