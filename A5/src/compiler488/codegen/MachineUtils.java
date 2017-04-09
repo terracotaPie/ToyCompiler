@@ -100,6 +100,9 @@ public class MachineUtils {
                 ordered_instructions.add(new Instruction(Machine.OR));
                 break;
             case "=":
+                ordered_instructions.addAll(a);
+                ordered_instructions.addAll(b);
+                ordered_instructions.add(new Instruction(Machine.EQ));
                 break;
         }
         MachineUtils.programOffset++;
