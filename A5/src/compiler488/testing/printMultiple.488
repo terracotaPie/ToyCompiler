@@ -1,0 +1,5 @@
+{
+    write (1 + 2 + 4), newline
+    write (1 * 2 + 4), newline
+    write (1 * 2 + 4), newline
+}

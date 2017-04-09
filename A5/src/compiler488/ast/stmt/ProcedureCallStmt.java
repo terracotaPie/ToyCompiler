@@ -73,7 +73,7 @@ public class ProcedureCallStmt extends Stmt {
 			param = params.next();
 			arg = args.next();
 
-			boolean sameType = param.getType().equals(arg.getType());
+			boolean sameType = param.getType().equals(arg.getTypeFromSymbolTable(semanticObject.getSymbolTable()));
 
 			if (!sameType) {
 				return false;
