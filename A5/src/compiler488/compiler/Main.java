@@ -1,10 +1,13 @@
 package compiler488.compiler;
 
 import java.io.*;
+import java.util.ArrayList;
 
+import compiler488.codegen.Instruction;
 import compiler488.parser.*;
 import compiler488.ast.AST ;
 import compiler488.ast.stmt.Program;
+import compiler488.semantics.SemanticObject;
 import compiler488.semantics.Semantics;
 import compiler488.symbol.SymbolTable;
 import compiler488.codegen.CodeGen;
@@ -440,6 +443,7 @@ public class Main {
         }
 
 	// Dump AST after parsing if requested
+    SymbolTable t = null;
 	if( dumpAST1 )
 	   try{
                 if( compilerDumpFileName.length() > 0 ){
@@ -459,13 +463,11 @@ public class Main {
 	       e.printStackTrace ();
 	       System.exit(100);
 	       }
-
 	try{
-	   // INSERT CODE HERE TO DO SEMANTIC ANALYSIS
-           // e.g.
-	   // programAST.doSemantics() ;
-	   // or
-	   // Semantics.doIt( programAST );
+		SemanticObject so = new SemanticObject();
+		System.out.println("Semantic: " + programAST.semantic_visit(so));
+		t = new SymbolTable();
+		programAST.table_visit(t);
 	}
         catch( Exception e) 
 	    {
@@ -514,11 +516,22 @@ public class Main {
 	    }
 
 	try{
-	   // INSERT CODE HERE TO DO CODE GENERATION
-           // e.g.
-	   // programAST.doCodeGen() ;
-	   // or
-	   // codeGen.doIt( programAST );
+		ArrayList<Instruction> is = programAST.machine_visit(t);
+		for (int l = 1; l < is.size() + 1; l++) {
+			is.get(l - 1).setLineNumber(l);
+		}
+		short codeLength = 0;
+		for (Instruction inst : is) {
+			Machine.writeMemory(codeLength, inst.getCode());
+			codeLength++;
+			for (short arg : inst.getArgs()) {
+				Machine.writeMemory(codeLength, arg);
+				codeLength++;
+			}
+		}
+		Machine.setPC((short) (0));
+		Machine.setMLP((short) (Machine.memorySize - codeLength));
+		Machine.setMSP(codeLength);
 	}
         catch( Exception e) 
 	    {

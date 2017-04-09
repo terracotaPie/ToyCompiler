@@ -80,8 +80,8 @@ public class ReadStmt extends Stmt {
 		{
 		    MachineUtils.programOffset += 2;
 			p = (Expn)iterator.next();
-			read_instructions.add(new Instruction(Machine.READI));
 			read_instructions.addAll(p.machine_lhs_vist(symbolTable));
+			read_instructions.add(new Instruction(Machine.READI));
 			read_instructions.add(new Instruction(Machine.STORE));
 		}
 		return read_instructions;
