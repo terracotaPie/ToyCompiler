@@ -1,5 +1,18 @@
 * Machine Code Generation
-** MachineUtils.java
+*** CONTRIBUTIONS:
+
+|------------------+----------+--------------|
+| name             | utorid   | contribution |
+|------------------+----------+--------------|
+| Nagee Elghassein | elghasse | everything   |
+| Timur Borkhodoev | borkhodo | everything   |
+| Theodor Poenaru  | poenarut | None         |
+| Yu Sing Wong     | wongyu7  | None         |
+| Hong Zhi Yew     | yewhong  | None         |
+|------------------+----------+--------------|
+:(
+
+*** MachineUtils.java
 *** ApplyOperator
 Handles  +,-,*,/,<,<=,>,>=,=,!=,and,or for arithmetic and logical operators
 **** Non trivial cases
@@ -53,4 +66,15 @@ ordered_instructions.add(new Instruction(Machine.OR));
 ordered_instructions.addAll(generateNegation());
 #+END_SRC
 
-
+*** Program
+*** Scopes
+*** Binary operations
+*** Unary operations
+**** Array indexing
+**** Minus
+*** Assignment
+*** looping  
+*** if statements 
+*** I/O operations
+*** returns
+*** Routines
