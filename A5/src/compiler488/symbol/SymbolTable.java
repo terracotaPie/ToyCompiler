@@ -123,14 +123,17 @@ public class SymbolTable {
                                                 depth,
                                                 var_type);
         if (this.hasEntry(identifier)){
+        	ArrayList<SymbolTableEntry> entries = new ArrayList<>();
+        	entries.addAll(this.symbols.get(identifier));
             for(SymbolTableEntry e : symbols.get(identifier)) {
                 if (entry.depth == e.depth) {
                     // TODO: handle error case properly
                     return;
 				} else {
-                    this.symbols.get(identifier).add(0, entry);
+					entries.add(0, entry);
                 }
 			}
+			this.symbols.put(identifier, entries);
         } else {
             ArrayList<SymbolTableEntry> chain = new ArrayList<SymbolTableEntry>();
             chain.add(entry);
