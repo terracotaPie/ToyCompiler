@@ -110,6 +110,10 @@ public class MachineUtils {
         return ordered_instructions;
     }
 
+    /**
+     * Generate negation using arithmetic hack abs(l - 1)
+     * @return
+     */
     public static ArrayList<Instruction> generateNegation() {
         ArrayList<Instruction> negation = new ArrayList<>();
         negation.add(new Instruction(Machine.PUSH, 1));
@@ -120,6 +124,14 @@ public class MachineUtils {
     }
 
 
+    /**
+     *
+     * Uses offset to generate BF BR statements when needed in b/w the blocks
+     * @param conditionInstructions Generated code for condition
+     * @param trueBlock Generated code for true block
+     * @param falseBlock Generated code to false block
+     * @return
+     */
     public static ArrayList<Instruction> ifThenElse(ArrayList<Instruction> conditionInstructions, ArrayList<Instruction> trueBlock, ArrayList<Instruction> falseBlock) {
         ArrayList<Instruction> output = new ArrayList<>();
 
@@ -159,6 +171,12 @@ public class MachineUtils {
         return output;
     }
 
+    /**
+     * Generated the needed BF statement in b/w the blocks
+     * @param conditionInstructions Generated Code for the if condition
+     * @param trueBlock Generated code for the true block
+     * @return
+     */
     public static ArrayList<Instruction> ifThen(ArrayList<Instruction> conditionInstructions, ArrayList<Instruction> trueBlock) {
         ArrayList<Instruction> output = new ArrayList<>();
         output.addAll(conditionInstructions);
@@ -210,6 +228,11 @@ public class MachineUtils {
         return untilLoop;
     }
 
+    /**
+     * @param condition generated code for the condition
+     * @param block the inside block generated code
+     * @return loop machine code
+     */
     public static ArrayList<Instruction> whileDo(ArrayList<Instruction> condition, ArrayList<Instruction> block) {
         programOffset += 6;
 
