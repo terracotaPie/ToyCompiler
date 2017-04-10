@@ -155,6 +155,7 @@ public class Scope extends Stmt {
                 Declaration decl = declIterator.next();
                 short declSize = (short)decl.size_visit();
                 alloc += declSize;
+                // handle cases of declarations
                 if (decl instanceof MultiDeclarations) {
                     ListIterator<DeclarationPart> declPartIter = ((MultiDeclarations) decl).getElements().getIterator();
                     DeclarationPart declPart;
@@ -164,6 +165,7 @@ public class Scope extends Stmt {
                         if (declPart instanceof ArrayDeclPart) {
                             size = (short)(int)((ArrayDeclPart) declPart).getSize();
                         }
+                        // we saved all of the space this takes, now we need to get how much is left
                         symbolTable.getEntry(declPart.getName()).setAddr((short) (alloc - size));
                     }
                 }
@@ -196,12 +198,13 @@ public class Scope extends Stmt {
             ListIterator<Stmt> stmtIterator = statements.getIterator();
             while (stmtIterator.hasNext()) {
                 Stmt stmt = stmtIterator.next();
+
+                // fixes for return statements
                 if (stmt instanceof ReturnStmt) {
                     // need to pop off all declarations
                     for (int i = 0; i < declarations.size(); i++) {
                         instructions.addAll(MachineUtils.swapPop());
                     }
-//                    instructions.addAll(MachineUtils.swapBr());
                 }
                 instructions.addAll(stmt.machine_visit(symbolTable));
             }

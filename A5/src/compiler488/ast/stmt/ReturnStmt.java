@@ -39,7 +39,9 @@ public class ReturnStmt extends Stmt {
 	@Override
 	public boolean semantic_visit(SemanticObject semanticObject) {
 		SymbolTable st = semanticObject.getSymbolTable();
-		return value.semantic_visit(semanticObject) && semanticObject.IsTopStackType(value.getTypeFromSymbolTable(st));
+		if (value != null)
+            return value.semantic_visit(semanticObject) && semanticObject.IsTopStackType(value.getTypeFromSymbolTable(st));
+		return true;
 	}
 
 	public Expn getValue() {

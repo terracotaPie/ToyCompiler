@@ -1,30 +1,39 @@
 Testing process:
 
+~~Output~~
 While developing features, we would create one of the new files,
 set it as TEST.488, and use `../src/compiler488/testing/TestCodeGen.java`
 to run the test. We would then move `TEST.488` to one of the other new test
 files, and then give it a descriptive name.
+
+~~Machine Code~~
+We tested the specific code outputted by printing out the resulting
+`ArrayList<Instruction>`, and diffing it with prewritten machine code. These
+were done for very "small" test programs, like declaring one variable and
+storing it, or looping and exiting directly.
 
 One thing we should have done was regressive tests. Our `TestCodeGen.java`
 should have taken a directory of files, ran the compiler on each of those files,
 and outputted the failures/passes in some nice format.
 
 The following test cases each cover C00-C04
+
 |-------------------+-------------------------------------+-----+-----|
 | File (.488)       | Short description                   | New | P/F |
 |-------------------+-------------------------------------+-----+-----|
-| Arithmetics       |                                     | Y   | :)  |
-| MultScopes        |                                     | Y   | :)  |
-| Procedure         |                                     | Y   | :)  |
+| Arithmetics       | arithmetic operations               | Y   | :)  |
+| MultScopes        | multiple scopes                     | Y   | :)  |
+| Procedure         | procedure call                      | Y   | :)  |
 | ProcedureLLTest   |                                     | Y   | :)  |
-| ReadWriteIdent    |                                     | Y   | :)  |
-| ReadWriteSubs     |                                     | Y   | :)  |
+| ReadWriteIdent    | read and write into a basic var     | Y   | :)  |
+| ReadWriteSubs     | read and write into an array index  | Y   | :)  |
 | TEST              | The temporary testing file          | Y   | :)  |
-| basicArrayRef     |                                     | Y   | :)  |
-| basicAssignemnt   |                                     | Y   | :)  |
-| basicVarReference |                                     | Y   | :)  |
-| negArrayRef       |                                     | Y   | :)  |
-| printMultiple     |                                     | Y   | :)  |
+| basicArrayRef     | array references                    | Y   | :)  |
+| FunNoParams.488   | a function w/o params               | Y   | :)  |
+| basicAssignemnt   | variable assignemnts                | Y   | :)  |
+| basicVarReference | varaible references                 | Y   | :)  |
+| negArrayRef       | negative array bounds/reference     | Y   | :)  |
+| printMultiple     | print the result of multiple expns  | Y   | :)  |
 | C10-11            | test Start/end fun w/o params       | Y   | :)  |
 | C12-13            | test Start/end fun w params         | Y   | :)  |
 | C14-17            | test start/end proc                 | Y   | :)  |
@@ -32,4 +41,18 @@ The following test cases each cover C00-C04
 | C20-29            | params in funs/procs                | Y   | :)  |
 | C30-36            | test allocation of fun, Array, vars | Y   | :)  |
 | C40-57            | BR/BF, print, while, do until       | Y   | :)  |
+| C60               | negation                            | Y   | :)  |
+| C61               | addtition                           | Y   | :)  |
+| C62               | subtraction                         | Y   | :)  |
+| C63               | mulitplicatoin                      | Y   | :)  |
+| C64               | division                            | Y   | :)  |
+| C65               | land                                | Y   | :)  |
+| C66               | lnot                                | Y   | :)  |
+| C67               | lor                                 | Y   | :)  |
+| C68               | address                             | Y   | :)  |
+| C69               | equality                            | Y   | :)  |
+| C70               | inequality                          | Y   | :)  |
+| C71-C74           | comparisons (lt, gt, lte, gte)      | Y   | :)  |
+| C75-C79           | addr/val of param                   | Y   | :)  |
+| C80-C82           | constants                           | Y   | :)  |
 |-------------------+-------------------------------------+-----+-----|
