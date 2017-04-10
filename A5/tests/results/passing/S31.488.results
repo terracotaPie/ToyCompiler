@@ -1,0 +1,24 @@
+Scope
+    declarations
+        A         : integer 
+    statements
+        Assignment: A := 10
+End Scope
+Semantic: true
+Scope
+    declarations
+        A         : integer 
+    statements
+        Assignment: A := 10
+End Scope
+End of Compilation
+Begin Execution
+
+Start Execution  pc = 0, msp = 15, mlp = 8177
+	
+
+End Execution.
+  pc = 14, msp = 16, mlp = 8177
+	display[0 .. 0] = 15  
+	memory[15 .. 15] = 10  
+End of Execution

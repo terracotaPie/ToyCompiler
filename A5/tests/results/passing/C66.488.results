@@ -1,0 +1,34 @@
+Scope
+    declarations
+        >>empty<<
+    statements
+        write ((true))and((true)),  newline 
+        write ((true))and((false)),  newline 
+        write ((false))and((true)),  newline 
+        write ((false))and((false)),  newline 
+End Scope
+Semantic: false
+Scope
+    declarations
+        >>empty<<
+    statements
+        write ((true))and((true)),  newline 
+        write ((true))and((false)),  newline 
+        write ((false))and((true)),  newline 
+        write ((false))and((false)),  newline 
+End Scope
+End of Compilation
+Begin Execution
+
+Start Execution  pc = 0, msp = 88, mlp = 8104
+	
+1
+0
+0
+0
+
+End Execution.
+  pc = 87, msp = 88, mlp = 8104
+	display[0 .. 0] = 88  
+	
+End of Execution

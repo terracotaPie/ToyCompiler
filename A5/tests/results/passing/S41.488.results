@@ -1,0 +1,26 @@
+Scope
+    declarations
+         procedure f ()
+            Scope
+                declarations
+                    B                     : integer 
+                statements
+                    Assignment: B := 1
+            End Scope
+    statements
+        Procedure call: f ()
+End Scope
+Semantic: true
+Scope
+    declarations
+         procedure f ()
+            Scope
+                declarations
+                    B                     : integer 
+                statements
+                    Assignment: B := 1
+            End Scope
+    statements
+        Procedure call: f ()
+End Scope
+Processing Terminated due to errors

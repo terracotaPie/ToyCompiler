@@ -1,0 +1,28 @@
+Scope
+    declarations
+        flag         : boolean 
+        X         : integer 
+    statements
+        Assignment: flag := (true)
+        Assignment: X := (flag ? 0 : 1)
+End Scope
+Semantic: true
+Scope
+    declarations
+        flag         : boolean 
+        X         : integer 
+    statements
+        Assignment: flag := (true)
+        Assignment: X := (flag ? 0 : 1)
+End Scope
+End of Compilation
+Begin Execution
+
+Start Execution  pc = 0, msp = 33, mlp = 8159
+	
+
+Execution Error -  LOAD address out of range.
+
+  pc = 20, msp = 37, mlp = 8159
+	display[0 .. 0] = 33  
+	memory[33 .. 36] = 1  -32768  34  -32767  

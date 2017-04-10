@@ -1,6 +1,0 @@
-{
-  var X[1 .. 10] : Integer
-  var A : Integer
-  X[1] := 10
-  A := X[1]
-}

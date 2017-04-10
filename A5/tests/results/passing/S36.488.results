@@ -1,0 +1,40 @@
+Scope
+    declarations
+         function f : integer (B : integer)
+            Scope
+                declarations
+                    >>empty<<
+                statements
+                    return with B
+            End Scope
+        X         : integer 
+    statements
+        Assignment: X := 10
+        Procedure call: f (X)
+End Scope
+Semantic: true
+Scope
+    declarations
+         function f : integer (B : integer)
+            Scope
+                declarations
+                    >>empty<<
+                statements
+                    return with B
+            End Scope
+        X         : integer 
+    statements
+        Assignment: X := 10
+        Procedure call: f (X)
+End Scope
+End of Compilation
+Begin Execution
+
+Start Execution  pc = 0, msp = 29, mlp = 8163
+	
+
+Execution Error -  LOAD address out of range.
+
+  pc = 17, msp = 33, mlp = 8163
+	display[0 .. 0] = 29  
+	memory[29 .. 32] = -32768  -32768  10  -32765  

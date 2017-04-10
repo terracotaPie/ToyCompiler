@@ -1,7 +1,0 @@
-{
-  function f(B: Integer) : Integer
-  {
-    return with B
-  }
-  f(10)
-}

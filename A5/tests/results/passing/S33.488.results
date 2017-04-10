@@ -1,0 +1,38 @@
+Scope
+    declarations
+        A         : integer 
+        B         : integer 
+    statements
+        Assignment: A := 10
+        Assignment: B := 10
+        if (A)=(B) then 
+            write "OK"
+        else
+            write "BOO"
+        End if
+End Scope
+Semantic: true
+Scope
+    declarations
+        A         : integer 
+        B         : integer 
+    statements
+        Assignment: A := 10
+        Assignment: B := 10
+        if (A)=(B) then 
+            write "OK"
+        else
+            write "BOO"
+        End if
+End Scope
+End of Compilation
+Begin Execution
+
+Start Execution  pc = 0, msp = 51, mlp = 8141
+	
+
+Execution Error -  LOAD address out of range.
+
+  pc = 23, msp = 54, mlp = 8141
+	display[0 .. 0] = 51  
+	memory[51 .. 53] = 10  10  -32767  

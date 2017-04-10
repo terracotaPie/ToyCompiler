@@ -1,0 +1,26 @@
+Scope
+    declarations
+        X[0..4]         : integer 
+    statements
+        Assignment: X[1] := 1
+        write X[1]
+End Scope
+Semantic: true
+Scope
+    declarations
+        X[0..4]         : integer 
+    statements
+        Assignment: X[1] := 1
+        write X[1]
+End Scope
+End of Compilation
+Begin Execution
+
+Start Execution  pc = 0, msp = 30, mlp = 8162
+	
+1
+End Execution.
+  pc = 29, msp = 34, mlp = 8162
+	display[0 .. 0] = 30  
+	memory[30 .. 33] = -32768  -32768  -32768  -32768  
+End of Execution

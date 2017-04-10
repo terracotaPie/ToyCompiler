@@ -1,0 +1,36 @@
+Scope
+    declarations
+         function p : integer ()
+            Scope
+                declarations
+                    >>empty<<
+                statements
+                    return with 1
+            End Scope
+    statements
+        write "ok"
+End Scope
+Semantic: true
+Scope
+    declarations
+         function p : integer ()
+            Scope
+                declarations
+                    >>empty<<
+                statements
+                    return with 1
+            End Scope
+    statements
+        write "ok"
+End Scope
+End of Compilation
+Begin Execution
+
+Start Execution  pc = 0, msp = 15, mlp = 8177
+	
+ok
+End Execution.
+  pc = 14, msp = 17, mlp = 8177
+	display[0 .. 0] = 15  
+	memory[15 .. 16] = -32768  -32768  
+End of Execution

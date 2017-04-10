@@ -1,0 +1,24 @@
+Scope
+    declarations
+        B[1..2]         : integer 
+    statements
+        Assignment: B[1] := 1
+End Scope
+Semantic: true
+Scope
+    declarations
+        B[1..2]         : integer 
+    statements
+        Assignment: B[1] := 1
+End Scope
+End of Compilation
+Begin Execution
+
+Start Execution  pc = 0, msp = 20, mlp = 8172
+	
+
+End Execution.
+  pc = 19, msp = 21, mlp = 8172
+	display[0 .. 0] = 20  
+	memory[20 .. 20] = -32768  
+End of Execution
