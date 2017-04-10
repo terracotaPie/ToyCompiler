@@ -1,6 +1,0 @@
-{
-  var A : Integer
-  var B : Integer
-  B := 10
-  A := B
-}

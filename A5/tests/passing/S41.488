@@ -1,8 +1,0 @@
-{
-  procedure f
-  {
-    var B: Integer
-    B := 1
-  }
-  f
-}

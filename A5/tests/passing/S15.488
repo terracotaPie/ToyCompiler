@@ -1,5 +1,0 @@
-{
-  procedure f(a : Integer) {
-  }
-  write "ok"
-}

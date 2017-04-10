@@ -1,9 +1,0 @@
-{
-  function a(b : Integer) : Integer {
-    var d : Integer
-    d := 1
-    return with d
-  }
-  write "ok"
-}
-

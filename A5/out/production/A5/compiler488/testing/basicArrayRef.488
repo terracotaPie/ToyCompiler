@@ -1,5 +1,0 @@
-{
-  var y[2] : Integer
-  y[1] := 100
-  write y[1]
-}

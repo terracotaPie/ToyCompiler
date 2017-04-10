@@ -98,6 +98,11 @@ public class BinaryExpn extends Expn
     public void table_visit(SymbolTable symbolTable){}
 
 
+    /**
+     * Generate code for expressings using  +,-,*,/,<,<=,>,>=,=,!=,and,or
+     * @param symbolTable
+     * @return
+     */
     @Override
     public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
         ArrayList<Instruction> left_instructions = left.machine_visit(symbolTable);

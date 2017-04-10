@@ -1,0 +1,34 @@
+Scope
+    declarations
+        >>empty<<
+    statements
+        Scope
+            declarations
+                >>empty<<
+            statements
+                >>empty<<
+        End Scope
+End Scope
+Semantic: true
+Scope
+    declarations
+        >>empty<<
+    statements
+        Scope
+            declarations
+                >>empty<<
+            statements
+                >>empty<<
+        End Scope
+End Scope
+End of Compilation
+Begin Execution
+
+Start Execution  pc = 0, msp = 7, mlp = 8185
+	
+
+End Execution.
+  pc = 6, msp = 7, mlp = 8185
+	display[0 .. 1] = 7  7  
+	
+End of Execution

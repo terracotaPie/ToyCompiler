@@ -1,0 +1,32 @@
+Scope
+    declarations
+        x         : integer 
+    statements
+        Assignment: x := 10
+        while (x)!=(0) do
+            Scope
+                declarations
+                    >>empty<<
+                statements
+                    exit 1 when (x)=(5) 
+                    Assignment: x := (x)-(1)
+            End Scope
+        End while-do
+End Scope
+Semantic: false
+Scope
+    declarations
+        x         : integer 
+    statements
+        Assignment: x := 10
+        while (x)!=(0) do
+            Scope
+                declarations
+                    >>empty<<
+                statements
+                    exit 1 when (x)=(5) 
+                    Assignment: x := (x)-(1)
+            End Scope
+        End while-do
+End Scope
+Processing Terminated due to errors

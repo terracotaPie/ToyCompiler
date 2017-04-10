@@ -1,0 +1,28 @@
+Scope
+    declarations
+        >>empty<<
+    statements
+        write (1)*(1)
+        write (2)*(2)
+        write (3)*(3)
+End Scope
+Semantic: true
+Scope
+    declarations
+        >>empty<<
+    statements
+        write (1)*(1)
+        write (2)*(2)
+        write (3)*(3)
+End Scope
+End of Compilation
+Begin Execution
+
+Start Execution  pc = 0, msp = 22, mlp = 8170
+	
+149
+End Execution.
+  pc = 21, msp = 22, mlp = 8170
+	display[0 .. 0] = 22  
+	
+End of Execution

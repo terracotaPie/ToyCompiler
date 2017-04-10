@@ -1,8 +1,0 @@
-{
-  function f ( a : Integer , p : Integer ) : Integer
-  {
-    return with a + p
-  }
-  var X : Integer
-  X := f(2,3)
-}

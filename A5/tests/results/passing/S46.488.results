@@ -1,0 +1,24 @@
+Scope
+    declarations
+        A[1..10]         : integer 
+    statements
+        write 2
+End Scope
+Semantic: true
+Scope
+    declarations
+        A[1..10]         : integer 
+    statements
+        write 2
+End Scope
+End of Compilation
+Begin Execution
+
+Start Execution  pc = 0, msp = 12, mlp = 8180
+	
+2
+End Execution.
+  pc = 11, msp = 21, mlp = 8180
+	display[0 .. 0] = 12  
+	memory[13 .. 20] = -32768  -32768  -32768  -32768  -32768  -32768  -32768  -32768  
+End of Execution

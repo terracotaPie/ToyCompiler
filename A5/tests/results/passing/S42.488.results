@@ -1,0 +1,38 @@
+Scope
+    declarations
+         function f : integer ()
+            Scope
+                declarations
+                    >>empty<<
+                statements
+                    return with 0
+            End Scope
+        X         : integer 
+    statements
+        Assignment: X := f
+End Scope
+Semantic: true
+Scope
+    declarations
+         function f : integer ()
+            Scope
+                declarations
+                    >>empty<<
+                statements
+                    return with 0
+            End Scope
+        X         : integer 
+    statements
+        Assignment: X := f
+End Scope
+End of Compilation
+Begin Execution
+
+Start Execution  pc = 0, msp = 21, mlp = 8171
+	
+
+End Execution.
+  pc = 20, msp = 24, mlp = 8171
+	display[0 .. 2] = 21  -32767  25  
+	memory[21 .. 23] = -32768  -32768  0  
+End of Execution

@@ -1,6 +1,0 @@
-{
-    var X[10] : Integer
-    X[1] := 100
-    read X[1]
-    write X[1]
-}

@@ -1,6 +1,0 @@
-{
-    if false then write "false branch", newline
-    if true then write "true branch", newline
-    write "repeat", newline
-    write "while"
-}

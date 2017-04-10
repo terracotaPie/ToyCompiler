@@ -1,4 +1,0 @@
-{
-  var X : Integer
-  X := 1 + 3
-}

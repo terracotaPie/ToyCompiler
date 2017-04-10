@@ -1,0 +1,26 @@
+Scope
+    declarations
+        >>empty<<
+    statements
+        write not((true))
+        write not((false))
+End Scope
+Semantic: false
+Scope
+    declarations
+        >>empty<<
+    statements
+        write not((true))
+        write not((false))
+End Scope
+End of Compilation
+Begin Execution
+
+Start Execution  pc = 0, msp = 18, mlp = 8174
+	
+01
+End Execution.
+  pc = 17, msp = 18, mlp = 8174
+	display[0 .. 0] = 18  
+	
+End of Execution

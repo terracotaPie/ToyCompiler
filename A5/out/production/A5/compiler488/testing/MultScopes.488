@@ -1,9 +1,0 @@
-{
-    var X : Integer
-    X := 1
-    write X, newline
-    {
-        X := 2
-        write X, newline
-    }
-}

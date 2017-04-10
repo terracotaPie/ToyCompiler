@@ -1,6 +1,0 @@
-{
-  procedure p : {
-    return with 1
-  }
-  write "ok"
-}
