@@ -1,0 +1,6 @@
+{
+  function F(a : Integer) : Integer {
+    return with a
+  }
+  write F(10)
+}

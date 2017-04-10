@@ -1,0 +1,10 @@
+{
+  procedure P {
+    write 1, newline
+  }
+  procedure Q(a : Integer) {
+    write a
+  }
+  P
+  Q(1)
+}

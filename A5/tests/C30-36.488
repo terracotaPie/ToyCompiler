@@ -1,0 +1,5 @@
+{
+    var a, A[2] : Integer
+    function f(a : Integer) : Integer { return with 1 }
+    write 1
+}

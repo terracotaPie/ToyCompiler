@@ -1,0 +1,35 @@
+Testing process:
+
+While developing features, we would create one of the new files,
+set it as TEST.488, and use `../src/compiler488/testing/TestCodeGen.java`
+to run the test. We would then move `TEST.488` to one of the other new test
+files, and then give it a descriptive name.
+
+One thing we should have done was regressive tests. Our `TestCodeGen.java`
+should have taken a directory of files, ran the compiler on each of those files,
+and outputted the failures/passes in some nice format.
+
+The following test cases each cover C00-C04
+|-------------------+-------------------------------------+-----+-----|
+| File (.488)       | Short description                   | New | P/F |
+|-------------------+-------------------------------------+-----+-----|
+| Arithmetics       |                                     | Y   | :)  |
+| MultScopes        |                                     | Y   | :)  |
+| Procedure         |                                     | Y   | :)  |
+| ProcedureLLTest   |                                     | Y   | :)  |
+| ReadWriteIdent    |                                     | Y   | :)  |
+| ReadWriteSubs     |                                     | Y   | :)  |
+| TEST              | The temporary testing file          | Y   | :)  |
+| basicArrayRef     |                                     | Y   | :)  |
+| basicAssignemnt   |                                     | Y   | :)  |
+| basicVarReference |                                     | Y   | :)  |
+| negArrayRef       |                                     | Y   | :)  |
+| printMultiple     |                                     | Y   | :)  |
+| C10-11            | test Start/end fun w/o params       | Y   | :)  |
+| C12-13            | test Start/end fun w params         | Y   | :)  |
+| C14-17            | test start/end proc                 | Y   | :)  |
+| C18-19            | test return in funcs, procs         | Y   | :)  |
+| C20-29            | params in funs/procs                | Y   | :)  |
+| C30-36            | test allocation of fun, Array, vars | Y   | :)  |
+| C40-57            | BR/BF, print, while, do until       | Y   | :)  |
+|-------------------+-------------------------------------+-----+-----|

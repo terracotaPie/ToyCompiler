@@ -1,0 +1,7 @@
+{
+    function F : Integer {
+        return 1
+    }
+    write F
+}
+

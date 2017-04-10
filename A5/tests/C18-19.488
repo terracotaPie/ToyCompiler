@@ -1,0 +1,11 @@
+{
+    function f(a : Integer) : Integer {
+        return with a
+    }
+    procedure p {
+        write newline, 1
+        return
+    }
+    write f(1)
+    p
+}
