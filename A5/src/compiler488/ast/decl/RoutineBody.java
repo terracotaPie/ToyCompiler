@@ -60,11 +60,28 @@ public class RoutineBody extends Indentable {
 		ArrayList<Instruction> switchInstr = new ArrayList<Instruction>();
         ArrayList<Instruction> scopeInstr = body.machine_visit(symbolTable);
 
+        ArrayList<Instruction> modifiedScopeInstr = new ArrayList<>();
+        for (Instruction i : scopeInstr) {
+        	if (i.getCode() == Machine.ADDR) {
+        		short newAddrLL = (short)(i.getArgs().get(0) + 1);
+				short addrON = i.getArgs().get(1);
+				Instruction modifiedAddr = new Instruction(Machine.ADDR, newAddrLL, addrON);
+				modifiedScopeInstr.add(modifiedAddr);
+			} else if (i.getCode() == Machine.SETD) {
+        	    short newLL = (short)(i.getArgs().get(0) - 1);
+        	    Instruction modifiedSetd = new Instruction(Machine.SETD, newLL);
+        	    modifiedScopeInstr.add(modifiedSetd);
+            } else {
+        		modifiedScopeInstr.add(i);
+			}
+		}
+
+
         switchInstr.add(new Instruction(Machine.PUSH, size));
         switchInstr.add(new Instruction(Machine.SUB));
 
 
-		routineBodyInst.addAll(scopeInstr);
+		routineBodyInst.addAll(modifiedScopeInstr);
 		routineBodyInst.addAll(1, switchInstr);
 		return routineBodyInst;
 	}

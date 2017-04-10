@@ -75,26 +75,6 @@ public class IdentExpn extends Expn implements Readable
 	public ArrayList<Instruction> machine_visit(SymbolTable symbolTable) {
 	    SymbolTableEntry.VarType t = symbolTable.getEntry(ident).getVarType();
 
-	    if (t == SymbolTableEntry.VarType.FUNC) {
-	        return ((RoutineDecl)symbolTable.getEntry(ident).getValue()).machine_visit(symbolTable);
-        }
-        /* We consider our scalar declarations to be part of the scope of the function, and
-         * the depth is considered 1 based, unlike the `else` case, which needs to be 0 based.
-         */
-        else if (t == SymbolTableEntry.VarType.SCALAR) {
-
-            MachineUtils.programOffset += 5;
-            // -1 for 0 based vs 1 based
-            short ll = (short) (symbolTable.getEntry(ident).depth );
-            // GET ADDRESS
-            short address = symbolTable.getEntry(ident).getAddr();
-
-            ArrayList<Instruction> mach_ident = new ArrayList<>();
-            mach_ident.add(new Instruction(Machine.ADDR, ll, address));
-            mach_ident.add(new Instruction(Machine.LOAD));
-            return mach_ident;
-        }
-        else {
             MachineUtils.programOffset += 5;
             // -1 for 0 based vs 1 based
             short ll = (short) (symbolTable.getEntry(ident).depth - 1);
@@ -105,7 +85,6 @@ public class IdentExpn extends Expn implements Readable
             mach_ident.add(new Instruction(Machine.ADDR, ll, address));
             mach_ident.add(new Instruction(Machine.LOAD));
             return mach_ident;
-        }
     }
 
     /**
