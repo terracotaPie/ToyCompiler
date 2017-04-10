@@ -1,0 +1,6 @@
+{
+    write true and true, newline
+    write true and false , newline
+    write false and true, newline
+    write false and false, newline
+}

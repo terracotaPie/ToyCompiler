@@ -1,0 +1,19 @@
+{
+    write 1 < 2, newline
+    write 2 < 1, newline
+    write 2 < 2, newline
+
+    write 1 <= 2, newline
+    write 2 <= 1, newline
+    write 2 <= 2, newline
+    write 2 <= 3, newline
+
+    write 1 > 2, newline
+    write 2 > 1, newline
+    write 2 > 2, newline
+
+    write 1 >= 2, newline
+    write 2 >= 1, newline
+    write 2 >= 2, newline
+    write 2 >= 3, newline
+}

@@ -1,0 +1,6 @@
+{
+  var flag : Boolean
+  var X : Integer
+  flag := true
+  X := ( flag ? 0 : 1 )
+}

@@ -1,0 +1,7 @@
+{
+  function a(b : Integer) : Integer {
+    return with b
+  }
+  write "ok"
+ 
+}

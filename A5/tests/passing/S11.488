@@ -1,0 +1,6 @@
+{
+  function a : Integer {
+
+  }
+  write "ok"
+}

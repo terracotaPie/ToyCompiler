@@ -1,0 +1,5 @@
+{
+    write 2 not = 2, newline
+    write 1 not = 2, newline
+    write 2 not = 1, newline
+}

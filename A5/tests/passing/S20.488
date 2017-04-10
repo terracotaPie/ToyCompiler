@@ -1,0 +1,4 @@
+{
+  var flag : Boolean
+  flag := true
+}

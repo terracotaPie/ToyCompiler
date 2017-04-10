@@ -1,0 +1,5 @@
+{
+  procedure a {
+  }
+  write "ok"
+}
