@@ -1,7 +1,7 @@
 {
-    function F : Integer {
-        return 1
+    function F(a : Integer) : Integer {
+        return with 1
     }
-    write F
+    write F(1)
 }
 
