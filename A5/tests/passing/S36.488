@@ -1,0 +1,9 @@
+{
+  function f(B : Integer) : Integer
+  {
+    return with B
+  }
+  var X:Integer
+  X:=10
+  f(X)
+}

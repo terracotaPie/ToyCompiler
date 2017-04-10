@@ -1,0 +1,9 @@
+{
+    var X : Integer
+    var B : Boolean
+    X := 4
+    write X + 2, newline
+
+    B := true
+    write B, newline
+}

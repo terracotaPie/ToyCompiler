@@ -1,0 +1,6 @@
+{
+  function f : Integer {
+    return with 1
+  }
+  write "ok"
+}

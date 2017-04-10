@@ -1,0 +1,5 @@
+{
+    var X[4] : Integer
+    X[1] := 1
+    write X[1]
+}
